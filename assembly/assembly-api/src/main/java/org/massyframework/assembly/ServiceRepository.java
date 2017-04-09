@@ -1,0 +1,193 @@
+/**
+* @Copyright: 2017 smarabbit studio. All rights reserved.
+*  
+* @作   者： 黄开晖<kaimohkh@gmail.com> 
+* @日   期:  2017年4月9日
+*
+* 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
+*/
+package org.massyframework.assembly;
+
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * 服务仓储，提供所有输出服务的查找、获取以及注册服务监听事件。
+ */
+public interface ServiceRepository {
+
+	/**
+	 * 添加服务事件监听器
+	 * @param listener 服务事件监听器
+	 * @param filter 服务事件筛选器
+	 * @see Filter 
+	 */
+	void addListener(ServiceListener listener, Filter filter);
+	
+	/**
+	 * 添加服务事件监听器
+	 * @param listener 服务事件监听器
+	 * @param filterString 服务事件筛选字符串，用于筛选关注的服务.<br>
+	 * 			可以为null，表示监听所有服务事件
+	 */
+	void addListener(ServiceListener listener, String filterString);
+	
+	/**
+	 * 直接查找服务实例<br>
+	 * 本方法简化了服务查找方法，合并{@link #findService(Class)}和{@link #getService(ServiceReference)}两个方法的调用过程.
+	 * @param serviceType 服务类型
+	 * @return {@link S}, 无对应服务可以返回null.
+	 */
+	<S> S findService(Class<S> serviceType);
+	
+	/**
+	 * 直接查找服务实例<br>
+	 * 本方法简化了服务查找方法，合并{@link #findService(Class, Filter)}和{@link #getService(ServiceReference)}两个方法的调用过程.
+	 * @param serviceType 服务类型
+	 * @param filter 筛选器
+	 * @return {@link S}, 无对应服务可以返回null.
+	 */
+	<S> S findService(Class<S> serviceType, Filter filter);
+	
+	/**
+	 * 直接查找服务实例<br>
+	 * 本方法简化了服务查找方法，合并{@link #findService(Class, String)}和{@link #getService(ServiceReference)}两个方法的调用过程.
+	 * @param serviceType 服务类型
+	 * @param filterString 筛选字符串
+	 * @return {@link S}, 无对应服务可以返回null.
+	 */
+	<S> S findService(Class<S> serviceType, String filterString);
+	
+	/**
+	 * 按服务类型查找服务引用<br>
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
+	 * @param serviceType 服务类型
+	 * @return {@link ServiceReference}，可能返回null.
+	 */
+	<S> ServiceReference<S> findServiceReference(Class<S> serviceType);
+	
+	/**
+	 * 按服务筛选要求查找服务引用<br>
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
+	 * 
+	 * <p>
+	 * 在已经返回服务类型的情况下，应尽可能使用效率更高的{@link #findServiceRefernece(Class, String)}方法进行查找。
+	 * @param filter 筛选器
+	 * @return {@link ServiceReference}，可能返回null.
+	 */
+	ServiceReference<?> findServiceReference(Filter filter);
+	
+	/**
+	 * 按服务筛选要求查找服务引用<br>
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
+	 * 
+	 * <p>
+	 * 在已经返回服务类型的情况下，应尽可能使用效率更高的{@link #findServiceRefernece(Class, String)}方法进行查找。
+	 * @param filterString 服务筛选字符串
+	 * @return {@link ServiceReference}，可能返回null.
+	 */
+	ServiceReference<?> findServiceReference(String filterString);
+	
+	/**
+	 * 按服务类型和筛选要求，查找服务引用<br>
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
+	 * @param serviceType 服务类型
+	 * @param filter 筛选器
+	 * @return {@link ServiceReference}
+	 */
+	<S> ServiceReference<S> findServiceRefernece(Class<S> serviceType, Filter filter);
+	
+	/**
+	 * 按服务类型和筛选要求，查找服务引用<br>
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
+	 * @param serviceType 服务类型
+	 * @param filterString 筛选字符串
+	 * @return {@link ServiceReference}
+	 */
+	<S> ServiceReference<S> findServiceRefernece(Class<S> serviceType, String filterString);
+	
+	/**
+	 * 获取所有输出指定服务类型的服务引用
+	 * @param serviceType 服务类型
+	 * @return {@link List}
+	 */
+	<S> List<ServiceReference<S>> getServiceReferences(Class<S> serviceType);
+	
+	/**
+	 * 获取满足服务筛选要求的所有服务引用<br>
+	 * 在已经返回服务类型的情况下，应尽可能使用效率更高的{@link #getServiceReferences(Class, String)}方法。
+	 * @param serviceType 服务类型
+	 * @param filter 筛选器
+	 * @return {@link List}
+	 */
+	List<ServiceReference<?>> getServiceReferences(Filter filter);
+	
+	/**
+	 * 获取满足服务筛选要求的所有服务引用<br>
+	 * 在已经返回服务类型的情况下，应尽可能使用效率更高的{@link #getServiceReferences(Class, String)}方法。
+	 * @param serviceType 服务类型
+	 * @param filterString 筛选字符串
+	 * @return {@link List}
+	 */
+	List<ServiceReference<?>> getServiceReferences(String filterString);
+	
+	/**
+	 * 获取所有输出指定服务类型并满足筛选要求的服务引用
+	 * @param serviceType 服务类型
+	 * @param filter 筛选器
+	 * @return {@link List}
+	 * @see Filter
+	 */
+	<S> List<ServiceReference<S>> getServiceReferences(Class<S> serviceType, Filter filter);
+	
+	/**
+	 * 获取所有输出指定服务类型并满足筛选要求的服务引用
+	 * @param serviceType 服务类型
+	 * @param filterString 筛选字符串
+	 * @return {@link List}
+	 */
+	<S> List<ServiceReference<S>> getServiceReferences(Class<S> serviceType, String filterString);
+	
+	/**
+	 * 根据服务引用获取服务实例
+	 * @param reference 服务引用
+	 * @return {@link S},服务实例
+	 * @throws ServiceNotFoundException 服务未找到则抛出例外
+	 */
+	<S> S getService(ServiceReference<S> reference) throws ServiceNotFoundException;
+	
+	/**
+	 * 根据服务引用获取服务实例
+	 * @param references 服务引用集合
+	 * @return {@link List}服务实例集合
+	 * @throws ServiceNotFoundException 服务未找到则抛出例外
+	 */
+	List<Object> getServices(Collection<ServiceReference<?>> references) throws ServiceNotFoundException;
+	
+	/**
+	 * 根据服务引用获取同类型的服务实例
+	 * @param references 服务引用集合
+	 * @return {@link List}服务实例集合
+	 * @throws ServiceNotFoundException 服务未找到则抛出例外
+	 */
+	<S> List<S> getSameServices(Collection<ServiceReference<S>> references) throws ServiceNotFoundException;
+	
+	/**
+	 * 使用筛选字符串创建筛选器<br>
+	 * 筛选字符串用于筛选关心的服务
+	 * @param filterString 筛选字符串
+	 * @return {@link Filter}
+	 */
+	Filter createFilter(String filterString);
+	
+	/**
+	 * 移除服务事件监听器
+	 * @param listener
+	 */
+	void removeListener(ServiceListener listener);
+}
