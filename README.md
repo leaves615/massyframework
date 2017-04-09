@@ -1,2 +1,2 @@
 # massyframework
-通过装配件Assembly聚合一组服务，并为程序代码运行提供所需的外部资源。
+Massy Framwork提供java的开发架构，使用装配件实现服务的聚合和隔离，为程序代码运行提供依赖资源。
