@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 提供框架核心服务的注册方法
  */
-public interface FrameworkServiceRegistry extends ServiceRepository{
+public interface FrameworkServiceRegistry{
 
 	/**
 	 * 添加服务，服务自动作为输出服务供其他装配件使用<br>

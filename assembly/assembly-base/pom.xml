@@ -22,5 +22,10 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.massyframework.assembly</groupId>
+    	<artifactId>assembly-api</artifactId>
+    	<version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

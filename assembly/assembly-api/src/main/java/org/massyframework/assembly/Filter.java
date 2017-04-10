@@ -33,8 +33,8 @@ public interface Filter {
 	
 	/**
 	 * 对服务引用进行过滤，对reference的属性名和属性值进行不区分大小写进行匹配
-	 * @param reference {@link ServiceReference}
+	 * @param reference {@link ExportServiceReference}
 	 * @return {@code true}匹配，{@code false}不匹配
 	 */
-	boolean match(ServiceReference<?> reference);
+	boolean match(ExportServiceReference<?> reference);
 }

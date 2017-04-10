@@ -11,12 +11,12 @@ package org.massyframework.assembly;
 import java.util.EventListener;
 
 /**
- * 服务监听器,监听运行框架的服务注册事件<br>
- * {@link ServiceRepository#addListener(ServiceListener, Filter)}和<br>
- * {@link ServiceRepository#removeListener(ServiceListener)}提供了<br>
+ * 输出服务监听器,监听运行框架的服务注册事件<br>
+ * {@link ExportServiceRepository#addListener(ServiceListener, Filter)}和<br>
+ * {@link ExportServiceRepository#removeListener(ServiceListener)}提供了<br>
  * 服务事件监听的添加和移除方法
  */
-public interface ServiceListener extends EventListener{
+public interface ExportServiceListener extends EventListener{
 
 	/**
 	 * 当发生服务注册和撤销注册时，触发本方法

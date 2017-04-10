@@ -27,7 +27,7 @@ public final class ServiceEvent extends EventObject {
 	/**
 	 * @param source
 	 */
-	public ServiceEvent(ServiceReference<?> reference, int type) {
+	public ServiceEvent(ExportServiceReference<?> reference, int type) {
 		super(reference);
 		if (type != 0 && type != 1){
 			throw new IllegalStateException("Invalid service event type: type=" + type + ".");
@@ -37,10 +37,10 @@ public final class ServiceEvent extends EventObject {
 	
 	/**
 	 * 服务引用
-	 * @return {@link ServiceReference}
+	 * @return {@link ExportServiceReference}
 	 */
-	public ServiceReference<?> getServiceReference(){
-		return (ServiceReference<?>)this.source;
+	public ExportServiceReference<?> getServiceReference(){
+		return (ExportServiceReference<?>)this.source;
 	}
 	
 	/**

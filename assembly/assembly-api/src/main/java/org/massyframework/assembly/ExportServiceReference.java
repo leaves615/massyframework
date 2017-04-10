@@ -11,20 +11,13 @@ package org.massyframework.assembly;
 /**
  * 装配键输出服务的引用
  */
-public interface ServiceReference<S> {
+public interface ExportServiceReference<S> {
 	
 	/**
 	 * 提供服务实例的装配件
 	 * @return {@link Assembly}
 	 */
 	Assembly getAssembly();
-
-	/**
-	 * 服务类型数组<br>
-	 * 存放在服务属性中，键为{@link Constants#SERVICE_EXPORTTYPE}
-	 * @return {@link Class}数组
-	 */
-	Class<?>[] getExportTypes();
 	
 	/**
 	 * 服务的编号，由运行框架生成<br>
@@ -32,14 +25,7 @@ public interface ServiceReference<S> {
 	 * @return {@link long}
 	 */
 	long getServiceId();
-	
-	/**
-	 * 服务名称
-	 * 存放在服务属性中，键为{@link Constants#SERVICE_NAME}
-	 * @return {@link String}数组
-	 */
-	String[] getServiceName();
-	
+		
 	/**
 	 * 获取服务属性
 	 * @param key 属性的键

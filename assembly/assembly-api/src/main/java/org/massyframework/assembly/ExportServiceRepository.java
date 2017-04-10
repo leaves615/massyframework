@@ -12,9 +12,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 服务仓储，提供所有输出服务的查找、获取以及注册服务监听事件。
+ * 输出服务仓储，提供所有输出服务的查找、获取以及注册服务监听事件。
  */
-public interface ServiceRepository {
+public interface ExportServiceRepository {
 
 	/**
 	 * 添加服务事件监听器
@@ -22,7 +22,7 @@ public interface ServiceRepository {
 	 * @param filter 服务事件筛选器
 	 * @see Filter 
 	 */
-	void addListener(ServiceListener listener, Filter filter);
+	void addListener(ExportServiceListener listener, Filter filter);
 	
 	/**
 	 * 添加服务事件监听器
@@ -30,11 +30,11 @@ public interface ServiceRepository {
 	 * @param filterString 服务事件筛选字符串，用于筛选关注的服务.<br>
 	 * 			可以为null，表示监听所有服务事件
 	 */
-	void addListener(ServiceListener listener, String filterString);
+	void addListener(ExportServiceListener listener, String filterString);
 	
 	/**
 	 * 直接查找服务实例<br>
-	 * 本方法简化了服务查找方法，合并{@link #findService(Class)}和{@link #getService(ServiceReference)}两个方法的调用过程.
+	 * 本方法简化了服务查找方法，合并{@link #findService(Class)}和{@link #getService(ExportServiceReference)}两个方法的调用过程.
 	 * @param serviceType 服务类型
 	 * @return {@link S}, 无对应服务可以返回null.
 	 */
@@ -42,7 +42,7 @@ public interface ServiceRepository {
 	
 	/**
 	 * 直接查找服务实例<br>
-	 * 本方法简化了服务查找方法，合并{@link #findService(Class, Filter)}和{@link #getService(ServiceReference)}两个方法的调用过程.
+	 * 本方法简化了服务查找方法，合并{@link #findService(Class, Filter)}和{@link #getService(ExportServiceReference)}两个方法的调用过程.
 	 * @param serviceType 服务类型
 	 * @param filter 筛选器
 	 * @return {@link S}, 无对应服务可以返回null.
@@ -51,7 +51,7 @@ public interface ServiceRepository {
 	
 	/**
 	 * 直接查找服务实例<br>
-	 * 本方法简化了服务查找方法，合并{@link #findService(Class, String)}和{@link #getService(ServiceReference)}两个方法的调用过程.
+	 * 本方法简化了服务查找方法，合并{@link #findService(Class, String)}和{@link #getService(ExportServiceReference)}两个方法的调用过程.
 	 * @param serviceType 服务类型
 	 * @param filterString 筛选字符串
 	 * @return {@link S}, 无对应服务可以返回null.
@@ -63,9 +63,9 @@ public interface ServiceRepository {
 	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * @param serviceType 服务类型
-	 * @return {@link ServiceReference}，可能返回null.
+	 * @return {@link ExportServiceReference}，可能返回null.
 	 */
-	<S> ServiceReference<S> findServiceReference(Class<S> serviceType);
+	<S> ExportServiceReference<S> findServiceReference(Class<S> serviceType);
 	
 	/**
 	 * 按服务筛选要求查找服务引用<br>
@@ -75,9 +75,9 @@ public interface ServiceRepository {
 	 * <p>
 	 * 在已经返回服务类型的情况下，应尽可能使用效率更高的{@link #findServiceRefernece(Class, String)}方法进行查找。
 	 * @param filter 筛选器
-	 * @return {@link ServiceReference}，可能返回null.
+	 * @return {@link ExportServiceReference}，可能返回null.
 	 */
-	ServiceReference<?> findServiceReference(Filter filter);
+	ExportServiceReference<?> findServiceReference(Filter filter);
 	
 	/**
 	 * 按服务筛选要求查找服务引用<br>
@@ -87,9 +87,9 @@ public interface ServiceRepository {
 	 * <p>
 	 * 在已经返回服务类型的情况下，应尽可能使用效率更高的{@link #findServiceRefernece(Class, String)}方法进行查找。
 	 * @param filterString 服务筛选字符串
-	 * @return {@link ServiceReference}，可能返回null.
+	 * @return {@link ExportServiceReference}，可能返回null.
 	 */
-	ServiceReference<?> findServiceReference(String filterString);
+	ExportServiceReference<?> findServiceReference(String filterString);
 	
 	/**
 	 * 按服务类型和筛选要求，查找服务引用<br>
@@ -97,9 +97,9 @@ public interface ServiceRepository {
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * @param serviceType 服务类型
 	 * @param filter 筛选器
-	 * @return {@link ServiceReference}
+	 * @return {@link ExportServiceReference}
 	 */
-	<S> ServiceReference<S> findServiceRefernece(Class<S> serviceType, Filter filter);
+	<S> ExportServiceReference<S> findServiceRefernece(Class<S> serviceType, Filter filter);
 	
 	/**
 	 * 按服务类型和筛选要求，查找服务引用<br>
@@ -107,16 +107,16 @@ public interface ServiceRepository {
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * @param serviceType 服务类型
 	 * @param filterString 筛选字符串
-	 * @return {@link ServiceReference}
+	 * @return {@link ExportServiceReference}
 	 */
-	<S> ServiceReference<S> findServiceRefernece(Class<S> serviceType, String filterString);
+	<S> ExportServiceReference<S> findServiceRefernece(Class<S> serviceType, String filterString);
 	
 	/**
 	 * 获取所有输出指定服务类型的服务引用
 	 * @param serviceType 服务类型
 	 * @return {@link List}
 	 */
-	<S> List<ServiceReference<S>> getServiceReferences(Class<S> serviceType);
+	<S> List<ExportServiceReference<S>> getServiceReferences(Class<S> serviceType);
 	
 	/**
 	 * 获取满足服务筛选要求的所有服务引用<br>
@@ -125,7 +125,7 @@ public interface ServiceRepository {
 	 * @param filter 筛选器
 	 * @return {@link List}
 	 */
-	List<ServiceReference<?>> getServiceReferences(Filter filter);
+	List<ExportServiceReference<?>> getServiceReferences(Filter filter);
 	
 	/**
 	 * 获取满足服务筛选要求的所有服务引用<br>
@@ -134,7 +134,7 @@ public interface ServiceRepository {
 	 * @param filterString 筛选字符串
 	 * @return {@link List}
 	 */
-	List<ServiceReference<?>> getServiceReferences(String filterString);
+	List<ExportServiceReference<?>> getServiceReferences(String filterString);
 	
 	/**
 	 * 获取所有输出指定服务类型并满足筛选要求的服务引用
@@ -143,7 +143,7 @@ public interface ServiceRepository {
 	 * @return {@link List}
 	 * @see Filter
 	 */
-	<S> List<ServiceReference<S>> getServiceReferences(Class<S> serviceType, Filter filter);
+	<S> List<ExportServiceReference<S>> getServiceReferences(Class<S> serviceType, Filter filter);
 	
 	/**
 	 * 获取所有输出指定服务类型并满足筛选要求的服务引用
@@ -151,7 +151,7 @@ public interface ServiceRepository {
 	 * @param filterString 筛选字符串
 	 * @return {@link List}
 	 */
-	<S> List<ServiceReference<S>> getServiceReferences(Class<S> serviceType, String filterString);
+	<S> List<ExportServiceReference<S>> getServiceReferences(Class<S> serviceType, String filterString);
 	
 	/**
 	 * 根据服务引用获取服务实例
@@ -159,7 +159,7 @@ public interface ServiceRepository {
 	 * @return {@link S},服务实例
 	 * @throws ServiceNotFoundException 服务未找到则抛出例外
 	 */
-	<S> S getService(ServiceReference<S> reference) throws ServiceNotFoundException;
+	<S> S getService(ExportServiceReference<S> reference) throws ServiceNotFoundException;
 	
 	/**
 	 * 根据服务引用获取服务实例
@@ -167,7 +167,7 @@ public interface ServiceRepository {
 	 * @return {@link List}服务实例集合
 	 * @throws ServiceNotFoundException 服务未找到则抛出例外
 	 */
-	List<Object> getServices(Collection<ServiceReference<?>> references) throws ServiceNotFoundException;
+	List<Object> getServices(Collection<ExportServiceReference<?>> references) throws ServiceNotFoundException;
 	
 	/**
 	 * 根据服务引用获取同类型的服务实例
@@ -175,7 +175,7 @@ public interface ServiceRepository {
 	 * @return {@link List}服务实例集合
 	 * @throws ServiceNotFoundException 服务未找到则抛出例外
 	 */
-	<S> List<S> getSameServices(Collection<ServiceReference<S>> references) throws ServiceNotFoundException;
+	<S> List<S> getSameServices(Collection<ExportServiceReference<S>> references) throws ServiceNotFoundException;
 	
 	/**
 	 * 使用筛选字符串创建筛选器<br>
@@ -189,5 +189,5 @@ public interface ServiceRepository {
 	 * 移除服务事件监听器
 	 * @param listener
 	 */
-	void removeListener(ServiceListener listener);
+	void removeListener(ExportServiceListener listener);
 }
