@@ -27,6 +27,13 @@ package org.massyframework.assembly;
  * 装配件上下文{@link AssemblyContext}在进入工作状态后被创建，通过{@link AssemblyContext}可以获取装配件内置的聚合服务。<br>
  */
 public interface Assembly extends Comparable<Assembly>{
+	
+	/**
+	 * 通过适配类型，获得对应的适配实例
+	 * @param adaptType 适配类型
+	 * @return {@link T}, 如果不支持的适配类型，可以返回null.
+	 */
+	<T> T adapt(Class<T> adaptType);
 
 	/**
 	 * 编号，当装配件被创建时，由Framework统一分配。<br>
