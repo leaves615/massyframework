@@ -60,7 +60,7 @@ public interface ExportServiceRepository {
 	
 	/**
 	 * 按服务类型查找服务引用<br>
-	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANKING}（倒序)，和
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * @param serviceType 服务类型
 	 * @return {@link ExportServiceReference}，可能返回null.
@@ -69,7 +69,7 @@ public interface ExportServiceRepository {
 	
 	/**
 	 * 按服务筛选要求查找服务引用<br>
-	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANKING}（倒序)，和
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * 
 	 * <p>
@@ -81,7 +81,7 @@ public interface ExportServiceRepository {
 	
 	/**
 	 * 按服务筛选要求查找服务引用<br>
-	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANKING}（倒序)，和
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * 
 	 * <p>
@@ -93,7 +93,7 @@ public interface ExportServiceRepository {
 	
 	/**
 	 * 按服务类型和筛选要求，查找服务引用<br>
-	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANKING}（倒序)，和
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * @param serviceType 服务类型
 	 * @param filter 筛选器
@@ -103,7 +103,7 @@ public interface ExportServiceRepository {
 	
 	/**
 	 * 按服务类型和筛选要求，查找服务引用<br>
-	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANK}（倒序)，和
+	 * 存在多个同类型服务时，根据{@link Constants#SERVICE_RANKING}（倒序)，和
 	 * {@link Constants#SERVICE_ID}(正序) 排序，并返回最优的服务引用
 	 * @param serviceType 服务类型
 	 * @param filterString 筛选字符串

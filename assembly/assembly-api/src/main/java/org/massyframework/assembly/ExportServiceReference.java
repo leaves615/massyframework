@@ -8,6 +8,8 @@
 */
 package org.massyframework.assembly;
 
+import java.util.List;
+
 /**
  * 装配键输出服务的引用
  */
@@ -40,4 +42,10 @@ public interface ExportServiceReference<S> {
 	 * @return {@link P},属性不存在返回null.
 	 */
 	<P> P getProperty(String key, Class<P> propType);
+	
+	/**
+	 * 获取所有服务属性的键值
+	 * @return {@link List}
+	 */
+	List<String> getPropertyKeys();
 }

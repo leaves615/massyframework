@@ -33,7 +33,7 @@ public abstract class AbstractHandler implements Handler {
 	 * @see org.massyframework.assembly.base.handle.Handler#init(org.massyframework.assembly.base.handle.HandlerRegistry)
 	 */
 	@Override
-	public final void init(HandlerRegistry handlerRegistry) throws Exception {
+	public final void init(HandlerRegistry handlerRegistry){
 		this.handlerRegistry = handlerRegistry;
 		this.init();
 	}

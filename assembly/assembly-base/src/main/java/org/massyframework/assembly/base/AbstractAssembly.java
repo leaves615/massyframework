@@ -11,6 +11,10 @@ package org.massyframework.assembly.base;
 import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.AssemblyContext;
 import org.massyframework.assembly.AssemblyStatus;
+import org.massyframework.assembly.ExportServiceRepository;
+import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
+import org.massyframework.assembly.base.handle.HandlerRegistry;
+import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
 
 /**
  * 装配件的基类
@@ -18,11 +22,37 @@ import org.massyframework.assembly.AssemblyStatus;
 public abstract class AbstractAssembly implements Assembly {
 
 	private final long id;
+	private final HandlerRegistry handlerRegistry;
+	private final AdaptManagement adaptManagement;
+	
+	private String name;
+	private String symbolicName;
+	private String description;
+
 	/**
 	 * 
 	 */
-	public AbstractAssembly() {
-		this.id = AssemblyIdGenericFactory.genericAssemblyId();
+	public AbstractAssembly(ExportServiceRepository serviceRepository) {
+		this.id = AssemblyIdFactory.genericAssemblyId();
+		this.handlerRegistry = new DefaultHandlerRegistry(this);
+		this.adaptManagement = new AdaptManagement(serviceRepository);
+		this.handlerRegistry.register(new InformationSetting());
+	}
+		
+	/**
+	 * 初始化可适配对象
+	 * @param adaptObject
+	 */
+	public void initAdaptObject(Object adaptObject){
+		this.adaptManagement.addAdaptObject(adaptObject);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Assembly#adapt(java.lang.Class)
+	 */
+	@Override
+	public <T> T adapt(Class<T> adaptType) {
+		return this.adaptManagement.adapt(adaptType);
 	}
 
 	/* (non-Javadoc)
@@ -30,7 +60,7 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public int compareTo(Assembly o) {
-		return 0;
+		return Long.compare(this.id, o.getAssemblyId());
 	}
 
 	/* (non-Javadoc)
@@ -46,7 +76,9 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public AssemblyContext getAssmeblyContext() {
-		return null;
+		AssemblyContext result =
+				this.getHandlerRegistry().findHandler(AssemblyContext.class);
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -54,16 +86,9 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public AssemblyStatus getAssemblyStatus() {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.Assembly#getCategory()
-	 */
-	@Override
-	public String getCategory() {
-		// TODO Auto-generated method stub
-		return null;
+		LifecycleProcessHandler handler =
+				this.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
+		return handler.getAssemblyStatus();
 	}
 
 	/* (non-Javadoc)
@@ -71,8 +96,7 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.description;
 	}
 
 	/* (non-Javadoc)
@@ -80,7 +104,6 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public String getInitParameter(String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -88,9 +111,17 @@ public abstract class AbstractAssembly implements Assembly {
 	 * @see org.massyframework.assembly.Assembly#getinitParameter(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String getinitParameter(String key, String defaultValue) {
+	public String getInitParameter(String key, String defaultValue) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Assembly#getCategory()
+	 */
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 	/* (non-Javadoc)
@@ -98,8 +129,7 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public String getSymbolicName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.symbolicName;
 	}
 
 	/* (non-Javadoc)
@@ -107,8 +137,8 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public boolean isReady() {
-		// TODO Auto-generated method stub
-		return false;
+		AssemblyStatus status = this.getAssemblyStatus();
+		return status != AssemblyStatus.READY || status != AssemblyStatus.WORKING;
 	}
 
 	/* (non-Javadoc)
@@ -116,8 +146,38 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public boolean isWorking() {
-		// TODO Auto-generated method stub
-		return false;
+		AssemblyStatus status = this.getAssemblyStatus();
+		return status != AssemblyStatus.WORKING;
 	}
 
+	/**
+	 * 处理注册器
+	 * @return
+	 */
+	protected HandlerRegistry getHandlerRegistry(){
+		return this.handlerRegistry;
+	}
+	
+	private class InformationSetting implements AssemblyInformationHandler {
+
+		@Override
+		public void setName(String name) {
+			AbstractAssembly.this.name = name;
+		}
+
+		@Override
+		public void setDescription(String description) {
+			AbstractAssembly.this.description = description;
+		}
+
+		@Override
+		public boolean setSymbolicName(String symbolicName) {
+			if (AbstractAssembly.this.symbolicName == null){
+				AbstractAssembly.this.symbolicName = symbolicName;
+				return true;
+			}
+			return false;
+		}
+		
+	}
 }

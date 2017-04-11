@@ -14,16 +14,21 @@ package org.massyframework.assembly;
 public interface Constants {
 	
 	/**
-	 * 服务在装配件上下文中的名称， 其值为字符串<br>
-	 * 该名称在装配件上下文中必须唯一，不能重复
+	 * 装配件符号名称，其值为字符串
 	 */
-	static final String SERVICE_CNAME = "service.cName";
+	static final String ASSEMBLY_SYMBOLICNAME = "assembly.symbolicName";
 	
 	/**
 	 * 服务类型，其值为Class数组<br>
 	 * 服务注册的必须项目
 	 */
-	static final String SERVICE_EXPORTTYPE = "service.exportType";
+	static final String OBJECT_CLASS = "service.objectClass";
+	
+	/**
+	 * 服务在装配件上下文中的名称， 其值为字符串<br>
+	 * 该名称在装配件上下文中必须唯一，不能重复
+	 */
+	static final String SERVICE_CNAME = "service.cName";
 	
 	/**
 	 * 服务编号，由系统统一生成，值为long
@@ -39,6 +44,6 @@ public interface Constants {
 	 * 服务排名,其值为int。<br>
 	 * 默认该值为0
 	 */
-	static final String SERVICE_RANK = "service.rank";
+	static final String SERVICE_RANKING = "service.rank";
 	
 }

@@ -327,12 +327,12 @@ public class DependencyServiceResourceMatcher extends DependencyServiceResourceR
 		}
 		
 		private Class<?>[] getServiceTypes(Map<String, Object> props){
-			Object value = props.get(Constants.SERVICE_EXPORTTYPE);
+			Object value = props.get(Constants.OBJECT_CLASS);
 			return (Class<?>[])value;
 		}
 		
 		private Class<?>[] getServiceTypes(ExportServiceReference<?> reference){
-			Object value = reference.getProperty(Constants.SERVICE_EXPORTTYPE);
+			Object value = reference.getProperty(Constants.OBJECT_CLASS);
 			return (Class<?>[])value;
 		}
 	}

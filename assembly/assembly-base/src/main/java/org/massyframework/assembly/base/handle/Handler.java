@@ -18,9 +18,8 @@ public interface Handler {
 	 * 初始化处理<br>
 	 * 在{@link HandlerRegistry#register(Object)}处理过程中，由{@link HandlerRegistry}调用本方法，执行初始化。
 	 * @param handlerRegistry 处理注册器
-	 * @throws Exception 初始化阶段发生的例外
 	 */
-	void init(HandlerRegistry handlerRegistry) throws Exception;
+	void init(HandlerRegistry handlerRegistry);
 	
 	/**
 	 * 销毁处理<br>

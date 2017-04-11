@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 装配件编号生成器工厂,生成唯一顺序的装配件编号
  *
  */
-abstract class AssemblyIdGenericFactory {
+abstract class AssemblyIdFactory {
 
 	private static AtomicLong id = new AtomicLong(-1);
 	

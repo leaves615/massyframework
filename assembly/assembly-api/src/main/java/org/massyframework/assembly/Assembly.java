@@ -55,19 +55,7 @@ public interface Assembly extends Comparable<Assembly>{
 	 * @return {@link AssemblyStatus}
 	 */
 	AssemblyStatus getAssemblyStatus();
-	
-	/**
-	 * 分类，简单说明装配件的使用场景，采用 分类-模块-子模块-行业 方式命名，例如：
-	 * <ul>
-	 * <li>基础设施-缓存管理-Redis</li>
-	 * <li>应用服务-用户管理-用户模型-电商</li>
-	 * <li>应用服务-用户管理-组织模型-企业MIS</li>
-	 * <li>Web交互-用户管理-权限模型-教育</li>
-	 * </ul>
-	 * @return {@link String}字符串，可以返回null.
-	 */
-	String getCategory();
-	
+		
 	/**
 	 * 功能介绍说明
 	 * @return {@link String}字符串，可以返回null.
@@ -87,7 +75,13 @@ public interface Assembly extends Comparable<Assembly>{
 	 * @param defaultValue 参数为null时，可返回的缺省值
 	 * @return {@link String}
 	 */
-	String getinitParameter(String key, String defaultValue);
+	String getInitParameter(String key, String defaultValue);
+	
+	/**
+	 * 装配件的友好名称
+	 * @return {@link String}字符串，可以返回null.
+	 */
+	String getName();
 	
 	/**
 	 * 符号名称，由生产商定义，采用组织/项目/模块方式命名，具有唯一性。<br>
