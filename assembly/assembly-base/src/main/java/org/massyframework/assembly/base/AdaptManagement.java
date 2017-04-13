@@ -21,7 +21,7 @@ import org.massyframework.assembly.util.Asserts;
  */
 final class AdaptManagement implements ExportServiceRepositoryReference{
 	
-	private final ExportServiceRepository serviceRepository;
+	private volatile ExportServiceRepository serviceRepository;
 	private List<Object> objects =
 			new ArrayList<Object>();
 

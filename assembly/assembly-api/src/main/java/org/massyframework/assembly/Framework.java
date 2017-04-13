@@ -9,14 +9,13 @@
 package org.massyframework.assembly;
 
 import java.util.List;
+import java.util.Map;
 
 import org.massyframework.assembly.spec.Specification;
 
 /**
  * 装配件的运行框架<br>
  * 运行框架管理所有装配件，并提供装配件的安装方法。<br>
- * 
- *
  */
 public interface Framework extends Assembly{
 	
@@ -25,6 +24,49 @@ public interface Framework extends Assembly{
 	 * @param listener {@link AssemblyListener}事件监听器
 	 */
 	void addListener(AssemblyListener listener);
+	
+	/**
+	 * 添加初始化事件监听器
+	 * <br>当运行框架初始化完成后，注册的初始化参数监听器将被自动移除。
+	 * @param listener {@link InitParameterListener}
+	 */
+	void addListener(InitParameterListener listener);
+	
+	/**
+	 * 添加输出服务，供其他装配件使用<br>
+	 * @param exportTypes 输出服务的类型
+	 * @param service 服务实例
+	 * @param props 服务属性, 可以为null
+	 */
+	void addExportService(Class<?>[] exportTypes, Object service, 
+			Map<String, Object> props);
+	
+	/**
+	 * 添加输出服务，供其他装配件使用<br>
+	 * @param exportType 输出服务的类型
+	 * @param service 服务实例
+	 * @param props 服务属性, 可以为null
+	 */
+	<S> void addExportService(Class<S> exportType, S service,
+			Map<String, Object> props);
+	
+	/**
+	 * 添加输出服务，供其他装配件使用<br>
+	 * @param exportType 输出服务的类型
+	 * @param factory 服务工厂
+	 * @param props 服务属性，可以为null
+	 */
+	<S> void addExportService(Class<S> exportType, ServiceFactory<S> factory,
+			Map<String, Object> props);
+	
+	/**
+	 * 添加输出服务，供其他装配件使用<br>
+	 * @param exportTypes 输出服务的类型
+	 * @param factory 服务工厂
+	 * @param props 服务属性，可以为null
+	 */
+	<S> void addExportService(Class<?>[] exportTypes, ServiceFactory<S> factory, 
+			Map<String, Object> props);
 	
 	/**
 	 * 判断指定符号名称的装配件是否存在

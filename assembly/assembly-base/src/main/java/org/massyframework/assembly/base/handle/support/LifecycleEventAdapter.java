@@ -37,11 +37,10 @@ public abstract class LifecycleEventAdapter implements LifecycleListener {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.base.handle.LifecycleListener#onRedied()
+	 * @see org.massyframework.assembly.base.handle.LifecycleListener#onReadied()
 	 */
 	@Override
-	public void onRedied() {
-
+	public void onReadied() {
 	}
 
 	/* (non-Javadoc)
@@ -58,6 +57,14 @@ public abstract class LifecycleEventAdapter implements LifecycleListener {
 	@Override
 	public void onInactivating() {
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.base.handle.LifecycleListener#onUnreadying()
+	 */
+	@Override
+	public void onUnreadying() {
+
 	}
 
 	/* (non-Javadoc)

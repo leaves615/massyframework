@@ -20,7 +20,7 @@ public class FrameworkEvent extends EventObject {
 	 * 
 	 */
 	private static final long serialVersionUID = -3785503650481077481L;
-
+	
 	/**
 	 * 构造方法
 	 * @param source

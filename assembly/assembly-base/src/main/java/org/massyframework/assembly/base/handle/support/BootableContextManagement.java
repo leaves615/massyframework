@@ -1,0 +1,42 @@
+/**
+* @Copyright: 2017 smarabbit studio. All rights reserved.
+*  
+* @作   者： 黄开晖<kaimohkh@gmail.com> 
+* @日   期:  2017年4月12日
+*
+* 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
+*/
+package org.massyframework.assembly.base.handle.support;
+
+import org.massyframework.assembly.base.support.InitParams;
+
+/**
+ * 包含在Servlet、Filter和ContextListener对象内的，必须首先使得Servlet、Filter或者COntextListener可用后，
+ * 装配件方能进入工作状态的装配件上下文管理器。
+ */
+public abstract class BootableContextManagement<B>
+	extends AssemblyContextManagement{
+
+	/**
+	 * 
+	 */
+	public BootableContextManagement() {
+	}
+	
+	/**
+	 * 初始化引导组件
+	 * @param initParams 装配件的初始化参数
+	 */
+	protected abstract B createBootable(InitParams initParams) throws Exception;
+	
+	/**
+	 * 获取可引导组件
+	 * @return {@link B}, 可能返回null.
+	 */
+	protected abstract B getBootable();
+	
+	/**
+	 * 释放引导组件
+	 */
+	protected abstract void destroyBootable();
+}

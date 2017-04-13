@@ -9,28 +9,45 @@
 package org.massyframework.assembly.runtime;
 
 import java.util.List;
+import java.util.Map;
 
 import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.AssemblyListener;
 import org.massyframework.assembly.AssemblyNotFoundException;
+import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.Framework;
+import org.massyframework.assembly.InitParameterEvent;
+import org.massyframework.assembly.InitParameterListener;
+import org.massyframework.assembly.ServiceFactory;
 import org.massyframework.assembly.base.AbstractAssembly;
+import org.massyframework.assembly.base.ExportServiceRegistry;
+import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
+import org.massyframework.assembly.base.handle.HandlerRegistry;
+import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
+import org.massyframework.assembly.runtime.service.registry.ExportServiceRepositoryBuilder;
 import org.massyframework.assembly.spec.Specification;
 
 /**
  * 实现{@link Framework}的抽象类
- *
  */
 abstract class AbstractFramework extends AbstractAssembly 
 	implements Framework{
 
+	private final DefaultAssemblyManagement assemblyManagement;
+	
 	/**
 	 * 构造方法
-	 * @param serviceRepository
 	 */
-	public AbstractFramework(ExportServiceRepository serviceRepository) {
-		super(serviceRepository);
+	public AbstractFramework() {
+		super();
+		AssemblyInformationHandler handler =
+				this.getHandlerRegistry().getHandler(AssemblyInformationHandler.class);
+		handler.setSymbolicName("org.massyframework.assembly.core");
+		handler.setName("system");
+		handler.setDescription("");
+		this.assemblyManagement = 
+				new DefaultAssemblyManagement(this, this.getExportServiceRepository());
 	}
 
 	/* (non-Javadoc)
@@ -38,7 +55,57 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public void addListener(AssemblyListener listener) {
-		// TODO Auto-generated method stub
+		this.getAssemblyManagement().addListener(listener);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#addListener(org.massyframework.assembly.InitParameterListener)
+	 */
+	@Override
+	public void addListener(InitParameterListener listener) {
+		FrameworkInitParams initParams =
+				this.getFrameworkInitParams();
+		initParams.addListener(listener);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#addExportService(java.lang.Class[], java.lang.Object, java.util.Map)
+	 */
+	@Override
+	public void addExportService(Class<?>[] exportTypes, Object service, Map<String, Object> props) {
+		ExportServiceRegistry serviceRegistry =
+				this.getExportServiceRepository().findService(ExportServiceRegistry.class);
+		serviceRegistry.register(exportTypes, service, props);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#addExportService(java.lang.Class, java.lang.Object, java.util.Map)
+	 */
+	@Override
+	public <S> void addExportService(Class<S> exportType, S service, Map<String, Object> props) {
+		ExportServiceRegistry serviceRegistry =
+				this.getExportServiceRepository().findService(ExportServiceRegistry.class);
+		serviceRegistry.register(exportType, service, props);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#addExportService(java.lang.Class, org.massyframework.assembly.ServiceFactory, java.util.Map)
+	 */
+	@Override
+	public <S> void addExportService(Class<S> exportType, ServiceFactory<S> factory, Map<String, Object> props) {
+		ExportServiceRegistry serviceRegistry =
+				this.getExportServiceRepository().findService(ExportServiceRegistry.class);
+		serviceRegistry.register(exportType, factory, props);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#addExportService(java.lang.Class[], org.massyframework.assembly.ServiceFactory, java.util.Map)
+	 */
+	@Override
+	public <S> void addExportService(Class<?>[] exportTypes, ServiceFactory<S> factory, Map<String, Object> props) {
+		ExportServiceRegistry serviceRegistry =
+				this.getExportServiceRepository().findService(ExportServiceRegistry.class);
+		serviceRegistry.register(exportTypes, factory, props);
 		
 	}
 
@@ -47,8 +114,7 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public boolean containsAssembly(String symbolicName) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.getAssemblyManagement().findAssembly(symbolicName) != null;
 	}
 
 	/* (non-Javadoc)
@@ -56,8 +122,12 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public Assembly getAssembly(long assemblyId) throws AssemblyNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		Assembly result = this.getAssemblyManagement().findAssembly(assemblyId);
+		if (result == null){
+			throw new AssemblyNotFoundException(assemblyId);
+		}
+		
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -65,8 +135,12 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public Assembly getAssembly(String symbolicName) throws AssemblyNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		Assembly result = this.getAssemblyManagement().findAssembly(symbolicName);
+		if (result == null){
+			throw new AssemblyNotFoundException(symbolicName);
+		}
+		
+		return result;
 	}
 
 	/* (non-Javadoc)
@@ -74,8 +148,7 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public List<Assembly> getAssemblies() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getAssemblyManagement().getAssemblies();
 	}
 
 	/* (non-Javadoc)
@@ -83,8 +156,7 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public List<Assembly> getAssemblies(Specification<Assembly> spec) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.getAssemblyManagement().filterAll(spec);
 	}
 
 	/* (non-Javadoc)
@@ -92,17 +164,79 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public boolean setInitParameter(String key, String value) {
-		// TODO Auto-generated method stub
-		return false;
+		FrameworkInitParams initParams =
+				this.getHandlerRegistry().getHandler(FrameworkInitParams.class);
+		boolean result = initParams.setParameter(key, value);
+		if (result){
+			initParams.publishChangeEvent(
+					new InitParameterEvent(this, key, value));
+		}
+		return result;
 	}
-
+	
+	/**
+	 * 运行框架初始化参数
+	 * @return {@link FrameworkInitParams}
+	 */
+	FrameworkInitParams getFrameworkInitParams(){
+		return this.getHandlerRegistry().getHandler(FrameworkInitParams.class);
+	}
+	
+	/**
+	 * 安装装配件
+	 * @param resource 装配件资源
+	 * @return {@link AssemblyResource}
+	 * @throws Exception
+	 */
+	AssemblyRegistration installAssembly(AssemblyResource resource) throws Exception{
+		AssemblyRegistry registry = this.getHandlerRegistry().getHandler(AssemblyRegistry.class);
+		return registry.installAndRegister(resource);
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see org.massyframework.assembly.Framework#removeListener(org.massyframework.assembly.AssemblyListener)
 	 */
 	@Override
 	public void removeListener(AssemblyListener listener) {
-		// TODO Auto-generated method stub
-		
+		this.getAssemblyManagement().removeListener(listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.base.AbstractAssembly#getExportServiceRepository()
+	 */
+	@Override
+	protected ExportServiceRepository getExportServiceRepository() {
+		return ExportServiceRepositoryBuilder.getExportServiceRepository(this);
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.base.AbstractAssembly#getHandlerRegistry()
+	 */
+	@Override
+	protected HandlerRegistry getHandlerRegistry() {
+		return super.getHandlerRegistry();
+	}
+	
+	void start() throws Exception{
+		LifecycleProcessHandler handler =
+				this.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
+		handler.start();
+	}
+	
+	void stop() throws Exception{
+		LifecycleProcessHandler handler =
+				this.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
+		handler.stop();
+	}
+
+	/**
+	 * 装配件管理
+	 * @return {@link DefaultAssemblyManagement}
+	 */
+	DefaultAssemblyManagement getAssemblyManagement(){
+		return this.assemblyManagement; 
+	}
+	
 }

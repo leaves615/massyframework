@@ -16,10 +16,16 @@ import org.massyframework.assembly.AssemblyReference;
 public interface DependencyServiceResource extends AssemblyReference{
 
 	/**
+	 * 依赖服务被注入后，在装配件上下文中的名称
+	 * @return {@link String}
+	 */
+	String getCName();
+	
+	/**
 	 * 依赖服务的类型
 	 * @return {@link Class}
 	 */
-	Class<?> getServiceType();
+	Class<?> getRequiredType();
 	
 	/**
 	 * 服务筛选条件

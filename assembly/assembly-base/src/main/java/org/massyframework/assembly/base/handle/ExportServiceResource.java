@@ -10,13 +10,17 @@ package org.massyframework.assembly.base.handle;
 
 import java.util.List;
 
-import org.massyframework.assembly.AssemblyReference;
-
 /**
  * 输出的服务资源
  */
-public interface ExportServiceResource extends AssemblyReference {
+public interface ExportServiceResource{
 
+	/**
+	 * 输出服务在装配件上下文中的名称
+	 * @return {@link String}
+	 */
+	String getCName();
+	
 	/**
 	 * 输出类型
 	 * @return {@link Class}数组
@@ -31,8 +35,8 @@ public interface ExportServiceResource extends AssemblyReference {
 	Object getProperty(String key);
 	
 	/**
-	 * 所有属性名称
+	 * 所有属性键值
 	 * @return {@link List}
 	 */
-	List<String> getPropertyNames();
+	List<String> getPropertyKeys();
 }

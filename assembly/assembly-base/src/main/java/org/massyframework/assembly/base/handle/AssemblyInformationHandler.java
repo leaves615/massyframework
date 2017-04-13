@@ -31,4 +31,10 @@ public interface AssemblyInformationHandler {
 	 * @return <code>true</code>设置成功,<code>false</code>符号名称已存在，设置失败
 	 */
 	boolean setSymbolicName(String symbolicName);
+	
+	/**
+	 * 设置生产商
+	 * @param vendor 生产商
+	 */
+	void setVendor(String vendor);
 }

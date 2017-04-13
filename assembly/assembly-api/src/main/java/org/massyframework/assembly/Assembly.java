@@ -84,6 +84,12 @@ public interface Assembly extends Comparable<Assembly>{
 	String getName();
 	
 	/**
+	 * 生产商
+	 * @return {@link String}
+	 */
+	String getVendor();
+	
+	/**
 	 * 符号名称，由生产商定义，采用组织/项目/模块方式命名，具有唯一性。<br>
 	 * 例如: org.massyframework.assembly.core
 	 * @return {@link String}

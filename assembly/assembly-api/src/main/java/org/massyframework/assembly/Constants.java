@@ -19,6 +19,51 @@ public interface Constants {
 	static final String ASSEMBLY_SYMBOLICNAME = "assembly.symbolicName";
 	
 	/**
+	 * 装配件上下文的类型
+	 */
+	static final String ASSEMBLYCONTEXT_CLASSNAME = "assemblyContext.className";
+	
+	/**
+	 * Filter是否支持异步模式
+	 */
+	static final String FILTER_ASYNCSUPPORTED = "filter.asyncSupported";
+	
+	/**
+	 * 过滤器类型,其值为字符串
+	 */
+	static final String FILTER_CLASSNAME = "filter.className";
+	
+	/**
+	 * 过滤器的调度模型,其值为字符串
+	 */
+	static final String FILTER_DISPATCHERTYPE = "filter.dispatcherType";
+	
+	/**
+	 * Filter初始化参数前缀，以"filter.init."开头，放置在装配件的初始化参数中。
+	 */
+	static final String FILTER_INIT_PREFIX = "filter.init.";
+	
+	/**
+	 * 过滤器名称,其值为字符串
+	 */
+	static final String FILTER_NAME = "filter.name";
+		
+	/**
+	 * filter过滤的匹配路径,其值为字符串，用","分隔多个urlPattern
+	 */
+	static final String FILTER_URLPATTERNS = "filter.urlPatterns";
+	
+	/**
+	 * ServletContextListener类型
+	 */
+	static final String LISTENER_CLASSNAME = "servletContextListener.className";
+	
+	/**
+	 * SerlvetContextListener的初始化参数前缀,以"servletContextListener.init."开头，放置在装配件的初始化参数中。
+	 */
+	static final String LISTENER_INIT_PREFIX = "servletContextListener.init.";
+	
+	/**
 	 * 服务类型，其值为Class数组<br>
 	 * 服务注册的必须项目
 	 */
@@ -29,6 +74,11 @@ public interface Constants {
 	 * 该名称在装配件上下文中必须唯一，不能重复
 	 */
 	static final String SERVICE_CNAME = "service.cName";
+	
+	/**
+	 * 服务说明，其值为字符串
+	 */
+	static final String SERVICE_DESCRIPTION = "service.description";
 	
 	/**
 	 * 服务编号，由系统统一生成，值为long
@@ -46,4 +96,35 @@ public interface Constants {
 	 */
 	static final String SERVICE_RANKING = "service.rank";
 	
+	/**
+	 * Servlet是否支持异步模式
+	 */
+	static final String SERVLET_ASYNCSUPPORTED = "servlet.asyncSupported";
+	
+	/**
+	 * Servlet的类型
+	 */
+	static final String SERVLET_CLASSNAME = "servlet.className";
+	
+	/**
+	 * Servlet初始化参数前缀，以"servlet.init."开头，放置在装配件的初始化参数中。
+	 */
+	static final String SERVLET_INIT_PREFIX = "servlet.init.";
+	
+	/**
+	 * Servlet加载和启动次序，其值为int
+	 */
+	static final String SERVLET_LOADONSTARTUP = "servlet.loadOnStartup";
+	
+	/**
+	 * Servlet名称
+	 */
+	static final String SERVLET_NAME = "servlet.name";
+		
+	/**
+	 * Servlet的路径匹配
+	 */
+	static final String SERVLET_URLPATTERNS = "servlet.urlPatterns";
+	
+		
 }

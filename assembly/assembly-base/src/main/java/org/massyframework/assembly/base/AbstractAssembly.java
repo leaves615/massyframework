@@ -15,6 +15,8 @@ import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
+import org.massyframework.assembly.base.handle.support.LifecycleManagement;
+import org.massyframework.assembly.base.support.InitParams;
 
 /**
  * 装配件的基类
@@ -28,15 +30,22 @@ public abstract class AbstractAssembly implements Assembly {
 	private String name;
 	private String symbolicName;
 	private String description;
+	private String vendor;
 
 	/**
 	 * 
 	 */
-	public AbstractAssembly(ExportServiceRepository serviceRepository) {
+	public AbstractAssembly() {
 		this.id = AssemblyIdFactory.genericAssemblyId();
 		this.handlerRegistry = new DefaultHandlerRegistry(this);
-		this.adaptManagement = new AdaptManagement(serviceRepository);
+		this.adaptManagement = 
+				new AdaptManagement(this.getExportServiceRepository());
 		this.handlerRegistry.register(new InformationSetting());
+		this.init();
+	}
+	
+	protected void init(){
+		this.handlerRegistry.register(new LifecycleManagement());
 	}
 		
 	/**
@@ -52,6 +61,7 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public <T> T adapt(Class<T> adaptType) {
+		if (this.adaptManagement == null) return null;
 		return this.adaptManagement.adapt(adaptType);
 	}
 
@@ -104,7 +114,9 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public String getInitParameter(String key) {
-		return null;
+		InitParams initParams = 
+				this.getHandlerRegistry().findHandler(InitParams.class);
+		return initParams == null ? null : initParams.getParameter(key);
 	}
 
 	/* (non-Javadoc)
@@ -112,8 +124,11 @@ public abstract class AbstractAssembly implements Assembly {
 	 */
 	@Override
 	public String getInitParameter(String key, String defaultValue) {
-		// TODO Auto-generated method stub
-		return null;
+		String result = this.getInitParameter(key);
+		if (result == null){
+			result = defaultValue;
+		}
+		return result;
 	}
 	
 	/* (non-Javadoc)
@@ -122,6 +137,14 @@ public abstract class AbstractAssembly implements Assembly {
 	@Override
 	public String getName() {
 		return this.name;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Assembly#getVendor()
+	 */
+	@Override
+	public String getVendor() {
+		return this.vendor;
 	}
 
 	/* (non-Javadoc)
@@ -158,6 +181,15 @@ public abstract class AbstractAssembly implements Assembly {
 		return this.handlerRegistry;
 	}
 	
+	/**
+	 * 获取输出服务仓储
+	 * @return {@link ExportServiceRepository}
+	 */
+	protected abstract ExportServiceRepository getExportServiceRepository();
+	
+	/**
+	 * 基本信息设置
+	 */
 	private class InformationSetting implements AssemblyInformationHandler {
 
 		@Override
@@ -178,6 +210,13 @@ public abstract class AbstractAssembly implements Assembly {
 			}
 			return false;
 		}
-		
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.handle.AssemblyInformationHandler#setVendor(java.lang.String)
+		 */
+		@Override
+		public void setVendor(String vendor) {
+			AbstractAssembly.this.vendor = vendor;
+		}
 	}
 }

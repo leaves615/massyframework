@@ -77,7 +77,7 @@ public class DependencyServiceResourceRepository extends AbstractHandler
 	 * @param dependencyService
 	 */
 	private void checkResource(DependencyServiceResource resource){
-		Asserts.notNull(resource.getServiceType(), "serviceType of dependency resource cannot be null.");
+		Asserts.notNull(resource.getRequiredType(), "requiredType of dependency resource cannot be null.");
 	}
 
 	private synchronized void doAdd(DependencyServiceResource resource){

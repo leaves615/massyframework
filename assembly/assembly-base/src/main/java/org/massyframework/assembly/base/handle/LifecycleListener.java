@@ -28,7 +28,7 @@ public interface LifecycleListener extends EventListener{
 	/**
 	 * 已准备就绪
 	 */
-	void onRedied();
+	void onReadied();
 	
 	/**
 	 * 已激活，装配件进入工作状态
@@ -39,6 +39,11 @@ public interface LifecycleListener extends EventListener{
 	 * 正在钝化，装配件准备退出工作状态
 	 */
 	void onInactivating();
+	
+	/**
+	 * 退出准备就绪
+	 */
+	void onUnreadying();
 	
 	/**
 	 * 装配件准备卸载

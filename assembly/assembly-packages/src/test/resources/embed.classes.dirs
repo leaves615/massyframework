@@ -1,0 +1,4 @@
+#assembly-core项目
+../../../../../assembly-base/target/classes
+#assembly-runtime项目
+../../../../../assembly-runtime/target/classes

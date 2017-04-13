@@ -223,7 +223,7 @@ public class DependencyServiceResourceMatcher extends DependencyServiceResourceR
 			Set<Class<?>> requiredTypes = new HashSet<Class<?>>();
 			for (DependencyServiceResource resource: resources){
 				this.map.put(resource, serviceRepository.createFilter(resource.getFilterString()));
-				requiredTypes.add(resource.getServiceType());
+				requiredTypes.add(resource.getRequiredType());
 			}
 			this.filter = new DependencyServiceFilter(requiredTypes);
 		}

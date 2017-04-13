@@ -14,13 +14,12 @@ import java.util.EventListener;
  * 运行框架事件监听器
  */
 public interface FrameworkListener extends EventListener{
-
+	
 	/**
-	 * 运行框架初始化完成后触发事件。<br>
-	 * 在本事件处理过程中，可以注册框架服务。
-	 * @param event {@link FrameworkInitializeEvent}
+	 * 运行框架初始化完成后触发事件。
+	 * @param event {@link FrameworkEvent}
 	 */
-	void frameworkInitialized(FrameworkInitializeEvent event);
+	void frameworkInitialized(FrameworkEvent event);
 	
 	/**
 	 * 运行框架释放前触发本事件
