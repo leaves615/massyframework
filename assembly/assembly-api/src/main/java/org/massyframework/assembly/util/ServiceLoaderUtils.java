@@ -110,7 +110,7 @@ public abstract class ServiceLoaderUtils {
 	}
 
 	/**
-	 * 从{@link URLClassLoader#getURLs()}中查找META-INF/services下的内置服务配置资源，并加载文件内定义的服务。
+	 * 从{@link ClassLoader#getURLs()}中查找META-INF/services下的内置服务配置资源，并加载文件内定义的服务。
 	 * 内置资源仅仅存放在{@link URLClassLoader#getURLs()}内，通过对Urls的解析来完成.<br>
 	 * 本方法不返回存放在{@link URLClassLoader#getURLs()}外的其他内置资源
 	 * @param service 服务类型
@@ -119,11 +119,16 @@ public abstract class ServiceLoaderUtils {
 	 * @return {@link List}
 	 */
 	@SuppressWarnings("unchecked")
-	public static <S> List<S> loadServicesWithURLClassLoader(Class<S> service, URLClassLoader classLoader){
+	public static <S> List<S> loadServicesAtClassLoader(Class<S> service, ClassLoader classLoader){
 		Asserts.notNull(service, "service cannot be null.");
 		Asserts.notNull(classLoader, "classLoader cannot be null.");
+		
+		if (!(classLoader instanceof URLClassLoader)){
+			return loadServices(service, classLoader);
+		}
+		
 		List<URL> resources = ClassLoaderUtils.getResources(
-				"META-INF/services/" + service.getName(), classLoader);
+				"META-INF/services/" + service.getName(), (URLClassLoader)classLoader);
 		
 		List<S> result = new ArrayList<S>();
 		

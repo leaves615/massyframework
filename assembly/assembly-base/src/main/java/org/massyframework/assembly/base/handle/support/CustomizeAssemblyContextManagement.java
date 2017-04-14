@@ -11,7 +11,6 @@ package org.massyframework.assembly.base.handle.support;
 import org.massyframework.assembly.AssemblyContext;
 import org.massyframework.assembly.ClassLoaderReference;
 import org.massyframework.assembly.Constants;
-import org.massyframework.assembly.CustmizeAssemblyContext;
 import org.massyframework.assembly.base.handle.ActivationHandler;
 import org.massyframework.assembly.base.handle.HandlerRegistration;
 
@@ -53,9 +52,9 @@ public class CustomizeAssemblyContextManagement extends AssemblyContextManagemen
 		ClassLoader loader = ClassLoaderReference.adaptFrom(this.getAssembly());
 		Class<?> clazz = loader.loadClass(className);
 		
-		CustmizeAssemblyContext customize = (CustmizeAssemblyContext)clazz.newInstance();
-		AssemblyContextWrapper<CustmizeAssemblyContext> result = 
-				new AssemblyContextWrapper<CustmizeAssemblyContext>(customize);
+		AssemblyContext customize = (AssemblyContext)clazz.newInstance();
+		AssemblyContextWrapper<AssemblyContext> result = 
+				new AssemblyContextWrapper<AssemblyContext>(customize);
 		return result;
 	}
 	

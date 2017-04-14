@@ -8,13 +8,11 @@
 */
 package org.massyframework.assembly.base.handle.support;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.massyframework.assembly.AssemblyContext;
 import org.massyframework.assembly.CustmizeAssemblyContext;
-import org.massyframework.assembly.base.handle.DependencyServiceResource;
-import org.massyframework.assembly.base.handle.ServiceInjectCallback;
+import org.massyframework.assembly.InjectCallback;
 import org.massyframework.assembly.base.handle.ServiceInjectHandler;
 
 /**
@@ -47,7 +45,7 @@ final class CustomizeAssemblyContextWrapper extends AssemblyContextWrapper<Custm
 	/**
 	 * 回调
 	 */
-	protected class Callback implements ServiceInjectCallback {
+	protected class Callback implements InjectCallback {
 		
 		public Callback(){}
 
@@ -55,13 +53,11 @@ final class CustomizeAssemblyContextWrapper extends AssemblyContextWrapper<Custm
 		 * @see org.massyframework.assembly.handle.ServiceInjectCallback#doInject(java.util.Map)
 		 */
 		@Override
-		public void doInject(Map<DependencyServiceResource, Object> serviceMap) throws Exception {
-			Map<String, Object> services = new HashMap<String,Object>();
-			for (Entry<DependencyServiceResource, Object> entry: serviceMap.entrySet()){
-				services.put(entry.getKey().getCName(), entry.getValue());
+		public void doInject(Map<String, Object> serviceMap) throws Exception {
+			AssemblyContext context = getReference();
+			if (context instanceof InjectCallback){
+				((InjectCallback)context).doInject(serviceMap);
 			}
-			
-			getReference().injectServices(services);
 		}
 		
 	}

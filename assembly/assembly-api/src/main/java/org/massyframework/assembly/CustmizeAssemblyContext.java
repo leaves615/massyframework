@@ -19,7 +19,7 @@ import org.massyframework.assembly.util.Asserts;
 /**
  * 自定义的装配件上下文
  */
-public abstract class CustmizeAssemblyContext implements AssemblyContext, AssemblyAware {
+public class CustmizeAssemblyContext implements AssemblyContext, AssemblyAware, InjectCallback {
 
 	private volatile Assembly assembly;
 	private Map<String, Object> serviceMap;
@@ -45,6 +45,13 @@ public abstract class CustmizeAssemblyContext implements AssemblyContext, Assemb
 	@Override
 	public Assembly getAssembly() {
 		return this.assembly;
+	}
+	
+	/**
+	 * 初始化
+	 */
+	protected void init(){
+		
 	}
 
 	/* (non-Javadoc)
@@ -111,12 +118,14 @@ public abstract class CustmizeAssemblyContext implements AssemblyContext, Assemb
 		return result;
 	}
 
-	/**
-	 * 注入服务
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.InjectCallback#doInject(java.util.Map)
 	 */
-	public void injectServices(Map<String, Object> services){
-		for (Entry<String, Object> entry: services.entrySet()){
+	@Override
+	public void doInject(Map<String, Object> serviceMap) throws Exception {
+		for (Entry<String, Object> entry: serviceMap.entrySet()){
 			this.serviceMap.putIfAbsent(entry.getKey(), entry.getValue());
 		}
+		this.init();
 	}
 }

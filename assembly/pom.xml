@@ -77,5 +77,6 @@
     <module>assembly-base</module>
     <module>assembly-runtime</module>
     <module>assembly-packages</module>
+    <module>assembly-spring4</module>
   </modules>
 </project>

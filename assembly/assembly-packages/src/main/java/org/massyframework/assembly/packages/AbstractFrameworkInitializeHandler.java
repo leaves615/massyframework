@@ -59,7 +59,7 @@ public abstract class AbstractFrameworkInitializeHandler implements FrameworkIni
 		for (ClassLoader loader: loaders){
 			List<FrameworkInitializer> list = null;
 			if (loader instanceof URLClassLoader){
-				list = ServiceLoaderUtils.loadServicesWithURLClassLoader(
+				list = ServiceLoaderUtils.loadServicesAtClassLoader(
 						FrameworkInitializer.class, (URLClassLoader)loader);
 			}else{
 				list = ServiceLoaderUtils.loadServices(FrameworkInitializer.class, loader);

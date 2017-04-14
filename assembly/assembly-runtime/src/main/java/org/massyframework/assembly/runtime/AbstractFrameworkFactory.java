@@ -19,6 +19,7 @@ import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.util.Asserts;
 import org.massyframework.assembly.util.MapUtils;
+import org.massyframework.assembly.util.ServiceLoaderUtils;
 import org.slf4j.Logger;
 
 /**
@@ -70,6 +71,19 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 	protected void customizeFramework(AbstractFramework framework){
 	}
 	
+	protected List<FrameworkInitializer> loadFrameworkInitialziers(
+			FrameworkInitializeHandler initializeHandler){
+		List<FrameworkInitializer> result =
+			initializeHandler.getFrameworkInitializer();
+		
+
+		List<FrameworkInitializer> list =
+				ServiceLoaderUtils.loadServicesAtClassLoader(
+						FrameworkInitializer.class, this.getClass().getClassLoader());
+		result.addAll(0, list);
+		return result;
+	}
+	
 	/**
 	 * 设置初始化参数
 	 * @param framework 运行框架
@@ -105,7 +119,7 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 	 * @param logger
 	 */
 	protected void doStart(AbstractFramework framework, FrameworkInitializeHandler initializeHandler, Logger logger){
-		List<FrameworkInitializer> initializers = initializeHandler.getFrameworkInitializer();
+		List<FrameworkInitializer> initializers = this.loadFrameworkInitialziers(initializeHandler);
 		for (FrameworkInitializer initializer: initializers){
 			try{
 				initializer.onStartup(framework);

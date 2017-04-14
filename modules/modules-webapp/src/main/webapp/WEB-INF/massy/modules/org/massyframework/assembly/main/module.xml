@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="org.massyframework.assembly" slot="main">
+	
+	<resources>
+		<resource-root path="../../../../../../../../../../../../assembly/assembly-api/target/classes" />
+		<resource-root path="../../../../../../../../../../../../assembly/assembly-packages/target/classes" />
+		<resource-root path="../../../../../../../../../../../modules-core/target/classes" />
+	</resources>
+	
+	<dependencies>
+		<system export="true">
+            <paths>         
+            	<!-- javax.servlet -->
+            	<path name="javax/servlet" />
+            	<path name="javax/servlet/annotation" />
+            	<path name="javax/servlet/descriptor" />
+            	<path name="javax/servlet/http" />      
+            	
+            	<!-- jboss modules -->
+            	<path name="__redirected" />
+            	<path name="org/jboss/modules" />
+            	<path name="org/jboss/modules/_private" />
+            	<path name="org/jboss/modules/filter" />
+            	<path name="org/jboss/modules/log" />
+            	<path name="org/jboss/modules/management" />
+            	<path name="org/jboss/modules/maven" />
+            	<path name="org/jboss/modules/ref" />
+            	<path name="org/jboss/modules/security" />
+            	<path name="org/jboss/modules/xml" />
+            	
+            	<!-- org.slf4j -->
+            	<path name="org/slf4j"/>
+            	<path name="org/slf4j/event"/>
+            	<path name="org/slf4j/helpers"/>
+            	<path name="org/slf4j/spi"/>
+            	
+            	<!-- javax.name -->
+            	<path name="javax/naming" />
+            	<path name="javax/naming/directory" />
+            	<path name="javax/naming/event" />
+            	<path name="javax/naming/ldap" />
+            	<path name="javax/naming/spi" />
+            	
+            	<!-- javax.xml -->
+            	<path name="javax/xml"/>
+            	
+            	<path name="javax/xml/bind"/>
+            	<path name="javax/xml/bind/annotation"/>
+            	<path name="javax/xml/bind/annotation/adapters"/>
+            	<path name="javax/xml/bind/attachments"/>
+            	<path name="javax/xml/bind/util"/>
+            	
+            	<path name="javax/xml/crypto"/>
+            	<path name="javax/xml/crypto/dom"/>
+            	<path name="javax/xml/crypto/dsig"/>
+            	<path name="javax/xml/crypto/dsig/dom"/>
+            	<path name="javax/xml/crypto/dsig/keyinfo"/>
+            	<path name="javax/xml/crypto/spec"/>
+            	
+            	<path name="javax/xml/datatype"/>
+            	<path name="javax/xml/namespace"/>
+            	<path name="javax/xml/parsers"/>
+            	<path name="javax/xml/soap"/>
+            	
+            	<path name="javax/xml/stream"/>
+            	<path name="javax/xml/stream/events"/>
+            	<path name="javax/xml/stream/util"/>
+            	           	
+           		<path name="javax/xml/transform"/>
+           		<path name="javax/xml/transform/dom"/>
+           		<path name="javax/xml/transform/sax"/>
+           		<path name="javax/xml/transform/stax"/>
+           		<path name="javax/xml/transform/stream"/>
+          
+            	<path name="javax/xml/validation"/>
+            	
+            	<path name="javax/xml/ws"/>
+            	<path name="javax/xml/ws/handler"/>
+            	<path name="javax/xml/ws/handler/soap"/>
+            	<path name="javax/xml/ws/http"/>
+            	<path name="javax/xml/ws/soap"/>
+            	<path name="javax/xml/ws/spi"/>
+            	<path name="javax/xml/ws/spi/http"/>
+            	<path name="javax/xml/ws/wsaddressing"/>
+            	<path name="javax/xml/ws/xpath"/>
+            	
+            	<!--  org.w3c -->
+            	<path name="org/w3c/dom" />
+            	<path name="org/w3c/dom/css" />
+            	<path name="org/w3c/dom/events" />
+            	<path name="org/w3c/dom/html" />
+            	<path name="org/w3c/dom/ls" />
+            	<path name="org/w3c/dom/ranges" />
+            	<path name="org/w3c/dom/stylesheets" />
+            	<path name="org/w3c/dom/traversal" />
+            	<path name="org/w3c/dom/views" />
+            	<path name="org/w3c/dom/xpath" />
+            	
+            	<!-- org.xml -->
+            	<path name="org/xml/sax" />   
+            	<path name="org/xml/sax/ext" />   
+            	<path name="org/xml/sax/helpers" />            	
+            	
+            	<!-- massyframework modules api -->
+            	<path name="org/massyframework/modules" />
+            	            	
+            </paths>
+        </system>
+        
+        <module name="org.apache.commons.lang3" slot="3.5" />
+        
+	</dependencies>
+</module>
