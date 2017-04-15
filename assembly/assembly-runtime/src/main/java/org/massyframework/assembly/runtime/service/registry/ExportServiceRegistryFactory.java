@@ -94,6 +94,7 @@ public abstract class ExportServiceRegistryFactory  implements ServiceFactory<Ex
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	ExportServiceRegistration<?> doRegister(Class<?>[] classes, Object svcObj, 
 			Map<String, Object> props, Assembly assembly){
+		
 		ExportServiceRegistrationImpl result =
 				new ExportServiceRegistrationImpl(this, classes, svcObj, props, assembly);
 		
@@ -186,8 +187,9 @@ public abstract class ExportServiceRegistryFactory  implements ServiceFactory<Ex
 					builder.append(",");
 				}
 			}
+			builder.append("]");
 		}
-		builder.append("]");
+		
 		
 		return builder.toString();
 	}

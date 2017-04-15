@@ -26,12 +26,18 @@ public interface Framework extends Assembly{
 	void addListener(AssemblyListener listener);
 	
 	/**
+	 * 添加运行框架监听事件
+	 * @param listener {@link FrameworkListener} 运行框架监听器
+	 */
+	void addListener(FrameworkListener listener);
+	
+	/**
 	 * 添加初始化事件监听器
 	 * <br>当运行框架初始化完成后，注册的初始化参数监听器将被自动移除。
 	 * @param listener {@link InitParameterListener}
 	 */
 	void addListener(InitParameterListener listener);
-	
+		
 	/**
 	 * 添加输出服务，供其他装配件使用<br>
 	 * @param exportTypes 输出服务的类型
@@ -113,7 +119,6 @@ public interface Framework extends Assembly{
 	 */
 	Assembly installAssembly(AssemblyResource resource) throws Exception;
 	
-	
 	/**
 	 * 设置初始化参数<br>
 	 * 如果初始化参数已经存在，则设置将失败
@@ -122,6 +127,12 @@ public interface Framework extends Assembly{
 	 * @return <code>true</code>设置成功, <code>false</code>设置失败
 	 */
 	boolean setInitParameter(String key, String value);
+	
+	/**
+	 * 移除运行框架监听器
+	 * @param listener {@link FrameworkListener} 运行框架监听器
+	 */
+	void removeListener(FrameworkListener listener);
 	
 	/**
 	 * 移除装配件事件监听器

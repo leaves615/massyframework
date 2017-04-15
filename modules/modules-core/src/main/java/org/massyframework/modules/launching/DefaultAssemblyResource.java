@@ -16,7 +16,7 @@ import org.massyframework.assembly.util.Asserts;
 /**
  * 缺省的装配件资源实现
  */
-final class DefaultAssemblyResource implements AssemblyResource {
+public final class DefaultAssemblyResource implements AssemblyResource {
 
 	private final ClassLoader loader;
 	private final URL configFile;

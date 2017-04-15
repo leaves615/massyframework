@@ -8,11 +8,8 @@
 */
 package org.massyframework.assembly.runtime;
 
-import org.massyframework.assembly.runtime.service.DefaultLoggerReference;
-
 /**
- * @author huangkaihui
- *
+ * 提供缺省的FrameworkFactory
  */
 public final class DefaultFrameworkFactory extends AbstractFrameworkFactory {
 
@@ -32,11 +29,7 @@ public final class DefaultFrameworkFactory extends AbstractFrameworkFactory {
 		
 		FrameworkInitParams initParams = new FrameworkInitParams();
 		result.getHandlerRegistry().register(initParams);
-		
-		DefaultLoggerReference reference =
-				new DefaultLoggerReference(result);
-		result.initAdaptObject(reference);
-		
+				
 		FrameworkContextManagement management =
 				new FrameworkContextManagement();
 		result.getHandlerRegistry().register(management);

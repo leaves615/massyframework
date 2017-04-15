@@ -21,8 +21,9 @@ public interface FrameworkInitializeLoader {
 	 * 在{@link FrameworkFactory#createFramework(java.util.Map, InitializeHandler)}方法中，<br>
 	 * 调用{@link FrameworkInitializer#onStartup(Framework)}方法进行初始化。
 	 * @return {@link List}
+	 * @throws Exception 发生非预期的例外
 	 */
-	List<FrameworkInitializer> getFrameworkInitializer();
+	List<FrameworkInitializer> getFrameworkInitializer() throws Exception;
 
 	/**
 	 * 返回装配件资源<br>
@@ -30,6 +31,7 @@ public interface FrameworkInitializeLoader {
 	 * 使用{@link AssemblyResource}创建对应的装配件
 	 * 方法将在{@link FrameworkFactory}
 	 * @return {@link List}
+	 * @throws Exception 发生非预期的例外
 	 */
-	List<AssemblyResource> getAssemblyResources();
+	List<AssemblyResource> getAssemblyResources() throws Exception;
 }

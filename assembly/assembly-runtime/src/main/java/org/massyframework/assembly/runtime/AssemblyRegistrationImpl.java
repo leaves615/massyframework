@@ -15,7 +15,6 @@ import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
 import org.massyframework.assembly.base.handle.RegisterableHandler;
 import org.massyframework.assembly.base.handle.support.DefaultConfigFile;
 import org.massyframework.assembly.runtime.resolve.DefaultXmlResolver;
-import org.massyframework.assembly.runtime.service.DefaultLoggerReference;
 import org.massyframework.assembly.util.Asserts;
 import org.slf4j.Logger;
 
@@ -81,8 +80,6 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 	private DefaultAssembly createAssembly(AssemblyResource resource){		
 		DefaultAssembly result = new DefaultAssembly();
 		
-		//日志记录器引用
-		result.initAdaptObject(new DefaultLoggerReference(result));
 		//类加载器引用
 		result.initAdaptObject(
 				new DefaultClassLoaderReference(resource.getClassLoader()));
@@ -117,5 +114,7 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 	protected <S> S findService(Class<S> serviceType){
 		return this.assembly.getExportServiceRepository().findService(serviceType);
 	}
+	
+	
 	
 }

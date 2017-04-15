@@ -8,34 +8,26 @@
 */
 package org.massyframework.modules.launching;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkInitializer;
-import org.massyframework.assembly.spec.JarEntrySpecification;
 import org.massyframework.assembly.util.ClassLoaderUtils;
-import org.massyframework.assembly.util.JarUtils;
 import org.massyframework.assembly.util.ServiceLoaderUtils;
 
 /**
- * 实现{@link FrameworkInitializeLoader}的抽象类
+ * 抽象的运行框架初始化加载器
  */
-public abstract class AbstractFrameworkInitializeLoader implements FrameworkInitializeLoader {
+abstract class AbstractFrameworkInitializeLoader implements FrameworkInitializeLoader {
 
-	private static final String PATH = "META-INF/assembly";
-	private static final String EXTENSION = ".xml";
+	private static final String PATH = "META-INF/assembly/assembly.xml";
 	
 	private List<FrameworkInitializer> initializers;
 	
@@ -51,7 +43,7 @@ public abstract class AbstractFrameworkInitializeLoader implements FrameworkInit
 	 * @see org.massyframework.assembly.FrameworkInitializeHandler#getFrameworkInitializer()
 	 */
 	@Override
-	public List<FrameworkInitializer> getFrameworkInitializer() {
+	public List<FrameworkInitializer> getFrameworkInitializer() throws Exception{
 		List<ClassLoader> loaders = this.getClassLoaderes();
 		List<FrameworkInitializer> result = new ArrayList<FrameworkInitializer>();
 		for (ClassLoader loader: loaders){
@@ -65,6 +57,9 @@ public abstract class AbstractFrameworkInitializeLoader implements FrameworkInit
 			result.addAll(list);
 		}
 		
+		//添加直接使用FrameworkListener服务部署的监听器
+		result.add(new FrameworkListenerLoader(loaders));
+		
 		if (this.initializers != null){
 			result.addAll(0, this.initializers);
 		}
@@ -75,7 +70,7 @@ public abstract class AbstractFrameworkInitializeLoader implements FrameworkInit
 	 * @see org.massyframework.assembly.FrameworkInitializeHandler#getAssemblyResources()
 	 */
 	@Override
-	public List<AssemblyResource> getAssemblyResources() {
+	public List<AssemblyResource> getAssemblyResources() throws Exception{
 		List<ClassLoader> loaders = this.getClassLoaderes();
 		List<AssemblyResource> result = new ArrayList<AssemblyResource>();
 		
@@ -104,7 +99,7 @@ public abstract class AbstractFrameworkInitializeLoader implements FrameworkInit
 		List<AssemblyResource> result = new ArrayList<AssemblyResource>();
 
 		if (loader instanceof URLClassLoader){
-			List<URL> resources = ClassLoaderUtils.getResources(PATH, ".xml", (URLClassLoader)loader);
+			List<URL> resources = ClassLoaderUtils.getResources(PATH, (URLClassLoader)loader);
 			for (URL resource: resources){
 				result.add(new DefaultAssemblyResource(loader, resource));
 			}
@@ -112,20 +107,7 @@ public abstract class AbstractFrameworkInitializeLoader implements FrameworkInit
 			Enumeration<URL> em = loader.getResources(PATH);
 			while (em.hasMoreElements()){
 				URL url = em.nextElement();
-				String protocol = url.getProtocol();
-				switch (protocol){
-					case "jar": {
-						JarURLConnection connect = (JarURLConnection)url.openConnection();
-						JarFile jarFile = connect.getJarFile();
-						this.loadAssemblyResourcesFromJarFile(jarFile, result, loader);
-						break;
-					}
-					case "file":{
-						File file = new File(url.toURI());
-						this.loadAssemblyResourcesFromDirectory(file, result, loader);
-						break;
-					}
-				}
+				result.add(new DefaultAssemblyResource(loader, url));
 			}
 		}
 		
@@ -133,60 +115,8 @@ public abstract class AbstractFrameworkInitializeLoader implements FrameworkInit
 	}
 	
 	/**
-	 * 从jarFile文件中加载配置资源
-	 * @param jarFile jar文件
-	 * @param list 装配件定位集合
-	 * @param loader 类加载器
-	 * @throws IOException 发生非预期的读写异常
-	 */
-	protected void loadAssemblyResourcesFromJarFile(JarFile jarFile, List<AssemblyResource> list, ClassLoader loader)
-		throws IOException{
-		List<JarEntry> entries = JarUtils.findJarEntries(jarFile, 
-				new JarEntrySpecification(PATH, EXTENSION));
-		if (!entries.isEmpty()){
-			for (JarEntry entry: entries){
-				URL url = new URL("jar:file:" + jarFile.getName() + "!/" + entry.getName());
-				AssemblyResource resource =
-						new DefaultAssemblyResource(loader, url);
-				list.add(resource);
-			}
-		}
-	}
-	
-	/**
-	 * 从文件目录中加载配置资源
-	 * @param directory 目录
-	 * @param list 装配件定位集合
-	 * @param loader 类加载器
-	 * @throws IOException 发生非预期的读写异常
-	 */
-	protected void loadAssemblyResourcesFromDirectory(File directory, List<AssemblyResource> list, ClassLoader loader)
-		throws IOException{
-		if (directory.exists()){
-			File[] files = directory.listFiles(new FileFilter(){
-
-				@Override
-				public boolean accept(File file) {
-					if (file.getName().endsWith(EXTENSION)){
-						return true;
-					}
-					return false;
-				}
-				
-			});
-			
-			for (File file: files){
-				URL url = file.toURI().toURL();
-				AssemblyResource resource =
-						new DefaultAssemblyResource(loader, url);
-				list.add(resource);
-			}
-		}
-	}
-
-	/**
 	 * 获取类加载集合
 	 * @return {@link List}
 	 */
-	protected abstract List<ClassLoader> getClassLoaderes();
+	protected abstract List<ClassLoader> getClassLoaderes() throws Exception;
 }

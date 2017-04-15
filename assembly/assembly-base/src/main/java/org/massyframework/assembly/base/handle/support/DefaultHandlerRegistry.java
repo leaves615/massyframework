@@ -136,7 +136,7 @@ public final class DefaultHandlerRegistry implements HandlerRegistry {
 		
 		@Override
 		public void unregister() {
-						
+			doUnregister(this);		
 		}
 		
 		/**

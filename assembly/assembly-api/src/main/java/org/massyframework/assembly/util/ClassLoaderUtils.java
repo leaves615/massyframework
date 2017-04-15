@@ -60,7 +60,7 @@ public abstract class ClassLoaderUtils {
 		Thread.currentThread().setContextClassLoader(loader);
 		return result;
 	}
-	
+		
 	/**
 	 * 获取指定URLClassLoader内的内置资源.<br>
 	 * 内置资源仅仅存放在{@link URLClassLoader#getURLs()}内，通过对Urls的解析来完成.<br>

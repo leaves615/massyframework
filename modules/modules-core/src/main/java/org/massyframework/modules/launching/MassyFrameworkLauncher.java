@@ -49,9 +49,9 @@ public class MassyFrameworkLauncher implements Launcher {
 		
 		FrameworkFactory factory =  
 				ServiceLoaderUtils.loadFirstService(FrameworkFactory.class, module.getClassLoader());
-		FrameworkInitializeLoader handler =
-				this.createFrameworkInitializeHandler(servletContext, moduleLoader);
-		factory.createFramework(configuration, handler);
+		FrameworkInitializeLoader loader =
+				this.createFrameworkInitializeLoader(servletContext, moduleLoader,configuration);
+		factory.createFramework(configuration, loader);
 	}
 	
 	/**
@@ -92,12 +92,14 @@ public class MassyFrameworkLauncher implements Launcher {
 	 * @param moduleLoader 模块加载器
 	 * @return {@link FrameworkInitializeLoader}
 	 */
-	protected FrameworkInitializeLoader createFrameworkInitializeHandler(
-			ServletContext servletContext, ModuleLoader moduleLoader){
+	protected FrameworkInitializeLoader createFrameworkInitializeLoader(
+			ServletContext servletContext, ModuleLoader moduleLoader, 
+			Map<String, String> configuration){
 		List<FrameworkInitializer> handlers =
 				new ArrayList<FrameworkInitializer>();
 		handlers.add(new ServletContextInitializer(servletContext));
 		
-		return new ModuleInitializeLoader(handlers, moduleLoader);
+		return new DefaultAssemblyResourceLoader(
+				handlers, configuration, moduleLoader);
 	}
 }

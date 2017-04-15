@@ -36,10 +36,23 @@ public abstract class AbstractAssembly implements Assembly {
 	 * 
 	 */
 	public AbstractAssembly() {
+		this(null);
+	}
+	
+	protected AbstractAssembly(String symbolicName){
 		this.id = AssemblyIdFactory.genericAssemblyId();
 		this.handlerRegistry = new DefaultHandlerRegistry(this);
+		if (symbolicName != null){
+			this.symbolicName = symbolicName;
+		}
+		
 		this.adaptManagement = 
 				new AdaptManagement(this.getExportServiceRepository());
+		if (symbolicName != null){
+			this.adaptManagement.addAdaptObject(
+					new DefaultLoggerReference(this));
+		}
+		
 		this.handlerRegistry.register(new InformationSetting());
 		this.init();
 	}
@@ -208,6 +221,9 @@ public abstract class AbstractAssembly implements Assembly {
 		public boolean setSymbolicName(String symbolicName) {
 			if (AbstractAssembly.this.symbolicName == null){
 				AbstractAssembly.this.symbolicName = symbolicName;
+				
+				initAdaptObject(
+						new DefaultLoggerReference(AbstractAssembly.this));
 				return true;
 			}
 			return false;

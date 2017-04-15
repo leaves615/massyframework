@@ -222,7 +222,7 @@ abstract class AbstractXmlResolver extends AbstractResolver {
 	 * @throws ClassNotFoundException 类型未找到时抛出异常
 	 */
 	protected void doParserExportService(Document document) throws ClassNotFoundException{
-		NodeList list = document.getElementsByTagName(DEPENDENCY_SERVICE);
+		NodeList list = document.getElementsByTagName(EXPORT_SERVICE);
 		if (list != null){
 			List<ExportServiceResource> resources =
 					new ArrayList<ExportServiceResource>();

@@ -8,18 +8,13 @@
 */
 package org.massyframework.assembly.runtime;
 
-import java.util.List;
 import java.util.Map;
 
-import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.Framework;
 import org.massyframework.assembly.FrameworkFactory;
 import org.massyframework.assembly.FrameworkInitializeLoader;
-import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.util.Asserts;
-import org.massyframework.assembly.util.MapUtils;
-import org.massyframework.assembly.util.ServiceLoaderUtils;
 import org.slf4j.Logger;
 
 /**
@@ -51,13 +46,9 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 			logger.debug("Massy Framework do launching...");
 		}
 		
-		//设置参数
-		this.setInitParameters(result, configuration, logger);
-		this.doStart(result, initializeLoader, logger);
-				
-		this.installAssemblies(result, initializeLoader, logger);
+		result.init(configuration, initializeLoader);
+		result.getFrameworkLauncher().start();
 		
-		result.start();
 		if (logger != null){
 			logger.info("Massy Framework started.");
 		}
@@ -69,118 +60,6 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 	 * @param framework {@link AbstractFramework}
 	 */
 	protected void customizeFramework(AbstractFramework framework){
-	}
-	
-	protected List<FrameworkInitializer> loadFrameworkInitialziers(
-			FrameworkInitializeLoader initializeHandler){
-		List<FrameworkInitializer> result =
-			initializeHandler.getFrameworkInitializer();
-		
-
-		List<FrameworkInitializer> list =
-				ServiceLoaderUtils.loadServicesAtClassLoader(
-						FrameworkInitializer.class, this.getClass().getClassLoader());
-		result.addAll(0, list);
-		return result;
-	}
-	
-	/**
-	 * 设置初始化参数
-	 * @param framework 运行框架
-	 * @param params 参数
-	 */
-	protected void setInitParameters(AbstractFramework framework, Map<String, String> params, Logger logger){
-		if (!MapUtils.isEmpty(params)){
-			FrameworkInitParams initParams = framework.getFrameworkInitParams();
-			List<String> unsets = initParams.setParameters(params);
-			if (!unsets.isEmpty()){
-				//显示异常
-				if (logger != null){
-					if (logger.isWarnEnabled()){
-						StringBuilder builder = new StringBuilder();
-						builder.append("unset init parameter, because it exits:").append("\r\n");
-						for (String unset: unsets){
-							builder.append("\t")
-								.append(unset).append("= ").append(params.get(unset))
-								.append("\r\n");
-						}
-						
-						logger.warn(builder.toString());
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * 执行初始化
-	 * @param framework
-	 * @param initializeLoader
-	 * @param logger
-	 */
-	protected void doStart(AbstractFramework framework, FrameworkInitializeLoader initializeLoader, Logger logger){
-		List<FrameworkInitializer> initializers = this.loadFrameworkInitialziers(initializeLoader);
-		initializers.add(0, new Initailizer());
-		
-		for (FrameworkInitializer initializer: initializers){
-			try{
-				initializer.onStartup(framework);
-				if (logger != null){
-					if (logger.isDebugEnabled()){
-						logger.debug(initializer + " onStartup() invoked.");
-					}
-				}
-			}catch(Exception e){
-				if (logger != null){
-					if (logger.isErrorEnabled()){
-						logger.error( initializer + " onStartup() invoke failed.", e);
-					}
-				}
-			}
-		}
-		
-		//设置为只读模式
-		FrameworkInitParams initParams = framework.getFrameworkInitParams();
-		initParams.setReadOnly();
-		
-		//显示所有参数
-		if (logger != null){
-			if (logger.isInfoEnabled()){
-				List<String> keys = initParams.getParameterKeys();
-				StringBuilder builder = new StringBuilder();
-				builder.append("framework starting with:").append("\r\n");
-				for(String key: keys){
-					builder.append("\t")
-						.append(key).append("= ").append(initParams.getParameter(key))
-						.append("\r\n");
-				}
-				
-				logger.info(builder.toString());
-			}
-		}
-	}
-	
-	/**
-	 * 安装装配件
-	 * @param framework 运行框架
-	 * @param initializeHandler 初始化处理器
-	 * @param logger 日志记录器
-	 * @throws Exception
-	 */
-	protected void installAssemblies(AbstractFramework framework, 
-			FrameworkInitializeLoader initializeHandler, Logger logger) throws Exception{
-		List<AssemblyResource> resources = initializeHandler.getAssemblyResources();
-		for (AssemblyResource resource: resources){
-			try{
-				framework.installAssembly(resource);
-			}catch(Exception e){
-				if (logger != null){
-					if (logger.isErrorEnabled()){
-						logger.error("install " + resource + " failed.", e);
-					}
-				}
-			}
-		}
 	}
 	
 	/**

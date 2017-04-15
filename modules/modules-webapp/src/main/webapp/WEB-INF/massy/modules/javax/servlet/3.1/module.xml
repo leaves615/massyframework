@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="javax.servlet" slot="3.1">
+		
+	<dependencies>
+		<system export="true">
+            <paths>         
+            	<!-- javax.servlet -->
+            	<path name="javax/servlet" />
+            	<path name="javax/servlet/annotation" />
+            	<path name="javax/servlet/descriptor" />
+            	<path name="javax/servlet/http" />              	            	
+            </paths>
+        </system>        
+	</dependencies>
+</module>

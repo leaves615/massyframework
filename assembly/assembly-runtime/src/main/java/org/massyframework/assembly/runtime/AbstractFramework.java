@@ -17,6 +17,8 @@ import org.massyframework.assembly.AssemblyNotFoundException;
 import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.Framework;
+import org.massyframework.assembly.FrameworkInitializeLoader;
+import org.massyframework.assembly.FrameworkListener;
 import org.massyframework.assembly.InitParameterEvent;
 import org.massyframework.assembly.InitParameterListener;
 import org.massyframework.assembly.ServiceFactory;
@@ -24,7 +26,6 @@ import org.massyframework.assembly.base.AbstractAssembly;
 import org.massyframework.assembly.base.ExportServiceRegistry;
 import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
-import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
 import org.massyframework.assembly.runtime.service.registry.ExportServiceRepositoryBuilder;
 import org.massyframework.assembly.spec.Specification;
 
@@ -35,19 +36,21 @@ abstract class AbstractFramework extends AbstractAssembly
 	implements Framework{
 
 	private final DefaultAssemblyManagement assemblyManagement;
+	private final DefaultFrameworkLauncher frameworkLauncher;
 		
 	/**
 	 * 构造方法
 	 */
 	public AbstractFramework() {
-		super();
+		super("org.massyframework.assembly.core");
 		AssemblyInformationHandler handler =
 				this.getHandlerRegistry().getHandler(AssemblyInformationHandler.class);
-		handler.setSymbolicName("org.massyframework.assembly.core");
 		handler.setName("system");
 		handler.setDescription("");
 		this.assemblyManagement = 
 				new DefaultAssemblyManagement(this, this.getExportServiceRepository());
+		this.frameworkLauncher = new DefaultFrameworkLauncher(this);
+		
 	}
 
 	/* (non-Javadoc)
@@ -58,6 +61,13 @@ abstract class AbstractFramework extends AbstractAssembly
 		this.getAssemblyManagement().addListener(listener);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#addListener(org.massyframework.assembly.FrameworkListener)
+	 */
+	@Override
+	public void addListener(FrameworkListener listener) {
+	}
+
 	/* (non-Javadoc)
 	 * @see org.massyframework.assembly.Framework#addListener(org.massyframework.assembly.InitParameterListener)
 	 */
@@ -200,6 +210,13 @@ abstract class AbstractFramework extends AbstractAssembly
 	public void removeListener(AssemblyListener listener) {
 		this.getAssemblyManagement().removeListener(listener);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#removeListener(org.massyframework.assembly.FrameworkListener)
+	 */
+	@Override
+	public void removeListener(FrameworkListener listener) {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.massyframework.assembly.base.AbstractAssembly#getExportServiceRepository()
@@ -218,16 +235,14 @@ abstract class AbstractFramework extends AbstractAssembly
 		return super.getHandlerRegistry();
 	}
 	
-	void start() throws Exception{
-		LifecycleProcessHandler handler =
-				this.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
-		handler.start();
-	}
-	
-	void stop() throws Exception{
-		LifecycleProcessHandler handler =
-				this.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
-		handler.stop();
+	/**
+	 * 初始化
+	 * @param configuration 配置项目
+	 * @param initializeLoader 初始化加载器
+	 */
+	void init(Map<String, String> configuration, 
+			FrameworkInitializeLoader initializeLoader){
+		this.frameworkLauncher.init(configuration, initializeLoader);
 	}
 
 	/**
@@ -238,4 +253,7 @@ abstract class AbstractFramework extends AbstractAssembly
 		return this.assemblyManagement; 
 	}
 	
+	FrameworkLauncher getFrameworkLauncher(){
+		return this.frameworkLauncher;
+	}
 }
