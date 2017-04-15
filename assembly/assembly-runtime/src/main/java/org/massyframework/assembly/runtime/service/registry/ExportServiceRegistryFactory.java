@@ -23,6 +23,7 @@ import org.massyframework.assembly.ServiceEvent;
 import org.massyframework.assembly.ServiceFactory;
 import org.massyframework.assembly.base.ExportServiceRegistration;
 import org.massyframework.assembly.base.ExportServiceRegistry;
+import org.massyframework.assembly.base.util.ExportServiceUtils;
 import org.massyframework.assembly.util.Asserts;
 import org.slf4j.Logger;
 
@@ -112,9 +113,8 @@ public abstract class ExportServiceRegistryFactory  implements ServiceFactory<Ex
 		Logger logger = this.getLogger(assembly);
 		if (logger != null){
 			if (logger.isDebugEnabled()){
-				logger.debug("register service success: objectClass=" + 
-					this.getObjectClass(classes) + ",service.name=" + 
-						result.getReference().getProperty(Constants.SERVICE_NAME, String.class) + ".");
+				logger.debug("register service success:" + 
+					this.getObjectClassAndName(result.getReference()) + ".");
 			}	
 		}
 		
@@ -145,9 +145,8 @@ public abstract class ExportServiceRegistryFactory  implements ServiceFactory<Ex
 				Logger logger = this.getLogger(assembly);
 				if (logger != null){
 					if (logger.isDebugEnabled()){
-						logger.debug("unregister service success: objectClass=" + 
-							this.getObjectClass((Class<?>[])
-									registration.getReference().getProperty(Constants.OBJECT_CLASS)) + ".");
+						logger.debug("unregister service success: " + 
+							this.getObjectClassAndName(registration.getReference()) + ".");
 					}	
 				}
 			}
@@ -159,10 +158,14 @@ public abstract class ExportServiceRegistryFactory  implements ServiceFactory<Ex
 	 * @param classes 
 	 * @return {@link String}
 	 */
-	protected String getObjectClass(Class<?>[] classes){
+	protected String getObjectClassAndName(ExportServiceReference<?> reference){
+		Class<?>[] classes = ExportServiceUtils.getObjectClass(reference);
+		String[] names = ExportServiceUtils.getServiceName(reference);
+		
 		StringBuilder builder =
 				new StringBuilder();
-		builder.append("[");
+		builder.append("objectClass")
+			.append("=").append("[");
 		int size = classes.length;
 		for (int i=0; i<size; i++){
 			
@@ -173,8 +176,22 @@ public abstract class ExportServiceRegistryFactory  implements ServiceFactory<Ex
 		}
 		builder.append("]");
 		
+		if (names.length != 0){
+			builder.append(", ").append(Constants.SERVICE_NAME)
+				.append("=").append("[");
+			size = names.length;
+			for (int i=0; i<size; i++){
+				builder.append(names[i]);
+				if (i!=size-1){
+					builder.append(",");
+				}
+			}
+		}
+		builder.append("]");
+		
 		return builder.toString();
 	}
+	
 	
 	/**
 	 * 获取日志记录器

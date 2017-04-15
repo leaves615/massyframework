@@ -6,11 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.base.handle;
-
-import org.massyframework.assembly.Assembly;
-import org.massyframework.assembly.ExportServiceRepository;
-import org.massyframework.assembly.ObjectReference;
+package org.massyframework.assembly;
 
 /**
  * 输出服务仓储引用

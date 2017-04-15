@@ -28,6 +28,7 @@ import org.massyframework.assembly.base.handle.ConfigFileHandler;
 import org.massyframework.assembly.base.handle.DependencyServiceResource;
 import org.massyframework.assembly.base.handle.ExportServiceResource;
 import org.massyframework.assembly.base.handle.support.AbstractResolver;
+import org.massyframework.assembly.base.handle.support.SimpleExportServiceResource;
 import org.massyframework.assembly.util.CollectionUtils;
 import org.massyframework.assembly.util.IOUtils;
 import org.massyframework.assembly.util.SchemaValidatorUtils;
@@ -46,7 +47,7 @@ abstract class AbstractXmlResolver extends AbstractResolver {
 	public static final String NAME               = "name";
 	public static final String DESCRIPTION        = "description";
 	public static final String VENDOR             = "vendor";
-	public static final String CONTAINER          = "container";
+	public static final String ASSEMBLYCONTEXT    = "assemblyContext";
 	
 	public static final String INIT_PARAMS        = "init-params";
 	public static final String PARAMETER          = "parameter";
@@ -95,7 +96,7 @@ abstract class AbstractXmlResolver extends AbstractResolver {
 			this.doParserInitParams(document);
 			this.doParserDependencyService(document);
 			this.doParserExportService(document);
-			this.setContainer(container);
+			this.setAssemblyContextHandler(container);
 		}finally{
 			IOUtils.closeStream(inputStream);
 		}
@@ -135,7 +136,7 @@ abstract class AbstractXmlResolver extends AbstractResolver {
 					
 					break;
 				}
-				case CONTAINER : {
+				case ASSEMBLYCONTEXT : {
 					container = node.getTextContent();
 					break;
 				}

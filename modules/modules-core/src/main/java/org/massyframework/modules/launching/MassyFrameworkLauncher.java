@@ -19,7 +19,7 @@ import org.jboss.modules.Module;
 import org.jboss.modules.ModuleIdentifier;
 import org.jboss.modules.ModuleLoader;
 import org.massyframework.assembly.FrameworkFactory;
-import org.massyframework.assembly.FrameworkInitializeHandler;
+import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.util.Asserts;
 import org.massyframework.assembly.util.ServiceLoaderUtils;
@@ -49,7 +49,7 @@ public class MassyFrameworkLauncher implements Launcher {
 		
 		FrameworkFactory factory =  
 				ServiceLoaderUtils.loadFirstService(FrameworkFactory.class, module.getClassLoader());
-		FrameworkInitializeHandler handler =
+		FrameworkInitializeLoader handler =
 				this.createFrameworkInitializeHandler(servletContext, moduleLoader);
 		factory.createFramework(configuration, handler);
 	}
@@ -90,14 +90,14 @@ public class MassyFrameworkLauncher implements Launcher {
 	 * 创建FrameworkInitializeHandler实例
 	 * @param servletContext Servlet上下文
 	 * @param moduleLoader 模块加载器
-	 * @return {@link FrameworkInitializeHandler}
+	 * @return {@link FrameworkInitializeLoader}
 	 */
-	protected FrameworkInitializeHandler createFrameworkInitializeHandler(
+	protected FrameworkInitializeLoader createFrameworkInitializeHandler(
 			ServletContext servletContext, ModuleLoader moduleLoader){
 		List<FrameworkInitializer> handlers =
 				new ArrayList<FrameworkInitializer>();
 		handlers.add(new ServletContextInitializer(servletContext));
 		
-		return new ModuleInitializeHandler(handlers, moduleLoader);
+		return new ModuleInitializeLoader(handlers, moduleLoader);
 	}
 }

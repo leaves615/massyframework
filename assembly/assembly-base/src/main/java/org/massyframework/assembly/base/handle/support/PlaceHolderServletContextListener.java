@@ -26,10 +26,10 @@ import javax.servlet.http.HttpSessionListener;
 
 import org.massyframework.assembly.ExportServiceReference;
 import org.massyframework.assembly.ExportServiceRepository;
+import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.ExportServiceTracker;
 import org.massyframework.assembly.ExportServiceTrackerCustomizer;
 import org.massyframework.assembly.Framework;
-import org.massyframework.assembly.base.handle.ExportServiceRepositoryReference;
 
 /**
  * 用作占位符的ServletContextListener，它作为装配件内ServletContextListener的代理，先在ServletContext中占位，

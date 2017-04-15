@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.massyframework.assembly.Framework;
 import org.massyframework.assembly.FrameworkFactory;
-import org.massyframework.assembly.FrameworkInitializeHandler;
+import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.util.EmbedJarUtils;
 
 /**
@@ -33,7 +33,7 @@ public final class FrameworkFactoryProxy implements FrameworkFactory {
 	 * @see org.massyframework.assembly.FrameworkFactory#createFramework(java.util.Map, org.massyframework.assembly.FrameworkInitializeHandler)
 	 */
 	@Override
-	public Framework createFramework(Map<String, String> configuration, FrameworkInitializeHandler initializeHandler)
+	public Framework createFramework(Map<String, String> configuration, FrameworkInitializeLoader initializeHandler)
 			throws Exception {
 		try{
 			ClassLoader loader = this.createdEmbedClassLoader();

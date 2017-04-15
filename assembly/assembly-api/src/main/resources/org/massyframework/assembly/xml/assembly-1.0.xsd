@@ -55,11 +55,11 @@
 				</xs:element>
 				
 				<!-- 服务容器 -->
-				<xs:element name="container" type="containerType" minOccurs="1"
+				<xs:element name="assemblyContext" type="contextType" minOccurs="1"
 					maxOccurs="1">
 					<xs:annotation>
 						<xs:documentation>
-							装配件对应的服务容器，支持spring和自定义类作为服务容器
+							装配件上下文类型，目前仅支持customize和spring
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
@@ -119,7 +119,7 @@
 						</xs:sequence>
 
 						<!-- 编号 -->
-						<xs:attribute name="cid" type="xs:string" use="required">
+						<xs:attribute name="cName" type="xs:string" use="required">
 							<xs:annotation>
 								<xs:documentation>
 									依赖服务注入到装配件容器的编号，如果容器是spring,编号对应的是spring的bean名称。如果容器是类，编号对应的就是字段名。
@@ -174,20 +174,20 @@
 		</xs:complexType>
 	</xs:element>
 	
-	<!-- 容器类型 -->
-	<xs:simpleType name="containerType">
+	<!-- 装配件上下文类型 -->
+	<xs:simpleType name="contextType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="spring">
 				<xs:annotation>
 					<xs:documentation>
-					 使用spring作为服务容器
+					 使用spring作为装配件的上下文
 					</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="customize">
 				<xs:annotation>
 					<xs:documentation>
-					自定义一个类作为服务容器
+					自定义一个类作为装配件上下文
 					</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>

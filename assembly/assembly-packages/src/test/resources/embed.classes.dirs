@@ -2,3 +2,5 @@
 ../../../../../assembly-base/target/classes
 #assembly-runtime项目
 ../../../../../assembly-runtime/target/classes
+#assembly-spring4项目
+../../../../../assembly-spring4/target/classes

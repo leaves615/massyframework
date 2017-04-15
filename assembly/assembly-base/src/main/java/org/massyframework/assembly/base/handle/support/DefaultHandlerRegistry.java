@@ -6,7 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.base;
+package org.massyframework.assembly.base.handle.support;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +63,13 @@ public final class DefaultHandlerRegistry implements HandlerRegistry {
 	@Override
 	public <T> T getHandler(Class<T> handlerType) throws HandlerNotFoundException {
 		T result = this.findHandler(handlerType);
+		
+		if (result == null){
+			result = DefaultHandlerFactory.createHandler(handlerType);
+			if (result != null){
+				this.register(result);
+			}
+		}
 		if (result == null){
 			throw new HandlerNotFoundException(handlerType);
 		}

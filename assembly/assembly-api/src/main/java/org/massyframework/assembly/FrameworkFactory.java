@@ -18,10 +18,10 @@ public interface FrameworkFactory {
 	/**
 	 * 创建运行框架
 	 * @param configuration 运行框架的初始化配置参数
-	 * @param initializeHandler 初始化处理器
+	 * @param initializeLoader 初始化加载器
 	 * @return {@link Framework}
 	 * @throws Exception 创建时发生非预期的例外
 	 */
 	Framework createFramework(Map<String, String> configuration, 
-			FrameworkInitializeHandler initializeHandler) throws Exception;
+			FrameworkInitializeLoader initializeLoader) throws Exception;
 }

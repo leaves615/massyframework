@@ -76,5 +76,6 @@
     <module>modules-api</module>
     <module>modules-core</module>
     <module>modules-webapp</module>
+    <module>modules-tester</module>
   </modules>
 </project>

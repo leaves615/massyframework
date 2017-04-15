@@ -91,7 +91,7 @@ public class CustmizeAssemblyContext implements AssemblyContext, AssemblyAware, 
 	@Override
 	public <S> S getService(String cName, Class<S> resultType) throws ServiceNotFoundException {
 		Asserts.notNull(resultType, "resultType cannot be null.");
-		Object result = this.getService(resultType.getName());
+		Object result = this.getService(cName);
 		return resultType.cast(result);
 	}
 

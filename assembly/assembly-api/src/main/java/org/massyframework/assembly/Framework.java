@@ -106,6 +106,15 @@ public interface Framework extends Assembly{
 	List<Assembly> getAssemblies(Specification<Assembly> spec);
 	
 	/**
+	 * 安装装配件
+	 * @param resource 装配件资源
+	 * @return {@link Assembly},已安装的装配件
+	 * @throws Exception 安装失败时抛出的例外
+	 */
+	Assembly installAssembly(AssemblyResource resource) throws Exception;
+	
+	
+	/**
 	 * 设置初始化参数<br>
 	 * 如果初始化参数已经存在，则设置将失败
 	 * @param key 初始化参数的键

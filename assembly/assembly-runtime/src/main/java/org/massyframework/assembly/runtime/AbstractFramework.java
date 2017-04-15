@@ -35,7 +35,7 @@ abstract class AbstractFramework extends AbstractAssembly
 	implements Framework{
 
 	private final DefaultAssemblyManagement assemblyManagement;
-	
+		
 	/**
 	 * 构造方法
 	 */
@@ -158,6 +158,16 @@ abstract class AbstractFramework extends AbstractAssembly
 	public List<Assembly> getAssemblies(Specification<Assembly> spec) {
 		return this.getAssemblyManagement().filterAll(spec);
 	}
+	
+
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.Framework#installAssembly(org.massyframework.assembly.AssemblyResource)
+	 */
+	@Override
+	public Assembly installAssembly(AssemblyResource resource) throws Exception {
+		AssemblyRegistration registration = this.assemblyManagement.installAndRegister(resource);
+		return registration.getAssembly();
+	}
 
 	/* (non-Javadoc)
 	 * @see org.massyframework.assembly.Framework#setInitParameter(java.lang.String, java.lang.String)
@@ -180,17 +190,6 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	FrameworkInitParams getFrameworkInitParams(){
 		return this.getHandlerRegistry().getHandler(FrameworkInitParams.class);
-	}
-	
-	/**
-	 * 安装装配件
-	 * @param resource 装配件资源
-	 * @return {@link AssemblyResource}
-	 * @throws Exception
-	 */
-	AssemblyRegistration installAssembly(AssemblyResource resource) throws Exception{
-		AssemblyRegistry registry = this.getHandlerRegistry().getHandler(AssemblyRegistry.class);
-		return registry.installAndRegister(resource);
 	}
 	
 	

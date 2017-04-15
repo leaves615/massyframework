@@ -54,7 +54,8 @@ public class CustomizeAssemblyContextManagement extends AssemblyContextManagemen
 		
 		AssemblyContext customize = (AssemblyContext)clazz.newInstance();
 		AssemblyContextWrapper<AssemblyContext> result = 
-				new AssemblyContextWrapper<AssemblyContext>(customize);
+				new CustomizeAssemblyContextWrapper(customize);
+		
 		return result;
 	}
 	

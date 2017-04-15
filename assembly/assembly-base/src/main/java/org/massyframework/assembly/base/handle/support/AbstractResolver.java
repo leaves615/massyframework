@@ -13,11 +13,11 @@ import java.util.Map;
 
 import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.ExportServiceRepository;
+import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.ServiceNotFoundException;
 import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
 import org.massyframework.assembly.base.handle.DependencyServiceResource;
 import org.massyframework.assembly.base.handle.DependencyServiceResourceHandler;
-import org.massyframework.assembly.base.handle.ExportServiceRepositoryReference;
 import org.massyframework.assembly.base.handle.ExportServiceResource;
 import org.massyframework.assembly.base.handle.ExportServiceResourceHandler;
 import org.massyframework.assembly.base.handle.ResolveHandler;
@@ -69,16 +69,16 @@ public abstract class AbstractResolver extends AbstractHandler implements Resolv
 	 * 设置服务容器
 	 * @param containerName 容器名称 
 	 */
-	protected final void setContainer(String containerName) throws ServiceNotFoundException{
+	protected final void setAssemblyContextHandler(String contextHandlerName) throws ServiceNotFoundException{
 		ExportServiceRepository repository =
 				ExportServiceRepositoryReference.adaptFrom(this.getAssembly());
 		AssemblyContextHandler handler = repository.findService(AssemblyContextHandler.class, 
-				"(" + Constants.SERVICE_NAME + "=" + containerName + ")");
+				"(" + Constants.SERVICE_NAME + "=" + contextHandlerName + ")");
 		if (handler != null){
 			this.getHandlerRegistry().register(handler);
 		}else{
 			throw new ServiceNotFoundException("service not found: serviceType=" + AssemblyContextHandler.class 
-					+ "," + Constants.SERVICE_CNAME + "=" + containerName + ".");
+					+ "," + Constants.SERVICE_CNAME + "=" + contextHandlerName + ".");
 		}
 	}
 	

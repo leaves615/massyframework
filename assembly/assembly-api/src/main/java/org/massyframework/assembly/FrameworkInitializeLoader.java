@@ -14,7 +14,7 @@ import java.util.List;
  * 为运行框架的启动运行提供FrameworkInitializer和AssemblyResource，<br>
  * 并能控制FrameworkInitializer和AssemblyResource的次序。
  */
-public interface FrameworkInitializeHandler {
+public interface FrameworkInitializeLoader {
 	
 	/**
 	 * 获取运行框架初始化器<br>

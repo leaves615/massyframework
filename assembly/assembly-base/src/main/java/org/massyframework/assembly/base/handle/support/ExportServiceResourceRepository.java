@@ -11,9 +11,17 @@ package org.massyframework.assembly.base.handle.support;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.massyframework.assembly.AssemblyContext;
 import org.massyframework.assembly.AssemblyStatus;
+import org.massyframework.assembly.Constants;
+import org.massyframework.assembly.ExportServiceRepository;
+import org.massyframework.assembly.ExportServiceRepositoryReference;
+import org.massyframework.assembly.base.ExportServiceRegistration;
+import org.massyframework.assembly.base.ExportServiceRegistry;
 import org.massyframework.assembly.base.handle.ExportServiceResource;
 import org.massyframework.assembly.base.handle.ExportServiceResourceHandler;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
@@ -21,15 +29,17 @@ import org.massyframework.assembly.util.Asserts;
 
 /**
  * 输出服务资源仓储，实现{@link ExportServiceResourceHandler}接口
- * @author huangkaihui
- *
  */
-public class ExportServiceResourceRepository extends AbstractHandler implements ExportServiceResourceHandler {
+public class ExportServiceResourceRepository extends AbstractHandler 
+	implements ExportServiceResourceHandler {
 
 	private List<ExportServiceResource> resources =
 			new ArrayList<ExportServiceResource>();
 	private volatile EventAdapter eventAdapter;
 	private volatile boolean resolved = false;
+	
+	private volatile List<ExportServiceRegistration<?>> registrations;
+	
 	/**
 	 * 
 	 */
@@ -119,9 +129,7 @@ public class ExportServiceResourceRepository extends AbstractHandler implements 
 	 * 解析完成
 	 */
 	protected void onResolved(){
-		
 	}
-	
 	
 	/**
 	 * 初始化
@@ -154,8 +162,67 @@ public class ExportServiceResourceRepository extends AbstractHandler implements 
 		}
 		super.destroy();
 	}
-
-
+	
+	/**
+	 * 输出服务
+	 */
+	protected synchronized void exportServices(){
+		if (this.registrations == null){
+			this.registrations = new ArrayList<ExportServiceRegistration<?>>();
+			AssemblyContext context =
+					this.getHandler(AssemblyContext.class);
+			ExportServiceRepository serviceRepository =
+					ExportServiceRepositoryReference.adaptFrom(this.getAssembly());
+			ExportServiceRegistry serviceRegistry =
+					serviceRepository.findService(ExportServiceRegistry.class);
+			
+			for (ExportServiceResource resource: this.resources){
+				String cName = resource.getCName();
+				Class<?>[] exportTypes = resource.getExportTypes();
+				Map<String, Object> props = this.getServiceProperties(resource);
+				
+				Object service = context.getService(cName);
+				registrations.add(
+						serviceRegistry.register(exportTypes, service, props));
+			}
+		}
+	}
+	
+	/**
+	 * 取消输出服务
+	 */
+	protected synchronized void unexportServices(){
+		if (this.registrations != null){
+			List<ExportServiceRegistration<?>> list = this.registrations;
+			this.registrations.clear();
+			
+			for (ExportServiceRegistration<?> registration: list){
+				registration.unregister();
+			}
+			list.clear();
+			this.registrations = null;
+		}
+	}
+	
+	/**
+	 * 获取服务属性
+	 * @param resource {@link ExportServiceResource}
+	 * @return {@link Map}
+	 */
+	protected Map<String, Object> getServiceProperties(ExportServiceResource resource){
+		if (resource instanceof SimpleExportServiceResource){
+			return ((SimpleExportServiceResource)resource).getServiceProperties();
+		}
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<String> keys = resource.getPropertyKeys();
+		for (String key: keys){
+			result.put(key, resource.getProperty(key));
+		}
+		
+		result.put(Constants.OBJECT_CLASS, resource.getExportTypes());
+		return result;
+	}
 
 	/**
 	 * 事件适配器
@@ -166,5 +233,25 @@ public class ExportServiceResourceRepository extends AbstractHandler implements 
 		public void onResolved() {
 			setResolved();
 		}
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.handle.support.LifecycleEventAdapter#onActivated()
+		 */
+		@Override
+		public void onActivated() {
+			super.onActivated();
+			exportServices();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.handle.support.LifecycleEventAdapter#onInactivating()
+		 */
+		@Override
+		public void onInactivating() {
+			unexportServices();
+			super.onInactivating();
+		}
+		
+		
 	}
 }

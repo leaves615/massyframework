@@ -15,7 +15,7 @@ import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
-import org.massyframework.assembly.base.handle.support.LifecycleManagement;
+import org.massyframework.assembly.base.handle.support.DefaultHandlerRegistry;
 import org.massyframework.assembly.base.support.InitParams;
 
 /**
@@ -44,8 +44,10 @@ public abstract class AbstractAssembly implements Assembly {
 		this.init();
 	}
 	
+	/**
+	 * 
+	 */
 	protected void init(){
-		this.handlerRegistry.register(new LifecycleManagement());
 	}
 		
 	/**
@@ -170,7 +172,7 @@ public abstract class AbstractAssembly implements Assembly {
 	@Override
 	public boolean isWorking() {
 		AssemblyStatus status = this.getAssemblyStatus();
-		return status != AssemblyStatus.WORKING;
+		return status == AssemblyStatus.WORKING;
 	}
 
 	/**

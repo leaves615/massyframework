@@ -13,6 +13,7 @@ import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
 import org.massyframework.assembly.base.handle.RegisterableHandler;
+import org.massyframework.assembly.base.handle.support.DefaultConfigFile;
 import org.massyframework.assembly.runtime.resolve.DefaultXmlResolver;
 import org.massyframework.assembly.runtime.service.DefaultLoggerReference;
 import org.massyframework.assembly.util.Asserts;
@@ -85,6 +86,10 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 		//类加载器引用
 		result.initAdaptObject(
 				new DefaultClassLoaderReference(resource.getClassLoader()));
+		
+		DefaultConfigFile configFile =
+				new DefaultConfigFile(resource);
+		result.getHandlerRegistry().register(configFile);
 		
 		return result;
 	}

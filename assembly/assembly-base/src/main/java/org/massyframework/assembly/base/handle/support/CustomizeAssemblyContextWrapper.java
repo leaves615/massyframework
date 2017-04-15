@@ -11,19 +11,18 @@ package org.massyframework.assembly.base.handle.support;
 import java.util.Map;
 
 import org.massyframework.assembly.AssemblyContext;
-import org.massyframework.assembly.CustmizeAssemblyContext;
 import org.massyframework.assembly.InjectCallback;
 import org.massyframework.assembly.base.handle.ServiceInjectHandler;
 
 /**
  * 自定义装配件上下文封装器
  */
-final class CustomizeAssemblyContextWrapper extends AssemblyContextWrapper<CustmizeAssemblyContext> {
+final class CustomizeAssemblyContextWrapper extends AssemblyContextWrapper<AssemblyContext> {
 
 	/**
 	 * @param context
 	 */
-	public CustomizeAssemblyContextWrapper(CustmizeAssemblyContext context) {
+	public CustomizeAssemblyContextWrapper(AssemblyContext context) {
 		super(context);
 	}
 

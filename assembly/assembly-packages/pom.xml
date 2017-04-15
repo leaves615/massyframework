@@ -1,38 +1,51 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.massyframework.assembly</groupId>
-    <artifactId>assembly</artifactId>
-    <version>1.0.0</version>
-  </parent>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.massyframework.assembly</groupId>
+		<artifactId>assembly</artifactId>
+		<version>1.0.0</version>
+	</parent>
 
-  <artifactId>assembly-packages</artifactId>
-  <name>assembly-packages</name>
-  <description>
+	<artifactId>assembly-packages</artifactId>
+	<name>assembly-packages</name>
+	<description>
   提供assembly代码进行打包，使用独立的ClassLoader加载assembly-base, assembly-runtime,并增加程序的隔离性
   </description>
-  <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.massyframework.assembly</groupId>
-    	<artifactId>assembly-api</artifactId>
-    	<version>${project.version}</version>
-    </dependency>
-  </dependencies>
-  
-  <build>
-		<plugins>			
+	<url>http://maven.apache.org</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.massyframework.assembly</groupId>
+			<artifactId>assembly-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- springframework -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${springframework.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -56,6 +69,11 @@
 								<artifactItem>
 									<groupId>org.massyframework.assembly</groupId>
 									<artifactId>assembly-runtime</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.assembly</groupId>
+									<artifactId>assembly-spring4</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
 							</artifactItems>

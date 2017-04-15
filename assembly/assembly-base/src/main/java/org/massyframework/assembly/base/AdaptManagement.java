@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.massyframework.assembly.ExportServiceRepository;
+import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.ObjectReference;
-import org.massyframework.assembly.base.handle.ExportServiceRepositoryReference;
 import org.massyframework.assembly.util.Asserts;
 
 /**

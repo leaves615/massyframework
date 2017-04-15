@@ -6,7 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.runtime.resolve;
+package org.massyframework.assembly.base.handle.support;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import org.massyframework.assembly.util.Asserts;
 /**
  * 简单实现的输出服务资源
  */
-final class SimpleExportServiceResource implements ExportServiceResource {
+public final class SimpleExportServiceResource implements ExportServiceResource {
 
 	private Map<String, Object> props;
 	
@@ -69,4 +69,7 @@ final class SimpleExportServiceResource implements ExportServiceResource {
 		return new ArrayList<String>(this.props.keySet());
 	}
 
+	Map<String, Object> getServiceProperties(){
+		return props;
+	}
 }

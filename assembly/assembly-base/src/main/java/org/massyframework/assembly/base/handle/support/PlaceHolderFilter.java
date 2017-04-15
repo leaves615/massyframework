@@ -21,10 +21,10 @@ import javax.servlet.ServletResponse;
 
 import org.massyframework.assembly.ExportServiceReference;
 import org.massyframework.assembly.ExportServiceRepository;
+import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.ExportServiceTracker;
 import org.massyframework.assembly.ExportServiceTrackerCustomizer;
 import org.massyframework.assembly.Framework;
-import org.massyframework.assembly.base.handle.ExportServiceRepositoryReference;
 
 
 /**

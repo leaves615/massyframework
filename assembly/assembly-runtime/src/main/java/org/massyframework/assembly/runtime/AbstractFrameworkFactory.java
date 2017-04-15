@@ -14,7 +14,7 @@ import java.util.Map;
 import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.Framework;
 import org.massyframework.assembly.FrameworkFactory;
-import org.massyframework.assembly.FrameworkInitializeHandler;
+import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.util.Asserts;
@@ -34,12 +34,12 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.FrameworkFactory#createFramework(java.util.Map, org.massyframework.assembly.FrameworkInitializeHandler)
+	 * @see org.massyframework.assembly.FrameworkFactory#createFramework(java.util.Map, org.massyframework.assembly.FrameworkInitializeLoader)
 	 */
 	@Override
-	public Framework createFramework(Map<String, String> configuration, FrameworkInitializeHandler initializeHandler)
+	public Framework createFramework(Map<String, String> configuration, FrameworkInitializeLoader initializeLoader)
 			throws Exception {
-		Asserts.notNull(initializeHandler, "initializeHandler cannot be null.");
+		Asserts.notNull(initializeLoader, "initializeLoader cannot be null.");
 		
 		//初始化Framework
 		AbstractFramework result = this.doCreateFramework();
@@ -53,9 +53,9 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 		
 		//设置参数
 		this.setInitParameters(result, configuration, logger);
-		this.doStart(result, initializeHandler, logger);
+		this.doStart(result, initializeLoader, logger);
 				
-		this.installAssemblies(result, initializeHandler, logger);
+		this.installAssemblies(result, initializeLoader, logger);
 		
 		result.start();
 		if (logger != null){
@@ -72,7 +72,7 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 	}
 	
 	protected List<FrameworkInitializer> loadFrameworkInitialziers(
-			FrameworkInitializeHandler initializeHandler){
+			FrameworkInitializeLoader initializeHandler){
 		List<FrameworkInitializer> result =
 			initializeHandler.getFrameworkInitializer();
 		
@@ -115,11 +115,13 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 	/**
 	 * 执行初始化
 	 * @param framework
-	 * @param initializeHandler
+	 * @param initializeLoader
 	 * @param logger
 	 */
-	protected void doStart(AbstractFramework framework, FrameworkInitializeHandler initializeHandler, Logger logger){
-		List<FrameworkInitializer> initializers = this.loadFrameworkInitialziers(initializeHandler);
+	protected void doStart(AbstractFramework framework, FrameworkInitializeLoader initializeLoader, Logger logger){
+		List<FrameworkInitializer> initializers = this.loadFrameworkInitialziers(initializeLoader);
+		initializers.add(0, new Initailizer());
+		
 		for (FrameworkInitializer initializer: initializers){
 			try{
 				initializer.onStartup(framework);
@@ -166,7 +168,7 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 	 * @throws Exception
 	 */
 	protected void installAssemblies(AbstractFramework framework, 
-			FrameworkInitializeHandler initializeHandler, Logger logger) throws Exception{
+			FrameworkInitializeLoader initializeHandler, Logger logger) throws Exception{
 		List<AssemblyResource> resources = initializeHandler.getAssemblyResources();
 		for (AssemblyResource resource: resources){
 			try{

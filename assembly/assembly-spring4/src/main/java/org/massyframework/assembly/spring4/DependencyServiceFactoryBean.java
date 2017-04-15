@@ -12,8 +12,6 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 /**
  * 依赖服务工厂Bean
- * @author huangkaihui
- *
  */
 final class DependencyServiceFactoryBean<T> extends AbstractFactoryBean<T> {
 	

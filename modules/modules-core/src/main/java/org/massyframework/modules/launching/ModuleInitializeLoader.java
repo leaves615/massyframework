@@ -20,10 +20,10 @@ import org.slf4j.LoggerFactory;
 /**
  * 缺省的启动处理加载器
  */
-final class ModuleInitializeHandler extends  AbstractFrameworkInitializeHandler {
+final class ModuleInitializeLoader extends  AbstractFrameworkInitializeLoader {
 	
 	private final Logger logger = 
-			LoggerFactory.getLogger(ModuleInitializeHandler.class);
+			LoggerFactory.getLogger(ModuleInitializeLoader.class);
 	private ModuleLoader moduleLoader;
 
 	/**
@@ -31,7 +31,7 @@ final class ModuleInitializeHandler extends  AbstractFrameworkInitializeHandler 
 	 * @param handlers 前置的启动处理器
 	 * @param moduleLoader 模块加载器
 	 */
-	public ModuleInitializeHandler(List<FrameworkInitializer> initializers, ModuleLoader moduleLoader) {
+	public ModuleInitializeLoader(List<FrameworkInitializer> initializers, ModuleLoader moduleLoader) {
 		super(initializers);
 		this.moduleLoader = moduleLoader;
 	}

@@ -6,7 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.packages;
+package org.massyframework.modules.launching;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -22,7 +22,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.massyframework.assembly.AssemblyResource;
-import org.massyframework.assembly.FrameworkInitializeHandler;
+import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.spec.JarEntrySpecification;
 import org.massyframework.assembly.util.ClassLoaderUtils;
@@ -30,11 +30,9 @@ import org.massyframework.assembly.util.JarUtils;
 import org.massyframework.assembly.util.ServiceLoaderUtils;
 
 /**
- * 
- * @author huangkaihui
- *
+ * 实现{@link FrameworkInitializeLoader}的抽象类
  */
-public abstract class AbstractFrameworkInitializeHandler implements FrameworkInitializeHandler {
+public abstract class AbstractFrameworkInitializeLoader implements FrameworkInitializeLoader {
 
 	private static final String PATH = "META-INF/assembly";
 	private static final String EXTENSION = ".xml";
@@ -45,7 +43,7 @@ public abstract class AbstractFrameworkInitializeHandler implements FrameworkIni
 	 * 
 	 * @param initializers
 	 */
-	public AbstractFrameworkInitializeHandler(List<FrameworkInitializer> initializers) {
+	public AbstractFrameworkInitializeLoader(List<FrameworkInitializer> initializers) {
 		this.initializers = initializers;
 	}
 

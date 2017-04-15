@@ -6,7 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.packages;
+package org.massyframework.assembly.tester;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +14,14 @@ import java.util.List;
 import org.massyframework.assembly.FrameworkInitializer;
 
 /**
- * @author huangkaihui
- *
+ * 独立模式下的运行框架初始化处理器
  */
-public class StandaloneFrameworkInitializeHandler extends AbstractFrameworkInitializeHandler {
+public class StandaloneFrameworkInitializeLoader extends AbstractFrameworkInitializeLoader {
 
 	/**
 	 * @param initializers
 	 */
-	public StandaloneFrameworkInitializeHandler(List<FrameworkInitializer> initializers) {
+	public StandaloneFrameworkInitializeLoader(List<FrameworkInitializer> initializers) {
 		super(initializers);
 	}
 

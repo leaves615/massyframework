@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://www.massyframework.org/schema/assembly"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.massyframework.org/schema/assembly
+		http://www.massyframework.org/schema/assembly/assembly.xsd ">
+		
+	<symbolicName>test.customize.assemblyContext</symbolicName>
+	<name>测试-自定义装配件上下文</name>
+	<description>为系统提供装配件所需的各种基础设施，包括初始化参数、服务、依赖管理等</description>
+	<vendor>smarabbit</vendor>
+	<assemblyContext>customize</assemblyContext>
+	
+	<init-params>
+		<parameter key="assemblyContext.className"  
+			value="org.massyframework.assembly.tester.support.MyAssemblyContext" />
+	</init-params>
+	
+	<!-- 依赖服务 -->
+	<dependency-service cName="executor">
+		<class>java.util.concurrent.ExecutorService</class>
+	</dependency-service>
+</assembly>

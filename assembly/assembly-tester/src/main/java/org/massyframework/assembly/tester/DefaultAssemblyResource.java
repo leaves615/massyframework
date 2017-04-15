@@ -6,7 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.packages;
+package org.massyframework.assembly.tester;
 
 import java.net.URL;
 
@@ -15,7 +15,7 @@ import org.massyframework.assembly.util.Asserts;
 
 /**
  * 
- * @author huangkaihui
+ * 缺省的装配件资源
  *
  */
 public final class DefaultAssemblyResource implements AssemblyResource {
