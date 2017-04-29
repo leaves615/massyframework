@@ -19,4 +19,8 @@
 	<dependency-service cName="executor">
 		<class>java.util.concurrent.ExecutorService</class>
 	</dependency-service>
+	
+	<dependency-service cName="speak">
+		<class>org.massyframework.assembly.tester.support.Speak</class>
+	</dependency-service>
 </assembly>

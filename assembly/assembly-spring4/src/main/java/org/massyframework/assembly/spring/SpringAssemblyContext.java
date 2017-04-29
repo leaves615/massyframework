@@ -1,12 +1,22 @@
 /**
 * @Copyright: 2017 smarabbit studio. All rights reserved.
-*  
+* 
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*   
 * @作   者： 黄开晖<kaimohkh@gmail.com> 
 * @日   期:  2017年4月11日
-*
-* 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.spring4;
+package org.massyframework.assembly.spring;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -71,6 +81,7 @@ public class SpringAssemblyContext extends AbstractXmlApplicationContext
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		this.prapareLoadBeanDefinitions(beanFactory);
+		super.loadBeanDefinitions(beanFactory);
 		this.postLoadBeanDefintions(beanFactory);
 	}
 	
@@ -194,11 +205,11 @@ public class SpringAssemblyContext extends AbstractXmlApplicationContext
 	 * @see org.massyframework.assembly.AssemblyContext#getService(java.lang.String)
 	 */
 	@Override
-	public Object getService(String cid) throws ServiceNotFoundException {
+	public Object getService(String cName) throws ServiceNotFoundException {
 		try{
-			return this.getBean(cid);
+			return this.getBean(cName);
 		}catch(BeansException e){
-			throw new ServiceNotFoundException(cid, e);
+			throw new ServiceNotFoundException(cName, e);
 		}
 	}
 
@@ -245,8 +256,8 @@ public class SpringAssemblyContext extends AbstractXmlApplicationContext
 					new HashMap<DependencyServiceResource, Object>();
 			for (DependencyServiceResource resource: resources){
 				String cName = resource.getCName();
-				services.put(resource, 
-						serviceMap.get(cName));
+				Object service = serviceMap.get(cName);
+				services.put(resource, service);
 			}
 			inject(services, beanFactory);
 			doLoadBeanDefinitions(beanFactory);

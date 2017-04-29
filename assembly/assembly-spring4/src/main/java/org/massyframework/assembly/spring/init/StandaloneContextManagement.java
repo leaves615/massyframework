@@ -6,13 +6,13 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.spring4.init;
+package org.massyframework.assembly.spring.init;
 
 import org.massyframework.assembly.AssemblyContext;
 import org.massyframework.assembly.ClassLoaderReference;
 import org.massyframework.assembly.base.handle.HandlerRegistration;
 import org.massyframework.assembly.base.handle.support.AssemblyContextManagement;
-import org.massyframework.assembly.spring4.SpringAssemblyContext;
+import org.massyframework.assembly.spring.SpringAssemblyContext;
 import org.springframework.web.context.ContextLoader;
 
 /**
@@ -104,6 +104,7 @@ public final class StandaloneContextManagement extends AssemblyContextManagement
 	 * @return
 	 */
 	protected SpringAssemblyContext createApplicationContext() {
-		return new SpringAssemblyContext();
+		SpringAssemblyContext result = new SpringAssemblyContext();
+		return result;
 	}
 }

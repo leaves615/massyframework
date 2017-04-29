@@ -13,5 +13,8 @@
 	
 	<!-- 注解有效 -->
 	<context:annotation-config/>
-								
+					
+	<bean id="reader"
+		class="org.massyframework.assembly.tester.support.Reader" >
+	</bean>			
 </beans>

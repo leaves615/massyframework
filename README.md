@@ -1,4 +1,4 @@
-# MassyFramework
+# Massy Framework
 Massy Framwork提供模块化开发的开发视图，它重点关注软件开发期质量，为软件模块的组织提供有利于可扩展性、可重用性、易测试性等特性。<br>
 随着软件规模的扩大，如果您的软件存在以下迫在眉睫需要解决的问题，可以考虑使用Massy Framework作为软件研发管理的辅助工具:
 - 测试成本高<br>
