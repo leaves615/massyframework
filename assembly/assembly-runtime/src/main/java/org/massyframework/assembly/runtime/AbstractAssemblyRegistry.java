@@ -24,6 +24,8 @@ import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.NameExistsException;
 import org.massyframework.assembly.base.ExportServiceRegistry;
+import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
+import org.massyframework.assembly.base.handle.support.LifecycleEventAdapter;
 import org.massyframework.assembly.spec.Specification;
 import org.massyframework.assembly.util.Asserts;
 import org.slf4j.Logger;
@@ -33,7 +35,7 @@ import org.slf4j.Logger;
  */
 abstract class AbstractAssemblyRegistry implements AssemblyRegistry {
 
-	private final Assembly assembly;
+	private final AbstractFramework framework;
 	private final ExportServiceRepository serviceRepository;
 	private List<AssemblyListener> listeners =
 			new CopyOnWriteArrayList<AssemblyListener>();
@@ -49,15 +51,18 @@ abstract class AbstractAssemblyRegistry implements AssemblyRegistry {
 	 * @param framework
 	 * @param serviceRegistry
 	 */
-	public AbstractAssemblyRegistry(Assembly assembly, ExportServiceRepository serviceRepository) {
-		Asserts.notNull(assembly, "assembly cannot be null.");
+	public AbstractAssemblyRegistry(AbstractFramework framework, ExportServiceRepository serviceRepository) {
+		Asserts.notNull(framework, "framework cannot be null.");
 		Asserts.notNull(serviceRepository, "serviceRepository cannot be null.");
 		
-		this.assembly = assembly;
-		RegistrationImpl registration = new RegistrationImpl(assembly);
-		String symbolicName = assembly.getSymbolicName();
+		this.framework = framework;
+		LifecycleProcessHandler handler =this.framework.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
+		handler.addListener(new EventHandler());
+		
+		RegistrationImpl registration = new RegistrationImpl(framework);
+		String symbolicName = framework.getSymbolicName();
 		this.assemblyMap.put(symbolicName, registration);
-		this.idMap.put(assembly.getAssemblyId(), registration);
+		this.idMap.put(framework.getAssemblyId(), registration);
 		this.serviceRepository = serviceRepository;
 	}
 	
@@ -147,19 +152,23 @@ abstract class AbstractAssemblyRegistry implements AssemblyRegistry {
 		result.init();
 		
 		String symbolicName = result.getAssembly().getSymbolicName();
-		if (this.assemblyMap.put(symbolicName, result) != null){
-			throw new NameExistsException(symbolicName);
-		}
-		this.idMap.put(result.getAssembly().getAssemblyId(), result);
+		if (symbolicName != null){
+			if (this.assemblyMap.putIfAbsent(symbolicName, result) != null){
+				throw new NameExistsException(symbolicName);
+			}
+			this.idMap.put(result.getAssembly().getAssemblyId(), result);
 
-		Logger logger = LoggerReference.adaptFrom(assembly);
-		if (logger != null){
-			logger.debug("install assembly success: assembly=" + result.getAssembly());
+			Logger logger = LoggerReference.adaptFrom(framework);
+			if (logger != null){
+				logger.debug("install assembly success: assembly=" + result.getAssembly());
+			}
+			result.onRegistComplete();
+			
+			this.notifyInstalled(result.getAssembly());
+			return result;
 		}
-		result.onRegistComplete();
 		
-		this.notifyRegisted(result.getAssembly());
-		return result;
+		throw new RuntimeException("load assembly failed.");
 	}
 
 
@@ -174,7 +183,7 @@ abstract class AbstractAssemblyRegistry implements AssemblyRegistry {
 			this.assemblyMap.remove(registration.getAssembly().getSymbolicName());
 			this.idMap.remove(registration.getAssembly().getAssemblyId());
 			
-			Logger logger = LoggerReference.adaptFrom(this.assembly);
+			Logger logger = LoggerReference.adaptFrom(this.framework);
 			if (logger != null){
 				if (logger.isDebugEnabled()){
 					logger.debug("uninstall assembly success: assembly=" + registration.getAssembly() + ".");
@@ -205,7 +214,7 @@ abstract class AbstractAssemblyRegistry implements AssemblyRegistry {
 	 * 通知装配件已注册
 	 * @param assembly
 	 */
-	protected void notifyRegisted(Assembly assembly){
+	protected void notifyInstalled(Assembly assembly){
 		AssemblyEvent event =
 				new AssemblyEvent(assembly, AssemblyEvent.INSTALLED);
 		ExecutorService executor =
@@ -217,10 +226,35 @@ abstract class AbstractAssemblyRegistry implements AssemblyRegistry {
 		}
 	}
 	
+	/**
+	 * 通知装配件已激活(进入工作状态)
+	 * @param assembly
+	 */
+	protected void notifyActived(Assembly assembly){
+		AssemblyEvent event =
+				new AssemblyEvent(assembly, AssemblyEvent.ACTIVATED);
+		ExecutorService executor =
+				this.getExecutorService();
+		if (executor != null){
+			executor.execute(new Task(event));
+		}else{
+			new Thread(new Task(event)).start();
+		}
+	}
 	
+	/**
+	 * 通知装配件钝化(退出工作状态)
+	 * @param assembly
+	 */
+	protected void notifyInactivating(Assembly assembly){
+		AssemblyEvent event =
+				new AssemblyEvent(assembly, AssemblyEvent.INACTIVATING);
+		this.notifyAssesemblyEvent(event);
+	}
 	
+
 	private void notifyAssesemblyEvent(AssemblyEvent event){
-		Logger logger = LoggerReference.adaptFrom(this.assembly);
+		Logger logger = LoggerReference.adaptFrom(this.framework);
 		for (AssemblyListener listener: this.listeners){
 			try{
 				listener.onChanged(event);
@@ -288,6 +322,26 @@ abstract class AbstractAssemblyRegistry implements AssemblyRegistry {
 			return this.assembly;
 		}
 		
+	}
+	
+	private class EventHandler extends LifecycleEventAdapter {
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.handle.support.LifecycleEventAdapter#onActivated()
+		 */
+		@Override
+		public void onActivated() {
+			notifyActived(framework);
+		}
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.handle.support.LifecycleEventAdapter#onInactivating()
+		 */
+		@Override
+		public void onInactivating() {
+			notifyInactivating(framework);
+			super.onInactivating();
+		}
 	}
 	
 	/**

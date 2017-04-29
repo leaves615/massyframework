@@ -27,6 +27,7 @@ import org.massyframework.assembly.ServiceEvent;
 import org.massyframework.assembly.base.handle.DependencyServiceResource;
 import org.massyframework.assembly.base.handle.DependencyServiceResourceMatchHandler;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
+import org.massyframework.assembly.base.util.ExportServiceUtils;
 import org.massyframework.assembly.util.Asserts;
 import org.slf4j.Logger;
 
@@ -257,9 +258,20 @@ public class DependencyServiceResourceMatcher extends DependencyServiceResourceR
 			for (Entry<DependencyServiceResource, Filter> entry: this.map.entrySet()){
 				DependencyServiceResource resource = entry.getKey();
 				if (!resouceIsMatched(resource)){
-					if (entry.getValue().match(reference)){
-						if (doMatch(resource, reference)){
-							return entry.getKey();
+					Class<?>[] classes = ExportServiceUtils.getObjectClass(reference);
+					Class<?> requiredType = entry.getKey().getRequiredType();
+					boolean found = false;
+					for (Class<?> clazz: classes){
+						if (clazz == requiredType){
+							found = true;
+							break;
+						}
+					}
+					if (found){
+						if (entry.getValue().match(reference)){
+							if (doMatch(resource, reference)){
+								return entry.getKey();
+							}
 						}
 					}
 				}

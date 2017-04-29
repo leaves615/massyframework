@@ -48,6 +48,16 @@ final class FrameworkInitParams extends AbstractHandler implements InitParams {
 	}
 	
 	/**
+	 * 移除事件监听器
+	 * @param listener {@link InitParameterListener}
+	 */
+	public synchronized void removeListener(InitParameterListener listener){
+		if (listener != null){
+			this.listeners.remove(listener);
+		}
+	}
+	
+	/**
 	 * 当不能在增加，清除所有事件监听器
 	 */
 	public synchronized void cleanAll(){

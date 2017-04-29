@@ -11,6 +11,8 @@ package org.massyframework.assembly.base.handle.support;
 import java.util.Map;
 
 import org.massyframework.assembly.AssemblyContext;
+import org.massyframework.assembly.ExportServiceRepository;
+import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.InjectCallback;
 import org.massyframework.assembly.base.handle.ServiceInjectHandler;
 
@@ -55,6 +57,11 @@ final class CustomizeAssemblyContextWrapper extends AssemblyContextWrapper<Assem
 		public void doInject(Map<String, Object> serviceMap) throws Exception {
 			AssemblyContext context = getReference();
 			if (context instanceof InjectCallback){
+				ExportServiceRepository serviceRepository =
+						ExportServiceRepositoryReference.adaptFrom(getAssembly());
+				if (serviceRepository != null){
+					serviceMap.put(ExportServiceRepository.class.getName(), serviceRepository);
+				}
 				((InjectCallback)context).doInject(serviceMap);
 			}
 		}

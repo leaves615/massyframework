@@ -147,6 +147,10 @@ public final class LifecycleManagement extends AbstractHandler
 			}
 			
 			this.reference.set(AssemblyStatus.PREPARE);
+			Logger logger = this.getLogger();
+			if (logger != null){
+				logger.debug("assembly is resolved.");
+			}
 			this.publishResolvedEvent();
 		}
 	}
@@ -160,6 +164,10 @@ public final class LifecycleManagement extends AbstractHandler
 		if (this.reference.get() == AssemblyStatus.PREPARE){
 			if (this.isPrepare()){
 				this.reference.set(AssemblyStatus.READY);
+				Logger logger = this.getLogger();
+				if (logger != null){
+					logger.debug("assembly is readied.");
+				}
 				this.publishReadiedEvent();
 				return true;
 			}
@@ -199,6 +207,10 @@ public final class LifecycleManagement extends AbstractHandler
 				}
 				
 				this.reference.set(AssemblyStatus.WORKING);
+				Logger logger = this.getLogger();
+				if (logger != null){
+					logger.debug("assembly is working.");
+				}
 				this.publishActivatedEvent();
 			}
 		}
@@ -214,6 +226,10 @@ public final class LifecycleManagement extends AbstractHandler
 			this.publishInactivatingEvent();
 						
 			this.reference.set(AssemblyStatus.READY);
+			Logger logger = this.getLogger();
+			if (logger != null){
+				logger.debug("assembly is readied.");
+			}
 			
 			List<ActivationHandler> handlers =
 					this.getHandlers(ActivationHandler.class);
@@ -221,7 +237,6 @@ public final class LifecycleManagement extends AbstractHandler
 				try{
 					actHandler.doStopped();
 				}catch(Exception e){
-					Logger logger = this.getLogger();
 					if (logger != null){
 						if (logger.isDebugEnabled()){
 							logger.debug(actHandler + " doStopped() failed.", e);
@@ -241,6 +256,10 @@ public final class LifecycleManagement extends AbstractHandler
 			if (!this.isPrepare()){
 				this.publishUnreadyingEvent();
 				this.reference.set(AssemblyStatus.PREPARE);
+				Logger logger = this.getLogger();
+				if (logger != null){
+					logger.debug("assembly is prepared.");
+				}
 			}
 		}
 	}

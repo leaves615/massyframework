@@ -47,6 +47,8 @@ final class ExportServiceRepositoryManagement  extends ExportServiceRegistryFact
 	public ExportServiceRepositoryManagement() {
 		this.listenerManagement = new ServiceListenerManagement();
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see org.massyframework.assembly.ServiceFactory#getService(org.massyframework.assembly.Assembly)
@@ -148,6 +150,22 @@ final class ExportServiceRepositoryManagement  extends ExportServiceRegistryFact
 		this.getServiceListenerManagement().removeListener(listener, assembly);
 	}
 	
+	boolean containsService(Class<?> serviceType){
+		if (serviceType == null) return false;
+		return this.managementMap.get(serviceType) != null;
+	}
+	
+	boolean containsService(String className){
+		if (className == null) return false;
+		for (Class<?> serviceType: this.managementMap.keySet()){
+			if (className.equals(serviceType.getName())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * 创建筛选器
 	 * @param filterString 筛选条件，可以为null
@@ -195,6 +213,23 @@ final class ExportServiceRepositoryManagement  extends ExportServiceRegistryFact
 	}
 	
 	/**
+	 * 按服务类型获取所有输出服务实例
+	 * @param serviceType 服务类型
+	 * @return {@link List}
+	 */
+	<S> List<S> getServices(Class<S> serviceType, Assembly assembly){
+		Asserts.notNull(serviceType, "serviceType cannot be null.");
+		
+		
+		ExportServiceRegistrationManagement management =
+				this.managementMap.get(serviceType);
+		if (management != null){
+			return management.getServices(assembly);
+		}
+		return new ArrayList<S>();
+	}
+	
+	/**
 	 * 使用输出服务引用获取多个服务实例
 	 * @param references 输出服务引用集合
 	 * @return {@link List}
@@ -218,7 +253,7 @@ final class ExportServiceRepositoryManagement  extends ExportServiceRegistryFact
 	 * @return {@link List}
 	 */
 	<S> List<ExportServiceReference<S>> getServiceReferences(Class<S> clazz, Filter filter) {
-		Asserts.notNull(clazz, "calzz cannot be null.");
+		Asserts.notNull(clazz, "clazz cannot be null.");
 		Asserts.notNull(filter, "filter cannot be null.");
 		
 		ExportServiceRegistrationManagement management =

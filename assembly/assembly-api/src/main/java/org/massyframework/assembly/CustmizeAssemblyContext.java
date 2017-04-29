@@ -128,4 +128,15 @@ public class CustmizeAssemblyContext implements AssemblyContext, AssemblyAware, 
 		}
 		this.init();
 	}
+	
+	/**
+	 * 添加服务
+	 * @param cName 名称
+	 * @param service 服务实例
+	 */
+	protected void addService(String cName, Object service){
+		Asserts.notNull(cName, "cName cannot be null.");
+		Asserts.notNull(service, "service cannot be null.");
+		this.serviceMap.putIfAbsent(cName, service);
+	}
 }

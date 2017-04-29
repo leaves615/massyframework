@@ -8,6 +8,7 @@
 */
 package org.massyframework.assembly;
 
+import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
@@ -20,24 +21,14 @@ import org.massyframework.assembly.spec.Specification;
 public interface Framework extends Assembly{
 	
 	/**
-	 * 添加装配件事件监听器
-	 * @param listener {@link AssemblyListener}事件监听器
+	 * 添加事件监听器， 目前本方法支持{@link FrameworkListener}，<br>
+	 * {@link AssemblyListener}和{@link InitParameterListener}三种事件监听器<br>
+	 * 其中注册的{@link InitParameterListener}在运行框架启动时被自动丢弃。
+	 * 
+	 * @param listener {@link EventListener}事件监听器
 	 */
-	void addListener(AssemblyListener listener);
-	
-	/**
-	 * 添加运行框架监听事件
-	 * @param listener {@link FrameworkListener} 运行框架监听器
-	 */
-	void addListener(FrameworkListener listener);
-	
-	/**
-	 * 添加初始化事件监听器
-	 * <br>当运行框架初始化完成后，注册的初始化参数监听器将被自动移除。
-	 * @param listener {@link InitParameterListener}
-	 */
-	void addListener(InitParameterListener listener);
-		
+	void addListener(EventListener listener);
+			
 	/**
 	 * 添加输出服务，供其他装配件使用<br>
 	 * @param exportTypes 输出服务的类型
@@ -129,14 +120,9 @@ public interface Framework extends Assembly{
 	boolean setInitParameter(String key, String value);
 	
 	/**
-	 * 移除运行框架监听器
-	 * @param listener {@link FrameworkListener} 运行框架监听器
+	 * 移除事件监听器
+	 * @param listener {@link EventListener} 运行框架监听器
 	 */
-	void removeListener(FrameworkListener listener);
+	void removeListener(EventListener listener);
 	
-	/**
-	 * 移除装配件事件监听器
-	 * @param listener
-	 */
-	void removeListener(AssemblyListener listener);
 }

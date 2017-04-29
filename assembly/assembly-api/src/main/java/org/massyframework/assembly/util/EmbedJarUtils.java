@@ -159,6 +159,8 @@ public final class EmbedJarUtils {
 			} finally {
 				IOUtils.closeStream(input);
 			}
+		}else{
+			System.err.println("cannot found src/test/resources/embed.classes.dirs file.");
 		}
 		
 		return result;

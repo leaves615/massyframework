@@ -223,35 +223,28 @@
 				<path name="com/sun/org/apache/xml/internal/resolver/tools" />
 				<path name="com/sun/org/apache/xml/internal/security" />
 				<path name="com/sun/org/apache/xml/internal/security/algorithms" />
-				<path
-					name="com/sun/org/apache/xml/internal/security/algorithms/implementations" />
+				<path name="com/sun/org/apache/xml/internal/security/algorithms/implementations" />
 				<path name="com/sun/org/apache/xml/internal/security/c14n" />
 				<path name="com/sun/org/apache/xml/internal/security/c14n/helper" />
-				<path
-					name="com/sun/org/apache/xml/internal/security/c14n/implementations" />
+				<path name="com/sun/org/apache/xml/internal/security/c14n/implementations" />
 				<path name="com/sun/org/apache/xml/internal/security/encryption" />
 				<path name="com/sun/org/apache/xml/internal/security/exceptions" />
 				<path name="com/sun/org/apache/xml/internal/security/keys" />
 				<path name="com/sun/org/apache/xml/internal/security/keys/content" />
-				<path
-					name="com/sun/org/apache/xml/internal/security/keys/content/keyvalues" />
+				<path name="com/sun/org/apache/xml/internal/security/keys/content/keyvalues" />
 				<path name="com/sun/org/apache/xml/internal/security/keys/content/x509" />
 				<path name="com/sun/org/apache/xml/internal/security/keys/keyresolver" />
-				<path
-					name="com/sun/org/apache/xml/internal/security/keys/keyresolver/implementations" />
+				<path name="com/sun/org/apache/xml/internal/security/keys/keyresolver/implementations" />
 				<path name="com/sun/org/apache/xml/internal/security/keys/storage" />
-				<path
-					name="com/sun/org/apache/xml/internal/security/keys/storage/implementations" />
+				<path name="com/sun/org/apache/xml/internal/security/keys/storage/implementations" />
 				<path name="com/sun/org/apache/xml/internal/security/signature" />
 				<path name="com/sun/org/apache/xml/internal/security/signature/reference" />
 				<path name="com/sun/org/apache/xml/internal/security/transforms" />
-				<path
-					name="com/sun/org/apache/xml/internal/security/transforms/implementations" />
+				<path name="com/sun/org/apache/xml/internal/security/transforms/implementations" />
 				<path name="com/sun/org/apache/xml/internal/security/transforms/params" />
 				<path name="com/sun/org/apache/xml/internal/security/utils" />
 				<path name="com/sun/org/apache/xml/internal/security/utils/resolver" />
-				<path
-					name="com/sun/org/apache/xml/internal/security/utils/resolver/implementations" />
+				<path name="com/sun/org/apache/xml/internal/security/utils/resolver/implementations" />
 				<path name="com/sun/org/apache/xml/internal/serialize" />
 				<path name="com/sun/org/apache/xml/internal/serializer" />
 				<path name="com/sun/org/apache/xml/internal/serializer/utils" />
@@ -537,6 +530,11 @@
 				<path name="javax/activity" />
 				<path name="javax/annotation" />
 				<path name="javax/annotation/processing" />
+				<path name="javax/crypto" />
+				<path name="javax/crypto/interfaces" />
+				<path name="javax/crypto/spec" />
+				<path name="javax/crypto/internal/interfaces" />
+				<path name="javax/crypto/internal/spec" />
 				<path name="javax/imageio" />
 				<path name="javax/imageio/event" />
 				<path name="javax/imageio/metadata" />

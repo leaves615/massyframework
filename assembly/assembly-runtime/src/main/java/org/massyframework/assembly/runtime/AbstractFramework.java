@@ -8,6 +8,7 @@
 */
 package org.massyframework.assembly.runtime;
 
+import java.util.EventListener;
 import java.util.List;
 import java.util.Map;
 
@@ -53,31 +54,26 @@ abstract class AbstractFramework extends AbstractAssembly
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.Framework#addListener(org.massyframework.assembly.AssemblyListener)
-	 */
-	@Override
-	public void addListener(AssemblyListener listener) {
-		this.getAssemblyManagement().addListener(listener);
-	}
 	
+		
 	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.Framework#addListener(org.massyframework.assembly.FrameworkListener)
+	 * @see org.massyframework.assembly.Framework#addListener(java.util.EventListener)
 	 */
 	@Override
-	public void addListener(FrameworkListener listener) {
+	public void addListener(EventListener listener) {
+		if (listener instanceof FrameworkListener){
+			this.frameworkLauncher.addListener((FrameworkListener)listener);
+		}
+		if (listener instanceof AssemblyListener){
+			this.assemblyManagement.addListener((AssemblyListener)listener);
+		}
+		if (listener instanceof InitParameterListener){
+			getFrameworkInitParams().addListener((InitParameterListener)listener);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.Framework#addListener(org.massyframework.assembly.InitParameterListener)
-	 */
-	@Override
-	public void addListener(InitParameterListener listener) {
-		FrameworkInitParams initParams =
-				this.getFrameworkInitParams();
-		initParams.addListener(listener);
-	}
-	
+
+
 	/* (non-Javadoc)
 	 * @see org.massyframework.assembly.Framework#addExportService(java.lang.Class[], java.lang.Object, java.util.Map)
 	 */
@@ -202,20 +198,20 @@ abstract class AbstractFramework extends AbstractAssembly
 		return this.getHandlerRegistry().getHandler(FrameworkInitParams.class);
 	}
 	
-	
 	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.Framework#removeListener(org.massyframework.assembly.AssemblyListener)
+	 * @see org.massyframework.assembly.Framework#removeListener(java.util.EventListener)
 	 */
 	@Override
-	public void removeListener(AssemblyListener listener) {
-		this.getAssemblyManagement().removeListener(listener);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.massyframework.assembly.Framework#removeListener(org.massyframework.assembly.FrameworkListener)
-	 */
-	@Override
-	public void removeListener(FrameworkListener listener) {
+	public void removeListener(EventListener listener) {
+		if (listener instanceof FrameworkListener){
+			this.frameworkLauncher.removeListener((FrameworkListener)listener);
+		}
+		if (listener instanceof AssemblyListener){
+			this.assemblyManagement.removeListener((AssemblyListener)listener);
+		}
+		if (listener instanceof InitParameterListener){
+			getFrameworkInitParams().removeListener((InitParameterListener)listener);
+		}
 	}
 
 	/* (non-Javadoc)

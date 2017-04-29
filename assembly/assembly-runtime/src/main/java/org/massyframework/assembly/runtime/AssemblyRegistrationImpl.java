@@ -14,6 +14,7 @@ import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
 import org.massyframework.assembly.base.handle.RegisterableHandler;
 import org.massyframework.assembly.base.handle.support.DefaultConfigFile;
+import org.massyframework.assembly.base.handle.support.LifecycleEventAdapter;
 import org.massyframework.assembly.runtime.resolve.DefaultXmlResolver;
 import org.massyframework.assembly.util.Asserts;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 	
 	private final AbstractAssemblyRegistry registry;
 	private DefaultAssembly assembly;
+	private EventHandler eventHandler;
 	
 	/**
 	 * 
@@ -62,6 +64,9 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 	@Override
 	public void unregister() {
 		this.registry.doUnregister(this);
+		LifecycleProcessHandler handler =
+				this.assembly.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
+		handler.removeListener(this.eventHandler);
 	}
 
 	/* (non-Javadoc)
@@ -88,6 +93,11 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 				new DefaultConfigFile(resource);
 		result.getHandlerRegistry().register(configFile);
 		
+		LifecycleProcessHandler handler =
+				result.getHandlerRegistry().getHandler(LifecycleProcessHandler.class);
+		this.eventHandler = new EventHandler();
+		handler.addListener(this.eventHandler);
+		
 		return result;
 	}
 	
@@ -108,6 +118,8 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 					logger.error("resolve assembly failed.", e);
 				}
 			}
+			
+			throw e;
 		}
 	}
 		
@@ -115,6 +127,23 @@ class AssemblyRegistrationImpl implements AssemblyRegistration {
 		return this.assembly.getExportServiceRepository().findService(serviceType);
 	}
 	
-	
-	
+	private class EventHandler extends LifecycleEventAdapter {
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.handle.support.LifecycleEventAdapter#onActivated()
+		 */
+		@Override
+		public void onActivated() {
+			registry.notifyActived(getAssembly());
+		}
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.handle.support.LifecycleEventAdapter#onInactivating()
+		 */
+		@Override
+		public void onInactivating() {
+			registry.notifyInactivating(getAssembly());
+			super.onInactivating();
+		}
+	}
 }

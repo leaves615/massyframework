@@ -15,7 +15,7 @@ import org.massyframework.assembly.CustmizeAssemblyContext;
  *
  */
 public class MyAssemblyContext extends CustmizeAssemblyContext {
-
+	
 	/**
 	 * 
 	 */
@@ -28,6 +28,10 @@ public class MyAssemblyContext extends CustmizeAssemblyContext {
 	@Override
 	protected void init() {
 		super.init();
+		
+		//创建Speak实例
+		DefaultSpeak speak = new DefaultSpeak();
+		this.addService("speak", speak);
 	}
 	
 	

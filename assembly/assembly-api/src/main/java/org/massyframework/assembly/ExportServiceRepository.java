@@ -33,6 +33,21 @@ public interface ExportServiceRepository {
 	void addListener(ExportServiceListener listener, String filterString);
 	
 	/**
+	 * 判断是否包含特定类型的服务
+	 * @param serviceType 服务类型
+	 * @return <code>true</code>包含，<code>false</code>不包含 
+	 */
+	boolean containsService(Class<?> serviceType);
+	
+	/**
+	 * 判断是否包含特定类型的服务
+	 * @param className 类型名称
+	 * @return <code>true</code>包含，<code>false</code>不包含
+	 */
+	boolean containsService(String className);
+	
+		
+	/**
 	 * 直接查找服务实例<br>
 	 * 本方法简化了服务查找方法，合并{@link #findService(Class)}和{@link #getService(ExportServiceReference)}两个方法的调用过程.
 	 * @param serviceType 服务类型
@@ -160,6 +175,12 @@ public interface ExportServiceRepository {
 	 * @throws ServiceNotFoundException 服务未找到则抛出例外
 	 */
 	<S> S getService(ExportServiceReference<S> reference) throws ServiceNotFoundException;
+	
+	/**
+	 * 按服务类型获取所有输出服务实例
+	 * @return {@link List},服务实例集合
+	 */
+	<S> List<S> getServices(Class<S> serviceType);
 	
 	/**
 	 * 根据服务引用获取服务实例

@@ -130,6 +130,7 @@ public class Initializer implements ServletContainerInitializer {
 	 */
 	protected Map<String, String> getConfiguration(ServletContext servletContext){
 		Map<String, String> result = new HashMap<String, String>();
+		result.put("environment","j2ee");
 		String absoluteClassesPath = servletContext.getRealPath("/WEB-INF/classes");
 		result.put(Constants.CLASSES_PATH, absoluteClassesPath);
 		

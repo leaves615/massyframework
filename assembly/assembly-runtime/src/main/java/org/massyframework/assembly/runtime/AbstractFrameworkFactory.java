@@ -52,6 +52,7 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 		if (logger != null){
 			logger.info("Massy Framework started.");
 		}
+		
 		return result;
 	}
 	

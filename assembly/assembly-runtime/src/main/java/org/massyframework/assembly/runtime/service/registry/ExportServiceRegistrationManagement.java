@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.ExportServiceReference;
 import org.massyframework.assembly.Filter;
 import org.massyframework.assembly.util.CollectionUtils;
@@ -68,6 +69,21 @@ final class ExportServiceRegistrationManagement {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * 获取所有服务实例
+	 * @param clazz 服务类型
+	 * @param assembly 查找服务的装配件
+	 * @return {@link List}
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> List<T> getServices(Assembly assembly){
+		List<T> result = new ArrayList<T>();
+		for (ExportServiceRegistrationImpl<?> registration: this.registrations){
+			result.add((T)registration.getService(assembly));
+		}
+		return result;
 	}
 		
 	/**

@@ -8,12 +8,16 @@
 */
 package org.massyframework.modules.launching;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.modules.Module;
@@ -21,6 +25,7 @@ import org.jboss.modules.ModuleIdentifier;
 import org.jboss.modules.ModuleLoader;
 import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.FrameworkInitializer;
+import org.massyframework.assembly.protocol.URLFactory;
 import org.massyframework.assembly.util.Asserts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +41,7 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 
 	private ModuleLoader moduleLoader;
 	private Logger logger;
+	private ServletContext servletContext;
 	
 	private Map<ModuleIdentifier, List<String>> assemblyResources =
 			new LinkedHashMap<ModuleIdentifier, List<String>>();
@@ -45,9 +51,12 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 	 */
 	public DefaultAssemblyResourceLoader(
 			List<FrameworkInitializer> initializers, 
-			Map<String, String> configuration, ModuleLoader moduleLoader) {
+			Map<String, String> configuration, 
+			ModuleLoader moduleLoader,
+			ServletContext servletContext) {
 		super(initializers);
 		Asserts.notNull(moduleLoader, "moduleLoader cannot be null.");
+		Asserts.notNull(servletContext, "servletContext cannot be null.");
 		
 		String assemblies = configuration == null ?
 				null :
@@ -58,6 +67,8 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 		
 		this.logger = LoggerFactory.getLogger(DefaultAssemblyResourceLoader.class);
 		this.moduleLoader = moduleLoader;
+		this.servletContext = servletContext;
+		
 		this.assemblyResources = this.parser(assemblies, extensions);
 		
 	}
@@ -91,10 +102,13 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 			ClassLoader loader = module.getClassLoader();
 			
 			if (resources == null){
-				AssemblyResource assemblyResource = this.createAssemblyResource(loader, DEFAULT_RESOURCE);
-				if (assemblyResource != null){
-					result.add(assemblyResource);
-				}		
+				Enumeration<URL> em = loader.getResources(DEFAULT_RESOURCE);
+				while (em.hasMoreElements()){
+					URL url = em.nextElement();
+					AssemblyResource resource =
+							new DefaultAssemblyResource(loader, url);
+					result.add(resource);
+				}
 			}else{
 				for (String resource: resources){
 					AssemblyResource assemblyResource = this.createAssemblyResource(loader, resource);
@@ -111,12 +125,28 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 		return result;
 	}
 
-	protected AssemblyResource createAssemblyResource(ClassLoader loader, String resource){
-		URL url = loader.getResource(resource);
-		if (url != null){
-			return new DefaultAssemblyResource(loader, url);
+	/**
+	 * 创建装配件资源，支持从classpath,servletpath和常用的http/file等协议加载配置资源
+	 * @param loader 类加载器
+	 * @param resource 资源
+	 * @return  {@link AssemblyResource}
+	 * @throws MalformedURLException 
+	 */
+	protected AssemblyResource createAssemblyResource(ClassLoader loader, String resource) throws MalformedURLException{
+		URL url = null;
+		if (URLFactory.hasClassPathPrefix(resource)){
+			url = URLFactory.createClassPathUrl(resource, loader);
+		}else{
+			if (URLFactory.hasServletPathPrefix(resource)){
+				url = URLFactory.createServletPathUrl(resource, servletContext);
+			}
 		}
-		return null;
+		
+		if (url == null){
+			url = new URL(resource);
+		}
+		
+		return new DefaultAssemblyResource(loader, url);
 	}
 
 	/**

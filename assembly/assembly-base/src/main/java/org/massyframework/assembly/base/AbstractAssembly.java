@@ -16,6 +16,7 @@ import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
 import org.massyframework.assembly.base.handle.support.DefaultHandlerRegistry;
+import org.massyframework.assembly.base.logging.DelegateLogger;
 import org.massyframework.assembly.base.support.InitParams;
 
 /**
@@ -50,7 +51,7 @@ public abstract class AbstractAssembly implements Assembly {
 				new AdaptManagement(this.getExportServiceRepository());
 		if (symbolicName != null){
 			this.adaptManagement.addAdaptObject(
-					new DefaultLoggerReference(this));
+					new DelegateLogger(this));
 		}
 		
 		this.handlerRegistry.register(new InformationSetting());
@@ -201,7 +202,7 @@ public abstract class AbstractAssembly implements Assembly {
 	 * @return {@link ExportServiceRepository}
 	 */
 	protected abstract ExportServiceRepository getExportServiceRepository();
-	
+		
 	/**
 	 * 基本信息设置
 	 */
@@ -223,7 +224,7 @@ public abstract class AbstractAssembly implements Assembly {
 				AbstractAssembly.this.symbolicName = symbolicName;
 				
 				initAdaptObject(
-						new DefaultLoggerReference(AbstractAssembly.this));
+						new DelegateLogger(AbstractAssembly.this));
 				return true;
 			}
 			return false;

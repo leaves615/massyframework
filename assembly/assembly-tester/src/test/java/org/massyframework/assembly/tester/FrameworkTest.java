@@ -13,6 +13,7 @@ import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.Framework;
+import org.massyframework.assembly.tester.support.Reader;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class FrameworkTest {
@@ -75,6 +76,10 @@ public class FrameworkTest {
 		ExecutorService executor = 
 				assembly.getAssmeblyContext().getService("executor", ExecutorService.class);
 		assertNotNull("未注入ExecutorService服务", executor);
+		
+		ExportServiceRepository serviceRepository =
+				assembly.getAssmeblyContext().getService(ExportServiceRepository.class);
+		assertNotNull("未注入ExportServiceRepository服务", serviceRepository);
 	}
 	
 	/**
@@ -108,5 +113,13 @@ public class FrameworkTest {
 		ExecutorService executor = 
 				assembly.getAssmeblyContext().getService("executor", ExecutorService.class);
 		assertNotNull("未注入ExecutorService服务", executor);
+		
+		Reader reader =
+				assembly.getAssmeblyContext().getService("reader", Reader.class);
+		reader.read("Hello Every Body.");
+		
+		ExportServiceRepository serviceRepository =
+				assembly.getAssmeblyContext().getService(ExportServiceRepository.class);
+		assertNotNull("未注入ExportServiceRepository服务", serviceRepository);
 	}
 }

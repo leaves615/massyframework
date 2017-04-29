@@ -6,7 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.spring4;
+package org.massyframework.assembly.spring;
 
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;

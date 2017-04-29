@@ -54,6 +54,22 @@ public class ExportServiceRepositoryImpl extends ExportServiceRegistryImpl imple
 		Filter filter = this.createFilter(filterString);
 		this.addListener(listener, filter);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.ExportServiceRepository#containsService(java.lang.Class)
+	 */
+	@Override
+	public boolean containsService(Class<?> serviceType) {
+		return this.factory.containsService(serviceType);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.ExportServiceRepository#containsService(java.lang.String)
+	 */
+	@Override
+	public boolean containsService(String className) {
+		return this.factory.containsService(className);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.massyframework.assembly.ExportServiceRepository#findService(java.lang.Class)
@@ -178,6 +194,14 @@ public class ExportServiceRepositoryImpl extends ExportServiceRegistryImpl imple
 	@Override
 	public <S> S getService(ExportServiceReference<S> reference) throws ServiceNotFoundException {
 		return this.factory.getService(reference, this.getAssembly());
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.massyframework.assembly.ExportServiceRepository#getServices(java.lang.Class)
+	 */
+	@Override
+	public <S> List<S> getServices(Class<S> serviceType) {
+		return this.factory.getServices(serviceType, this.getAssembly());
 	}
 
 	/* (non-Javadoc)

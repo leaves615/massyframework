@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.massyframework</groupId>
@@ -8,4 +9,8 @@
   Massy Framwork提供java的开发架构，使用装配件实现服务的聚合和隔离，为程序代码运行提供依赖资源。
   </description>
 
+  <modules>
+  	<module>assembly</module>
+  	<module>modules</module>
+  </modules>
 </project>

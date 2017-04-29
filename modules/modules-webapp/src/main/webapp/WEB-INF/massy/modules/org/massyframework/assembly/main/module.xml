@@ -13,8 +13,10 @@
         
         <module name="org.apache.commons.lang3" slot="3.5" />
         <module name="org.jboss.modules" slot="1.5.2" />
-        <module name="org.slf4j" slot="main" />
         
+        <module name="org.springframework" slot="4.3.5.RELEASE" />
+        
+        <module name="org.slf4j" slot="main" />
         <module name="sun.jdk" slot="1.8" />
         
 	</dependencies>

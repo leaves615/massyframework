@@ -6,7 +6,7 @@
 *
 * 注意：本内容仅限学习和传阅，禁止用于其他的商业目的
 */
-package org.massyframework.assembly.spring4.init;
+package org.massyframework.assembly.spring.init;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -21,7 +21,7 @@ import org.massyframework.assembly.ClassLoaderReference;
 import org.massyframework.assembly.base.handle.Handler;
 import org.massyframework.assembly.base.handle.HandlerRegistration;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
-import org.massyframework.assembly.spring4.SpringWebAssemblyContext;
+import org.massyframework.assembly.spring.SpringWebAssemblyContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;

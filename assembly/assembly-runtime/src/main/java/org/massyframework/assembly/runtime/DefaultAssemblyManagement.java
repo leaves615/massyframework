@@ -8,7 +8,6 @@
 */
 package org.massyframework.assembly.runtime;
 
-import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.ExportServiceRepository;
 
 /**
@@ -17,11 +16,11 @@ import org.massyframework.assembly.ExportServiceRepository;
 class DefaultAssemblyManagement extends AbstractAssemblyRegistry {
 
 	/**
-	 * @param assembly
+	 * @param framework
 	 * @param serviceRepository
 	 */
-	public DefaultAssemblyManagement(Assembly assembly, ExportServiceRepository serviceRepository) {
-		super(assembly, serviceRepository);
+	public DefaultAssemblyManagement(AbstractFramework framework, ExportServiceRepository serviceRepository) {
+		super(framework, serviceRepository);
 	}
 
 }

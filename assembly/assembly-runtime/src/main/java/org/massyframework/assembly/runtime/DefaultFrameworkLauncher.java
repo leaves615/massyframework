@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.massyframework.assembly.AssemblyResource;
+import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.FrameworkEvent;
 import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkInitializer;
@@ -260,13 +261,20 @@ class DefaultFrameworkLauncher implements FrameworkLauncher {
 	 * @return {@link List}
 	 */
 	protected List<FrameworkInitializer> loadFrameworkInitialziers() throws Exception{
+		String text = null;
+		if (this.configuration != null){
+			text = this.configuration.get(Constants.ENVIRONMENT);
+		}
+		boolean isJ2EE = Constants.ENVIRONMENT_J2EE.equals(text);
+		
 		List<FrameworkInitializer> result =
 				initializeLoader.getFrameworkInitializer();
 		
 		List<FrameworkInitializer> list =
 				ServiceLoaderUtils.loadServicesAtClassLoader(
 						FrameworkInitializer.class, this.getClass().getClassLoader());
-		result.addAll(0, list);
+		int index = isJ2EE ? 1 : 0; //J2EE模式下，让ServletContext先注册，所以让1
+		result.addAll(index, list);
 		return result;
 	}
 }

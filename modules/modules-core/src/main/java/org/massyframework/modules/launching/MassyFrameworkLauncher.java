@@ -100,6 +100,6 @@ public class MassyFrameworkLauncher implements Launcher {
 		handlers.add(new ServletContextInitializer(servletContext));
 		
 		return new DefaultAssemblyResourceLoader(
-				handlers, configuration, moduleLoader);
+				handlers, configuration, moduleLoader, servletContext);
 	}
 }

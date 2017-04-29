@@ -24,6 +24,21 @@ public interface Constants {
 	static final String ASSEMBLYCONTEXT_CLASSNAME = "assemblyContext.className";
 	
 	/**
+	 * 环境属性，取值仅为{@link #ENVIRONMENT_J2SE}和{@link #ENVIRONMENT_J2EE}
+	 */
+	static final String ENVIRONMENT = "environment";
+	
+	/**
+	 * J2SE运行环境
+	 */
+	static final String ENVIRONMENT_J2SE = "j2se";
+	
+	/**
+	 * J2EE运行环境
+	 */
+	static final String ENVIRONMENT_J2EE = "j2ee";
+	
+	/**
 	 * Filter是否支持异步模式
 	 */
 	static final String FILTER_ASYNCSUPPORTED = "filter.asyncSupported";
@@ -52,7 +67,7 @@ public interface Constants {
 	 * filter过滤的匹配路径,其值为字符串，用","分隔多个urlPattern
 	 */
 	static final String FILTER_URLPATTERNS = "filter.urlPatterns";
-	
+		
 	/**
 	 * ServletContextListener类型
 	 */

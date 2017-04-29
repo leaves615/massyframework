@@ -27,7 +27,7 @@ import org.massyframework.assembly.util.ServiceLoaderUtils;
  */
 abstract class AbstractFrameworkInitializeLoader implements FrameworkInitializeLoader {
 
-	private static final String PATH = "META-INF/assembly/assembly.xml";
+	private static final String PATH = "classpath:META-INF/assembly/assembly.xml";
 	
 	private List<FrameworkInitializer> initializers;
 	
