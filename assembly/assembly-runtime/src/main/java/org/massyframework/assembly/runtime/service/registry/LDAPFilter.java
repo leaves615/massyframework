@@ -13,8 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *   
-* @作   者： 黄开晖<kaimohkh@gmail.com> 
-* @日   期:  2017年4月10日
+* 学习改编来自于apache feilx的org.apache.felix.framework.FilterImpl类
 */
 package org.massyframework.assembly.runtime.service.registry;
 
