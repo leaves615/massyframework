@@ -31,7 +31,9 @@ import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.Framework;
 import org.massyframework.assembly.FrameworkInitializer;
+import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.base.handle.AssemblyContextHandler;
+import org.slf4j.Logger;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.util.IntrospectorCleanupListener;
 
@@ -70,7 +72,8 @@ public class Initializer implements FrameworkInitializer {
 			if ((text == null) || ("true".equalsIgnoreCase(text))){
 				ExportServiceRepository serviceRepository =
 					ExportServiceRepositoryReference.adaptFrom(framework);
-				this.prepareWebEnvironment(serviceRepository);
+				Logger logger = LoggerReference.adaptFrom(framework);
+				this.prepareWebEnvironment(serviceRepository, logger);
 			}
 		}
 	}
@@ -79,7 +82,7 @@ public class Initializer implements FrameworkInitializer {
 	 * 准备WEB运行环境
 	 * @param framework {@link Framework}
 	 */
-	protected void prepareWebEnvironment(ExportServiceRepository serviceRepository){
+	protected void prepareWebEnvironment(ExportServiceRepository serviceRepository, Logger logger){
 		ServletContext servletContext = 
 				serviceRepository.findService(ServletContext.class);
 		
@@ -95,6 +98,12 @@ public class Initializer implements FrameworkInitializer {
 				EnumSet.allOf(DispatcherType.class), false, "/*");
 		registration.setInitParameter("encoding", "UTF-8");
 		registration.setInitParameter("forceEncoding", "true");
+		
+		if (logger != null){
+			if (logger.isInfoEnabled()){
+				logger.info("add CharacterEncodingFilter in ServletContext: class=" + CharacterEncodingFilter.class.getName() + ".");
+			}
+		}
 	}
 		
 	/**

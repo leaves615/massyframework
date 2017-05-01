@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://www.massyframework.org/schema/assembly"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.massyframework.org/schema/assembly
+		http://www.massyframework.org/schema/assembly/assembly.xsd ">
+		
+	<symbolicName>modules.test.business</symbolicName>
+	<name>测试-业务模块</name>
+	<description>提供test api的实现</description>
+	<vendor>smarabbit</vendor>
+	<assemblyContext>spring</assemblyContext>
+	
+	<init-params>
+		<parameter key="contextConfigLocation"  
+			value="classpath:META-INF/assembly/spring/user-context.xml" />
+	</init-params>
+	
+	<!-- 输出服务 -->
+	<export-service cName="userAdmin" >
+		<class>org.massyframework.modules.test.UserAdmin</class>
+		
+		<properties>
+			<property name="service.description" value="提供用户新增和查找能力" />
+		</properties>
+	</export-service>
+		
+</assembly>

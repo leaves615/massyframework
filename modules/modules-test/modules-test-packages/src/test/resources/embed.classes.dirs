@@ -1,0 +1,6 @@
+#modules-test-base项目
+../../../../../modules-test-base/target/classes
+#modules-test-persistence项目
+../../../../../modules-test-persistence/target/classes
+#modules-test-webui项目
+../../../../../modules-test-webui/target/classes

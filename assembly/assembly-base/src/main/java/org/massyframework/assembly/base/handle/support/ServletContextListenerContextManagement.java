@@ -198,7 +198,7 @@ public class ServletContextListenerContextManagement extends BootableContextMana
 		
 		String className = this.getServletContextListenerClass(initParams).getName();
 		Map<String, String> params = ServletUtils.getServletContextParameters(initParams);
-		
+				
 		StringBuilder builder = new StringBuilder();
 		builder.append("(&")
 			.append("(")
@@ -210,6 +210,7 @@ public class ServletContextListenerContextManagement extends BootableContextMana
 			.append(")");
 		
 		params.put(PlaceHolderServletContextListener.FILTERSTRING, builder.toString());
+		params.put(Constants.ASSEMBLY_SYMBOLICNAME, this.getAssembly().getSymbolicName());
 		
 		servletContext.addListener(PlaceHolderServletContextListener.class);
 		for (Entry<String, String> entry: params.entrySet()){

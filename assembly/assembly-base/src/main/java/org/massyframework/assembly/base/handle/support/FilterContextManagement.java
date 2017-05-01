@@ -196,6 +196,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 			.append(")");
 		Map<String, String> params = ServletUtils.getServletInitParameter(initParams);
 		params.put(PlaceHolderServlet.FILTERSTRING, builder.toString());
+		params.put(Constants.ASSEMBLY_SYMBOLICNAME, this.getAssembly().getSymbolicName());
 		
 		boolean asyncSupport = ServletUtils.getFilterAsyncSupported(initParams);
 		EnumSet<DispatcherType> types = ServletUtils.getFilterDispatcherTypes(initParams);

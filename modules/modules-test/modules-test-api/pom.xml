@@ -4,12 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.massyframework.modules</groupId>
-    <artifactId>modules</artifactId>
+    <artifactId>modules-test</artifactId>
     <version>1.0.0</version>
   </parent>
 
-  <artifactId>modules-tester</artifactId>
-  <name>modules-tester</name>
+  <artifactId>modules-test-api</artifactId>
+
+  <name>modules-test-api</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,11 +21,6 @@
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.massyframework.assembly</groupId>
-    	<artifactId>assembly-api</artifactId>
-    	<version>${assembly.version}</version>
     </dependency>
   </dependencies>
 </project>

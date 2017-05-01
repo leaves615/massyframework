@@ -209,6 +209,7 @@ public class ServletContextManagment extends BootableContextManagement<Servlet>
 			.append(")");
 		Map<String, String> params = ServletUtils.getServletInitParameter(initParams);
 		params.put(PlaceHolderServlet.FILTERSTRING, builder.toString());
+		params.put(Constants.ASSEMBLY_SYMBOLICNAME, this.getAssembly().getSymbolicName());
 		
 		ServletRegistration.Dynamic registration =
 				servletContext.addServlet(servletName, PlaceHolderServlet.class);

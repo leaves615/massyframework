@@ -31,13 +31,12 @@ public class UserAdminTest {
 		Assembly assembly = framework.getAssembly(symbolicName);
 		assertNotNull("assembly[" + symbolicName + "] 不能为null", assembly);
 		
-		if (assembly.isWorking()){
-			UserAdmin userAdmin = assembly.getAssmeblyContext().getService("userAdmin", UserAdmin.class);
-			assertNotNull("bean[userAdmin] cannot be null.", userAdmin);
-			
-			User user = userAdmin.findUser("test");
-			assertNotNull("user[identifier=test] cannot be null.", user);
-		}
+		UserAdmin userAdmin = assembly.getAssmeblyContext().getService("userAdmin", UserAdmin.class);
+		assertNotNull("bean[userAdmin] cannot be null.", userAdmin);
+		
+		User user = userAdmin.findUser("test");
+		assertNotNull("user[identifier=test] cannot be null.", user);
+		System.out.println("test complated.");
 	}
 
 }

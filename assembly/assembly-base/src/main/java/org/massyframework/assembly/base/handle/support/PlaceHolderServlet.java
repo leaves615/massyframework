@@ -28,6 +28,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.massyframework.assembly.AssemblyNotReadyException;
+import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.ExportServiceReference;
 import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.ExportServiceRepositoryReference;
@@ -92,7 +94,8 @@ public final class PlaceHolderServlet implements Servlet {
 		if (servlet != null){
 			servlet.service(req, res);
 		}else{
-			
+			throw new AssemblyNotReadyException(
+					this.config.getInitParameter(Constants.ASSEMBLY_SYMBOLICNAME));
 		}
 	}
 
@@ -168,7 +171,5 @@ public final class PlaceHolderServlet implements Servlet {
 				PlaceHolderServlet.this.reference.set(null);
 			}
 		}
-		
-		
 	}
 }

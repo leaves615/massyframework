@@ -1,18 +1,16 @@
 package org.massyframework.assembly.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.massyframework.assembly.Assembly;
-import org.massyframework.assembly.AssemblyEvent;
-import org.massyframework.assembly.AssemblyListener;
 import org.massyframework.assembly.DefaultAssemblyResource;
 import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.ExportServiceRepositoryReference;
@@ -76,6 +74,10 @@ public class FrameworkTest {
 		String description="为系统提供装配件所需的各种基础设施，包括初始化参数、服务、依赖管理等";
 		assertTrue("装配件说明不等于[" + description + "]", description.equals(assembly.getDescription()));
 		
+		AwaitAssemblyWorking await = 
+				new AwaitAssemblyWorking(framework, symbolicName);
+		await.ensureWorking();
+		
 		assertTrue("装配件未进入工作状态", assembly.isWorking());
 		ExecutorService executor = 
 				assembly.getAssmeblyContext().getService("executor", ExecutorService.class);
@@ -99,18 +101,18 @@ public class FrameworkTest {
 				new DefaultAssemblyResource(this.getClass().getClassLoader(), url);
 		
 		Framework framework = AllTests.getFramework();
-		CountDownLatch latch = new CountDownLatch(1);
-		framework.addListener(new AssemblyEventAdapter(latch));
-		
 		Assembly assembly = framework.installAssembly(resource);
 		
-		//等待装配件激活
-		latch.await();
+		String symbolicName = "test.spring.standalone";
+		AwaitAssemblyWorking await = 
+				new AwaitAssemblyWorking(framework, symbolicName);
+		await.ensureWorking();
+		
+
 		
 		assertNotNull("安装返回装配件不能为null.", assembly);
 		assertTrue("安装返回装配件的编号不能为0", assembly.getAssemblyId()!=0);
 		
-		String symbolicName = "test.spring.standalone";
 		assertTrue("装配件符号名称不等于[" + symbolicName + "]", symbolicName.equals(assembly.getSymbolicName()));
 		
 		String name = "测试-Spring装配件上下文";
@@ -118,39 +120,18 @@ public class FrameworkTest {
 		
 		String description="为系统提供装配件所需的各种基础设施，包括初始化参数、服务、依赖管理等";
 		assertTrue("装配件说明不等于[" + description + "]", description.equals(assembly.getDescription()));
+		
+		ExecutorService executor = 
+				assembly.getAssmeblyContext().getService("executor", ExecutorService.class);
+		assertNotNull("未注入ExecutorService服务", executor);
+		
+		Reader reader =
+				assembly.getAssmeblyContext().getService("reader", Reader.class);
+		reader.read("Hello Every Body.");
+		
+		ExportServiceRepository serviceRepository =
+				assembly.getAssmeblyContext().getService(ExportServiceRepository.class);
+		assertNotNull("未注入ExportServiceRepository服务", serviceRepository);
 	}
 	
-	private class AssemblyEventAdapter implements AssemblyListener {
-
-		private CountDownLatch latch;
-		private String name = "test.spring.standalone";
-		
-		public AssemblyEventAdapter(CountDownLatch latch){
-			this.latch = latch;
-		}
-		
-		@Override
-		public void onChanged(AssemblyEvent event) {
-			
-			//跟踪装配件激活事件
-			if (event.getType() == AssemblyEvent.ACTIVATED){
-				if (name.equals(event.getAssmebly().getSymbolicName())){
-					ExecutorService executor = 
-							event.getAssmebly().getAssmeblyContext().getService("executor", ExecutorService.class);
-					assertNotNull("未注入ExecutorService服务", executor);
-					
-					Reader reader =
-							event.getAssmebly().getAssmeblyContext().getService("reader", Reader.class);
-					reader.read("Hello Every Body.");
-					
-					ExportServiceRepository serviceRepository =
-							event.getAssmebly().getAssmeblyContext().getService(ExportServiceRepository.class);
-					assertNotNull("未注入ExportServiceRepository服务", serviceRepository);
-					
-					this.latch.countDown();
-				}
-			}
-		}
-		
-	}
 }
