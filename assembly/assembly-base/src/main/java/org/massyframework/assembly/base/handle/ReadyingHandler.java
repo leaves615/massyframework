@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public interface ReadyingHandler {
 	void doReadying() throws ReadyingException;
 	
 	/**
-	 * 执行退出就绪
+	 * 已退出就绪
 	 */
-	void doUnreadying();
+	void doUnreadied();
 }

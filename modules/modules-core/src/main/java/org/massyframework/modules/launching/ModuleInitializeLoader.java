@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -55,9 +55,6 @@ final class ModuleInitializeLoader extends  AbstractFrameworkInitializeLoader {
 		List<ModuleIdentifier> identifiers =
 				new ArrayList<ModuleIdentifier>();
 		identifiers.add(ModuleIdentifier.create("org.massyframework.assembly", "main"));
-/*		identifiers.add(ModuleIdentifier.create("org.massyframework.plugins.cli", "main"));
-		identifiers.add(ModuleIdentifier.create("org.massyframework.plugins.spring4", "main"));
-		identifiers.add(ModuleIdentifier.create("org.massyframework.plugins.spring4test", "main"));*/
 		
 		List<ClassLoader> result = new ArrayList<ClassLoader>();
 		for (ModuleIdentifier identifier: identifiers){

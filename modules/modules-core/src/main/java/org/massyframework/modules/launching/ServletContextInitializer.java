@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -53,6 +53,7 @@ public class ServletContextInitializer implements FrameworkInitializer {
 		props.put(Constants.SERVICE_RANKING, Integer.MAX_VALUE);
 		
 		framework.addExportService(ServletContext.class, this.context, props);
+		this.context.setAttribute(Framework.class.getName(), framework);
 	}
 
 }

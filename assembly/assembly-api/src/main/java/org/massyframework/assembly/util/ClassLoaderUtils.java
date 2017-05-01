@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -70,11 +70,47 @@ public abstract class ClassLoaderUtils {
 		Thread.currentThread().setContextClassLoader(loader);
 		return result;
 	}
+	
+	/**
+	 * 获取指定URLClassLoader内内置的资源<br>
+	 * 内置资源仅仅存放在{@link URLClassLoader#getURLs()}内，通过对Urls的解析来完成.<br>
+	 * 本方法不返回存放在{@link URLClassLoader#getURLs()}外的其他内置资源
+	 * @param resourcePath
+	 * @param classLoader
+	 * @return {@link URL}
+	 */
+	public static URL getResource(String resourcePath, URLClassLoader classLoader){
+		Asserts.notNull(classLoader, "classLoader cannot be null.");
+		Asserts.notNull(resourcePath, "resourcePath cannot be null.");
+		
+		URL result = null;
+		URL[] urls = classLoader.getURLs();
+		if (urls != null){
+			for (URL url: urls){
+				try{
+					JarFile jarFile = JarUtils.extractJarFile(url);
+					if (jarFile != null){
+						result = findResourceWithJarFile(resourcePath, jarFile);
+					}else{
+						Path path = IOUtils.toPath(url);
+						result = findResourceWithPath(resourcePath, path);
+					}					
+				}catch(Exception e){
+					
+				}
+				if (result != null){
+					break;
+				}
+			}
+		}
+		return result;
+	}
 		
 	/**
 	 * 获取指定URLClassLoader内的内置资源.<br>
 	 * 内置资源仅仅存放在{@link URLClassLoader#getURLs()}内，通过对Urls的解析来完成.<br>
 	 * 本方法不返回存放在{@link URLClassLoader#getURLs()}外的其他内置资源
+	 * @param resourcePath 资源路径
 	 * @param classLoader 类加载器
 	 * @return {@link List}集合
 	 */

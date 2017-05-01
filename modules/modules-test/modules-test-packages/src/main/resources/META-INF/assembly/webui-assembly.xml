@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://www.massyframework.org/schema/assembly"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.massyframework.org/schema/assembly
+		http://www.massyframework.org/schema/assembly/assembly.xsd ">
+		
+	<symbolicName>modules.test.webui</symbolicName>
+	<name>测试-业务模块-Web交互</name>
+	<description>提供test人机交互页面</description>
+	<vendor>smarabbit</vendor>
+	<assemblyContext>spring</assemblyContext>
+	
+	<init-params>
+		<parameter key="servlet.name" value ="user" />
+		<parameter key="servlet.urlPatterns" value ="/user/*" />
+	</init-params>
+	
+	<!-- 依赖服务 -->
+	<dependency-service cName="userAdmin">
+		<class>org.massyframework.modules.test.UserAdmin</class>
+	</dependency-service>
+	
+</assembly>

@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public final class FrameworkFactoryProxy implements FrameworkFactory {
 		}
 	}
 	
-	protected ClassLoader createdEmbedClassLoader() throws IOException{
+	protected URLClassLoader createdEmbedClassLoader() throws IOException{
 		URL[] jars = EmbedJarUtils.loadEmbedJars(FrameworkFactoryProxy.class);
 		return new URLClassLoader(
 				jars,

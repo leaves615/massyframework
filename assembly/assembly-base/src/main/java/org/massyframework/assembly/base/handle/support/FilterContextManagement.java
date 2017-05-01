@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -152,7 +152,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 	 * @see org.massyframework.assembly.base.handle.ReadyingHandler#doUnreadying()
 	 */
 	@Override
-	public void doUnreadying() {
+	public void doUnreadied() {
 		this.destroyBootable();
 	}
 	
@@ -206,7 +206,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 		registration.setAsyncSupported(asyncSupport);
 		registration.addMappingForUrlPatterns(types, true, urlPatterns);
 		registration.setInitParameters(
-				ServletUtils.getServletInitParameter(initParams));
+				params);
 	}
 
 	/**

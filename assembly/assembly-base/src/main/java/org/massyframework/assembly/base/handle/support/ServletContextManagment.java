@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -147,7 +147,7 @@ public class ServletContextManagment extends BootableContextManagement<Servlet>
 	 * @see org.massyframework.assembly.base.handle.ReadyingHandler#doUnreadying()
 	 */
 	@Override
-	public void doUnreadying() {
+	public void doUnreadied() {
 		this.destroyBootable();
 	}
 	
@@ -182,7 +182,7 @@ public class ServletContextManagment extends BootableContextManagement<Servlet>
 	 */
 	private void registerServletToServletContext(InitParams initParams){
 		ExportServiceRepository serviceRepository =
-				this.getHandler(ExportServiceRepository.class);
+				ExportServiceRepositoryReference.adaptFrom(this.getAssembly());
 		ServletContext servletContext =
 				serviceRepository.findService(ServletContext.class);
 		if (servletContext == null){
@@ -190,9 +190,13 @@ public class ServletContextManagment extends BootableContextManagement<Servlet>
 		}
 		
 		String servletName = ServletUtils.getServletName(initParams);
+		
 		int loadOnStartUp = ServletUtils.getServletLoadOnStartup(initParams);
 		boolean asyncSupported = ServletUtils.getServeltAsyncSupported(initParams);
 		String[] urlPatterns = ServletUtils.getServletUrlPatterns(initParams);
+		if (urlPatterns.length == 0){
+			throw new RuntimeException(Constants.SERVLET_URLPATTERNS + " cannot be empty.");
+		}
 		
 		StringBuilder builder = new StringBuilder();
 		builder.append("(&")
@@ -211,7 +215,7 @@ public class ServletContextManagment extends BootableContextManagement<Servlet>
 		
 		registration.addMapping(urlPatterns);
 		registration.setInitParameters(
-				ServletUtils.getServletInitParameter(initParams));
+				params);
 		registration.setAsyncSupported(asyncSupported);
 		registration.setLoadOnStartup(loadOnStartUp);
 	}

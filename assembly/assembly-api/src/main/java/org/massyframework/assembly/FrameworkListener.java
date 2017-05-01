@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,11 +26,12 @@ import java.util.EventListener;
 public interface FrameworkListener extends EventListener{
 	
 	/**
-	 * 运行框架初始化完成后触发事件。
+	 * 运行框架初始化完成后触发事件。<br>
+	 * 原则上手工安装装配件逻辑应置于此
 	 * @param event {@link FrameworkEvent}
 	 */
 	void frameworkInitialized(FrameworkEvent event);
-	
+		
 	/**
 	 * 运行框架释放前触发本事件
 	 * @param event {@link FrameworkEvent}

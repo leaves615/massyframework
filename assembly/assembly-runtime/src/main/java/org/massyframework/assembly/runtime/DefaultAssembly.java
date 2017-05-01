@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -47,4 +47,14 @@ public class DefaultAssembly extends AbstractAssembly {
 	protected HandlerRegistry getHandlerRegistry(){
 		return super.getHandlerRegistry();
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DefaultAssembly [assemblyId=" + getAssemblyId() + ", symbolicName=" + getSymbolicName() + "]";
+	}
+	
+	
 }

@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -63,6 +63,12 @@ public final class PlaceHolderServlet implements Servlet {
 		ExportServiceRepository serviceRepository =
 				this.getExportServiceRepository();
 		String filterString = this.getFilterString();
+		
+		Servlet servlet = serviceRepository.findService(Servlet.class, filterString);
+		if (servlet != null){
+			this.reference.set(servlet);
+			this.doInit();
+		}
 		this.serviceTracker =
 				new ExportServiceTracker<Servlet>(
 						serviceRepository, Servlet.class, filterString, new Customizer());

@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -88,8 +88,8 @@ public abstract class ServiceLoaderUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <S> List<S> loadServices(Class<S> service, ClassLoader loader) {
-		Asserts.notNull(service, "service.");
-		Asserts.notNull(loader, "loader.");
+		Asserts.notNull(service, "service cannot be null.");
+		Asserts.notNull(loader, "loader cannot be null.");
 		try {
 			Iterator<S> it = iteratorService(service, loader);
 			List<S> result = new ArrayList<S>();

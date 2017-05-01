@@ -79,6 +79,6 @@
     <module>assembly-runtime</module>
     <module>assembly-packages</module>
     <module>assembly-spring4</module>
-    <module>assembly-tester</module>
+    <module>assembly-test</module>
   </modules>
 </project>

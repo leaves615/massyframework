@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.massyframework.assembly.base.handle.ActivationHandler;
 import org.massyframework.assembly.base.handle.DependencyServiceResourceMatchHandler;
 import org.massyframework.assembly.base.handle.LifecycleListener;
 import org.massyframework.assembly.base.handle.LifecycleProcessHandler;
+import org.massyframework.assembly.base.handle.ReadyingHandler;
 import org.massyframework.assembly.base.handle.RegisterableHandler;
 import org.massyframework.assembly.base.handle.ResolveHandler;
 import org.massyframework.assembly.base.handle.AssemblyContextHandler;
@@ -173,6 +174,12 @@ public final class LifecycleManagement extends AbstractHandler
 	protected synchronized boolean doReady() throws Exception{
 		if (this.reference.get() == AssemblyStatus.PREPARE){
 			if (this.isPrepare()){
+				List<ReadyingHandler> handlers =
+						this.getHandlers(ReadyingHandler.class);
+				for (ReadyingHandler handler: handlers){
+					handler.doReadying();
+				}
+				
 				this.reference.set(AssemblyStatus.READY);
 				Logger logger = this.getLogger();
 				if (logger != null){
@@ -264,8 +271,16 @@ public final class LifecycleManagement extends AbstractHandler
 	protected synchronized void doUnready() throws Exception {
 		if (this.reference.get() == AssemblyStatus.READY){
 			if (!this.isPrepare()){
+								
 				this.publishUnreadyingEvent();
+								
 				this.reference.set(AssemblyStatus.PREPARE);
+				
+				List<ReadyingHandler> handlers =
+						this.getHandlers(ReadyingHandler.class);
+				for (ReadyingHandler handler: handlers){
+					handler.doUnreadied();
+				}
 				Logger logger = this.getLogger();
 				if (logger != null){
 					logger.debug("assembly is prepared.");

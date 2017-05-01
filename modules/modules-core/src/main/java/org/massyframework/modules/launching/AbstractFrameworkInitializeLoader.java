@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.massyframework.assembly.AssemblyResource;
+import org.massyframework.assembly.DefaultAssemblyResource;
 import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.util.ClassLoaderUtils;
@@ -56,15 +57,12 @@ abstract class AbstractFrameworkInitializeLoader implements FrameworkInitializeL
 	public List<FrameworkInitializer> getFrameworkInitializer() throws Exception{
 		List<ClassLoader> loaders = this.getClassLoaderes();
 		List<FrameworkInitializer> result = new ArrayList<FrameworkInitializer>();
-		for (ClassLoader loader: loaders){
-			List<FrameworkInitializer> list = null;
-			if (loader instanceof URLClassLoader){
-				list = ServiceLoaderUtils.loadServicesAtClassLoader(
-						FrameworkInitializer.class, (URLClassLoader)loader);
-			}else{
-				list = ServiceLoaderUtils.loadServices(FrameworkInitializer.class, loader);
+		for (ClassLoader loader: loaders){			
+			List<FrameworkInitializer> list = 
+					ServiceLoaderUtils.loadServicesAtClassLoader(FrameworkInitializer.class, loader);
+			if (!list.isEmpty()){
+				result.addAll(list);
 			}
-			result.addAll(list);
 		}
 		
 		//添加直接使用FrameworkListener服务部署的监听器

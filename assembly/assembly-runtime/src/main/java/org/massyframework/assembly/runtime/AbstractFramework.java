@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkListener;
 import org.massyframework.assembly.InitParameterEvent;
 import org.massyframework.assembly.InitParameterListener;
+import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.ServiceFactory;
 import org.massyframework.assembly.base.AbstractAssembly;
 import org.massyframework.assembly.base.ExportServiceRegistry;
@@ -39,6 +40,7 @@ import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
 import org.massyframework.assembly.runtime.service.registry.ExportServiceRepositoryBuilder;
 import org.massyframework.assembly.spec.Specification;
+import org.slf4j.Logger;
 
 /**
  * 实现{@link Framework}的抽象类
@@ -181,8 +183,19 @@ abstract class AbstractFramework extends AbstractAssembly
 	 */
 	@Override
 	public Assembly installAssembly(AssemblyResource resource) throws Exception {
-		AssemblyRegistration registration = this.assemblyManagement.installAndRegister(resource);
-		return registration.getAssembly();
+		try{
+			AssemblyRegistration registration = this.assemblyManagement.installAndRegister(resource);
+			return registration.getAssembly();
+		}catch(Exception e){
+			Logger logger = LoggerReference.adaptFrom(this);
+			if (logger != null){
+				if (logger.isErrorEnabled()){
+					logger.error("install assembly failed: resource=" + resource + ".", e);
+				}
+			}
+			
+			throw e;
+		}
 	}
 
 	/* (non-Javadoc)

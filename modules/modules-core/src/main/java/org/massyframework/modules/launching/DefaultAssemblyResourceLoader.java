@@ -1,5 +1,5 @@
 /**
-* @Copyright: 2017 smarabbit studio. All rights reserved.
+* @Copyright: 2017 smarabbit studio. 
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -32,8 +32,10 @@ import javax.servlet.ServletContext;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.modules.Module;
 import org.jboss.modules.ModuleIdentifier;
+import org.jboss.modules.ModuleLoadException;
 import org.jboss.modules.ModuleLoader;
 import org.massyframework.assembly.AssemblyResource;
+import org.massyframework.assembly.DefaultAssemblyResource;
 import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.protocol.URLFactory;
 import org.massyframework.assembly.util.Asserts;
@@ -45,14 +47,14 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLoader {
 	
-	public static final String ASSEMBILES           = "modules.assembly";
-	public static final String ASSEMBLIES_EXTENSION = "modules.assembly.extension";
+	public static final String MODULES_STARTUP            = "modules.startup";
+	public static final String MODULES_ASSEMBLY_RESOURCES = "modules.assembly.resources";
 	public static final String DEFAULT_RESOURCE     = "META-INF/assembly/assembly.xml";
 
-	private ModuleLoader moduleLoader;
 	private Logger logger;
-	private ServletContext servletContext;
-	
+	private ModuleLoader moduleLoader;
+	private ServletContext servletContext;	
+	private String identifiers;
 	private Map<ModuleIdentifier, List<String>> assemblyResources =
 			new LinkedHashMap<ModuleIdentifier, List<String>>();
 	
@@ -67,20 +69,19 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 		super(initializers);
 		Asserts.notNull(moduleLoader, "moduleLoader cannot be null.");
 		Asserts.notNull(servletContext, "servletContext cannot be null.");
-		
-		String assemblies = configuration == null ?
+				
+		this.identifiers = configuration == null ?
 				null :
-					configuration.get(ASSEMBILES);
-		String extensions = configuration == null?
-				null :
-					configuration.get(ASSEMBLIES_EXTENSION);
+					configuration.get(MODULES_STARTUP);
 		
-		this.logger = LoggerFactory.getLogger(DefaultAssemblyResourceLoader.class);
+		String resources = configuration == null?
+				null :
+					configuration.get(MODULES_ASSEMBLY_RESOURCES);
 		this.moduleLoader = moduleLoader;
+		this.logger = LoggerFactory.getLogger(DefaultAssemblyResourceLoader.class);
 		this.servletContext = servletContext;
 		
-		this.assemblyResources = this.parser(assemblies, extensions);
-		
+		this.assemblyResources = this.parserAssemblyResources(resources);
 	}
 
 	/* (non-Javadoc)
@@ -88,13 +89,7 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 	 */
 	@Override
 	protected List<ClassLoader> getClassLoaderes() throws Exception {
-		List<ClassLoader> result = new ArrayList<ClassLoader>();
-		
-		for (ModuleIdentifier identifier: this.assemblyResources.keySet()){
-			Module module = this.moduleLoader.loadModule(identifier);
-			result.add(module.getClassLoader());
-		}
-		return result;
+		return this.parserClassLoader(this.identifiers);
 	}
 
 	/* (non-Javadoc)
@@ -159,34 +154,43 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 		return new DefaultAssemblyResource(loader, url);
 	}
 
-	/**
-	 * 解析
-	 * @param assemblies
-	 * @param extensions
-	 */
-	protected Map<ModuleIdentifier, List<String>> parser(String assemblies, String extensions){
-		Map<ModuleIdentifier, List<String>> result =
-				new LinkedHashMap<ModuleIdentifier, List<String>>();
-		
-		if (assemblies != null){
-			assemblies = StringUtils.deleteWhitespace(assemblies);
-		}
-	
-		String[] names = StringUtils.split(assemblies, ",");
-		if (names != null){
+	protected List<ClassLoader> parserClassLoader(String identifiers) 
+			throws ModuleLoadException{
+		List<ClassLoader> result = new ArrayList<ClassLoader>();
+		if (identifiers != null){
+			String[] names = StringUtils.split(identifiers, ",");
 			for (String name: names){
-				if (!name.equals("")){
+				name = StringUtils.deleteWhitespace(name);
+				if (!"".equals(name)){
+					int index = StringUtils.indexOf(name, ":");
+					String moduleName = name;
+					String slot = "main";
+					if (index != -1){
+						moduleName = StringUtils.substring(name, 0, index);
+						slot = StringUtils.substring(name, index + 1, name.length());
+					}
 					ModuleIdentifier identifier =
-							ModuleIdentifierUtils.parse(name);
-					result.put(identifier, null);
+							ModuleIdentifier.create(moduleName, slot);
+					Module module = this.moduleLoader.loadModule(identifier);
+					result.add(module.getClassLoader());
 				}
 			}
 		}
 		
-		if (extensions != null){
-			extensions = StringUtils.replaceAll(extensions, "，", ",");
+		return result;
+	}
+	
+	/**
+	 * 解析装配件资源
+	 * @param extensions
+	 */
+	protected Map<ModuleIdentifier, List<String>> parserAssemblyResources(String resources){
+		Map<ModuleIdentifier, List<String>> result =
+				new LinkedHashMap<ModuleIdentifier, List<String>>();		
+		if (resources != null){
+			resources = StringUtils.replaceAll(resources, "，", ",");
 		}
-		String[] texts = StringUtils.split(extensions, ",");
+		String[] texts = StringUtils.split(resources, ",");
 		if (texts != null){
 			for (String text: texts){
 				int index = StringUtils.indexOf(text, "@");
@@ -201,12 +205,12 @@ public class DefaultAssemblyResourceLoader extends AbstractFrameworkInitializeLo
 				String moduleName = StringUtils.substring(text, index + 1, text.length());
 				ModuleIdentifier identifier = ModuleIdentifierUtils.parse(moduleName);
 				
-				List<String> resources = result.get(identifier);
-				if (resources == null){
-					resources = new ArrayList<String>();
-					result.put(identifier, resources);
+				List<String> assemblyResources = result.get(identifier);
+				if (assemblyResources == null){
+					assemblyResources = new ArrayList<String>();
+					result.put(identifier, assemblyResources);
 				}
-				resources.add(resource);
+				assemblyResources.add(resource);
 			}
 		}
 		
