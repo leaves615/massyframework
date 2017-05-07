@@ -22,7 +22,9 @@ import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.AssemblyAware;
 import org.massyframework.assembly.util.Asserts;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 /**
  * 执行AssemblyAware注入Bean的处理器
@@ -31,13 +33,16 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 final class AssemblyAwareBeanPostProcessor implements BeanPostProcessor {
 
 	private final Assembly assembly;
+	private final DefaultListableBeanFactory beanFactory;
 	
 	/**
 	 * 
 	 */
-	public AssemblyAwareBeanPostProcessor(Assembly assembly) {
+	public AssemblyAwareBeanPostProcessor(Assembly assembly, DefaultListableBeanFactory beanFactory) {
 		Asserts.notNull(assembly, "assembly cannot be null.");
+		Asserts.notNull(beanFactory, "beanFactory cannot be null.");
 		this.assembly = assembly;
+		this.beanFactory = beanFactory;
 	}
 
 	/* (non-Javadoc)
@@ -53,6 +58,15 @@ final class AssemblyAwareBeanPostProcessor implements BeanPostProcessor {
 	 */
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		if (beanName != null){
+			BeanDefinition definition = this.beanFactory.getBeanDefinition(beanName);
+			if (definition != null){
+				if (DependencyServiceFactoryBean.class.getName().equals(definition.getBeanClassName())){
+					return bean;
+				}
+			}
+		}
+		
 		AssemblyAware.maybeToBind(bean, assembly);
 		return bean;
 	}
