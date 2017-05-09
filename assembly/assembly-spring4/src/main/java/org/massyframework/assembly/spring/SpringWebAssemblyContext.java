@@ -87,7 +87,7 @@ public class SpringWebAssemblyContext extends XmlWebApplicationContext
 			throws BeansException, IOException {
 		try{
 			AssemblyAwareBeanPostProcessor processor =
-					new AssemblyAwareBeanPostProcessor(this.handlerRegistry.getReference());
+					new AssemblyAwareBeanPostProcessor(this.handlerRegistry.getReference(), beanFactory);
 			beanFactory.addBeanPostProcessor(processor);
 			
 			ServiceInjectHandler handler =
