@@ -18,10 +18,12 @@
 */
 package org.massyframework.assembly.runtime;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import org.massyframework.assembly.AssemblyResource;
 import org.massyframework.assembly.Constants;
@@ -214,14 +216,19 @@ class DefaultFrameworkLauncher implements FrameworkLauncher {
 	 */
 	protected void installAssemblies() throws Exception{
 		List<AssemblyResource> resources = this.initializeLoader.getAssemblyResources();
+		CountDownLatch latch = new CountDownLatch(resources.size());
+		List<InstallTask> tasks = new ArrayList<InstallTask>();
 		for (AssemblyResource resource: resources){
-			try{
-				framework.installAssembly(resource);
-			}catch(Exception e){
-				if (logger != null){
-					if (logger.isErrorEnabled()){
-						logger.error("install " + resource + " failed.", e);
-					}
+			InstallTask task = new InstallTask(resource, latch);
+			tasks.add(task);
+			new Thread(task).start();
+		}
+		
+		latch.await();
+		for (InstallTask task: tasks){
+			if (task.getException() != null){
+				if (logger.isErrorEnabled()){
+					logger.error("install assembly failed:", task.getException());
 				}
 			}
 		}
@@ -286,5 +293,39 @@ class DefaultFrameworkLauncher implements FrameworkLauncher {
 		int index = isJ2EE ? 1 : 0; //J2EE模式下，让ServletContext先注册，所以让1
 		result.addAll(index, list);
 		return result;
+	}
+	
+	private class InstallTask implements Runnable {
+		
+		private AssemblyResource resource;
+		private CountDownLatch latch;
+		private Exception cause;
+
+		/**
+		 * @param resource
+		 */
+		public InstallTask(AssemblyResource resource, CountDownLatch latch) {
+			this.resource = resource;
+			this.latch = latch;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
+		@Override
+		public void run() {
+			try {
+				framework.installAssembly(resource);
+			}catch (Exception e) {
+				this.cause = e;
+			}finally{
+				this.latch.countDown();
+			}
+		}
+		
+		public Exception getException(){
+			return this.cause;
+		}
+		
 	}
 }
