@@ -212,7 +212,8 @@ public class ServletContextListenerContextManagement extends BootableContextMana
 		params.put(PlaceHolderServletContextListener.FILTERSTRING, builder.toString());
 		params.put(Constants.ASSEMBLY_SYMBOLICNAME, this.getAssembly().getSymbolicName());
 		
-		servletContext.addListener(PlaceHolderServletContextListener.class);
+		//为确保和Tomcat兼容，使用监听器实例进行注册
+		servletContext.addListener(new PlaceHolderServletContextListener());
 		for (Entry<String, String> entry: params.entrySet()){
 			servletContext.setInitParameter(entry.getKey(), entry.getValue());
 		}

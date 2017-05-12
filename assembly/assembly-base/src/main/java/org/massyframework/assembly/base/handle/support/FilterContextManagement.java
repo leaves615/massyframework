@@ -202,8 +202,9 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 		EnumSet<DispatcherType> types = ServletUtils.getFilterDispatcherTypes(initParams);
 		String[] urlPatterns = ServletUtils.getFilterUrlPatterns(initParams);
 		
+		//和Tomcat保持兼容，使用过滤器实例进行注册
 		FilterRegistration.Dynamic registration =
-				servletContext.addFilter(filterName, PlaceHolderFilter.class);
+				servletContext.addFilter(filterName, new PlaceHolderFilter());
 		registration.setAsyncSupported(asyncSupport);
 		registration.addMappingForUrlPatterns(types, true, urlPatterns);
 		registration.setInitParameters(

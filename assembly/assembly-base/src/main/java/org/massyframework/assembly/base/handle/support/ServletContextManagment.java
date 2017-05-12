@@ -211,9 +211,10 @@ public class ServletContextManagment extends BootableContextManagement<Servlet>
 		params.put(PlaceHolderServlet.FILTERSTRING, builder.toString());
 		params.put(Constants.ASSEMBLY_SYMBOLICNAME, this.getAssembly().getSymbolicName());
 		
+		//Tomcat 在使用class注册动态Servlet时会发生ClassNotFoundException,所以直接使用Servlet实例进行注册
 		ServletRegistration.Dynamic registration =
-				servletContext.addServlet(servletName, PlaceHolderServlet.class);
-		
+				servletContext.addServlet(servletName, new PlaceHolderServlet());
+				
 		registration.addMapping(urlPatterns);
 		registration.setInitParameters(
 				params);

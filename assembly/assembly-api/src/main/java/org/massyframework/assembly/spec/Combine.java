@@ -57,7 +57,7 @@ public class Combine<T> implements Specification<T> {
 			}
 		}
 		
-		//or预算优先
+		//or运算优先
 		if (or != null){
 			if (or.isSatisfyBy(target)){
 				return true;
