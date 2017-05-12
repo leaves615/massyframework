@@ -78,5 +78,6 @@
     <module>modules-core</module>
     <module>modules-webapp</module>
     <module>modules-test</module>
+    <module>modules-webapp-deployment</module>
   </modules>
 </project>

@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.Framework;
@@ -59,7 +61,8 @@ class Initailizer implements FrameworkInitializer {
 		int size = text == null ?
 				Runtime.getRuntime().availableProcessors() * 2 :
 					Integer.parseInt(text);
-		ExecutorService service = Executors.newFixedThreadPool(size);
+		ExecutorService service = Executors.newFixedThreadPool(size, new Factory());
+		
 		Map<String, Object> props = new HashMap<String, Object>();
 		props.put(Constants.SERVICE_DESCRIPTION, "框架内核ExecutorService线程池，最大线程数量：" + size + ".");
 		framework.addExportService(ExecutorService.class, service, props);
@@ -77,4 +80,16 @@ class Initailizer implements FrameworkInitializer {
 				new CustomizeAssemblyContextManagement(), props);
 	}
 
+	private class Factory implements ThreadFactory {
+
+		private final AtomicInteger count = new AtomicInteger(-1);
+		
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread result = new Thread(r);  
+			result.setName("system-pool-" + count.incrementAndGet());
+			return result;
+		}
+		
+	}
 }

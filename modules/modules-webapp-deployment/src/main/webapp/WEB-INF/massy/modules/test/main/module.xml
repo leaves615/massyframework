@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="test" slot="main">
+	
+	<resources>
+		<resource-root path="modules-test-api-1.0.0.jar" />
+		<resource-root path="modules-test-packages-1.0.0.jar" />
+	</resources>
+	
+	<dependencies>
+		        
+		<module name="org.springframework" slot="4.3.5.RELEASE" >
+        	<imports>
+				<include path="META-INF**" />
+				<include path="org**" />
+			</imports>
+        </module>
+        <module name="javax.servlet" slot="3.1" />
+        
+        <module name="org.slf4j" slot="main" />   
+        <module name="org.massyframework.assembly" />   
+        <module name="org.freemarker" slot="2.3.x" />  
+        <module name="sun.jdk" slot="1.8" />
+        <module name="javax.servlet" slot="3.1" />
+	</dependencies>
+</module>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="org.springframework" slot="4.3.5.RELEASE">
+	
+	<resources>
+		<resource-root path="spring-aop-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-beans-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-context-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-context-support-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-core-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-expression-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-tx-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-web-4.3.5.RELEASE.jar" />
+		<resource-root path="spring-webmvc-4.3.5.RELEASE.jar" />
+	</resources>
+	
+	
+	<dependencies>
+		<module name="org.massyframework.assembly" slot="main" />
+        <module name="org.apache.commons.logging" slot="1.2" />
+        <module name="javax.servlet" slot="3.1" />
+        <module name="sun.jdk" slot="1.8" />
+        <module name="org.freemarker" slot="2.3.x" />  
+	</dependencies>
+</module>

@@ -7,6 +7,7 @@
 		<resource-root path="../../../../../../../../../../../modules-core/target/classes" />
 	</resources>
 	
+	
 	<dependencies>
 		        
         <module name="javax.servlet" slot="3.1" />

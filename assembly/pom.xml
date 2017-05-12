@@ -77,8 +77,9 @@
     <module>assembly-api</module>
     <module>assembly-base</module>
     <module>assembly-runtime</module>
-    <module>assembly-packages</module>
     <module>assembly-spring4</module>
+    <module>assembly-packages</module>
     <module>assembly-test</module>
+    <module>assembly-test-webapp</module>
   </modules>
 </project>

@@ -42,6 +42,7 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
@@ -65,6 +66,15 @@ public class SpringWebAssemblyContext extends XmlWebApplicationContext
 	@Override
 	public void init(HandlerRegistry handlerRegistry) {
 		this.handlerRegistry = handlerRegistry;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.springframework.context.support.AbstractXmlApplicationContext#initBeanDefinitionReader(org.springframework.beans.factory.xml.XmlBeanDefinitionReader)
+	 */
+	@Override
+	protected void initBeanDefinitionReader(XmlBeanDefinitionReader reader) {
+		super.initBeanDefinitionReader(reader);
+        reader.setBeanClassLoader(this.getClassLoader());
 	}
 	
 	/* (non-Javadoc)

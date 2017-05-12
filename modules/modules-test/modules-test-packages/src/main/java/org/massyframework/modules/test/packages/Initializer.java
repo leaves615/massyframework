@@ -19,6 +19,7 @@
 package org.massyframework.modules.test.packages;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -71,8 +72,9 @@ public class Initializer implements FrameworkInitializer {
 	 * 创建嵌入类加载器
 	 * @return {@link URLClassLoader}
 	 * @throws IOException 发生非预期异常所抛出的例外
+	 * @throws URISyntaxException 
 	 */
-	protected URLClassLoader createdEmbedClassLoader() throws IOException{
+	protected URLClassLoader createdEmbedClassLoader() throws IOException, URISyntaxException{
 		//以当前类为锚点，定位到META-INF/lib目录，同时将目录中的jar包复制到临时目录下
 		URL[] jars = EmbedJarUtils.loadEmbedJars(Initializer.class);
         //创建自定义的类加载器，用于加载上面三个jar包

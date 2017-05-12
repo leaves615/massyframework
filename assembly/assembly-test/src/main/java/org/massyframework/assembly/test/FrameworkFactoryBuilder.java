@@ -56,7 +56,7 @@ public class FrameworkFactoryBuilder {
 	 */
 	public static void build(Map<String, String> configuration) throws Exception{
 		build(configuration, 
-				new StandaloneFrameworkInitializeLoader(null));
+				new SingleableClassLoaderInitializeLoader(null));
 	}
 	
 	/**

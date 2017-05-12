@@ -92,7 +92,7 @@ public class Initializer implements FrameworkInitializer {
 		
 		//防止中文乱码
 		FilterRegistration.Dynamic registration =
-				servletContext.addFilter("SpringEncodingFilter", CharacterEncodingFilter.class);
+				servletContext.addFilter("SpringEncodingFilter",CharacterEncodingFilter.class);
 		registration.setAsyncSupported(true);
 		registration.addMappingForUrlPatterns(
 				EnumSet.allOf(DispatcherType.class), false, "/*");

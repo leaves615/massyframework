@@ -19,6 +19,7 @@
 package org.massyframework.assembly.packages;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
@@ -55,7 +56,7 @@ public final class FrameworkFactoryProxy implements FrameworkFactory {
 		}
 	}
 	
-	protected URLClassLoader createdEmbedClassLoader() throws IOException{
+	protected URLClassLoader createdEmbedClassLoader() throws IOException, URISyntaxException{
 		URL[] jars = EmbedJarUtils.loadEmbedJars(FrameworkFactoryProxy.class);
 		return new URLClassLoader(
 				jars,

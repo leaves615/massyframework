@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -49,8 +50,9 @@ public final class EmbedJarUtils {
 	 * @param anchorClass 锚定的Class。
 	 * @return
 	 * @throws IOException
+	 * @throws URISyntaxException 
 	 */
-	public static URL[] loadEmbedJars(Class<?> anchorClass) throws IOException{
+	public static URL[] loadEmbedJars(Class<?> anchorClass) throws IOException, URISyntaxException{
 		URL anchorUrl = getFilePath(anchorClass);
 		List<URL> result = null;
 		

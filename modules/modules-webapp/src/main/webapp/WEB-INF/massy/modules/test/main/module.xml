@@ -6,6 +6,7 @@
 		<resource-root path="../../../../../../../../../modules-test/modules-test-packages/target/classes" />
 	</resources>
 	
+	
 	<dependencies>
 		        
         <module name="javax.servlet" slot="3.1" />

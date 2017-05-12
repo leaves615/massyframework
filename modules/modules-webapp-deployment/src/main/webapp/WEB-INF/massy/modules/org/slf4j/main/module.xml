@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="org.slf4j" slot="main">
+		
+	<dependencies>
+		<system export="true">
+            <paths>                     	
+            	<!-- org.slf4j -->
+            	<path name="org/slf4j"/>
+            	<path name="org/slf4j/event"/>
+            	<path name="org/slf4j/helpers"/>
+            	<path name="org/slf4j/spi"/>          	            	
+            </paths>
+        </system>
+                
+	</dependencies>
+</module>
