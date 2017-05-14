@@ -50,7 +50,7 @@ public class Initializer implements FrameworkInitializer {
 				this.createdEmbedClassLoader();
 		
 		//找到装配件的配置文件，并手工安装装配件
-		URL url =  this.getClass().getResource("/META-INF/assembly/assembly.xml");
+		URL url =  this.getClass().getResource("/META-INF/assembly/modules-test-business.xml");
 		if (url != null){
 			DefaultAssemblyResource resource =
 					new DefaultAssemblyResource(loader, url);
@@ -59,7 +59,14 @@ public class Initializer implements FrameworkInitializer {
 				
 		//只有在J2EE运行环境下，才允许注册基于Web的装配件
 		if (Constants.ENVIRONMENT_J2EE.equals(framework.getInitParameter(Constants.ENVIRONMENT))){
-			url = this.getClass().getResource("/META-INF/assembly/webui-assembly.xml");
+			/*url = this.getClass().getResource("/META-INF/assembly/modules-test-webui.xml");
+			if (url != null){
+				DefaultAssemblyResource resource =
+						new DefaultAssemblyResource(loader, url);
+				framework.installAssembly(resource);
+			}*/
+			
+			url = this.getClass().getResource("/META-INF/assembly/modules-test-struts2.xml");
 			if (url != null){
 				DefaultAssemblyResource resource =
 						new DefaultAssemblyResource(loader, url);

@@ -25,6 +25,16 @@
     	<artifactId>assembly-test</artifactId>
     	<version>${project.version}</version>
     </dependency>
+    <dependency>
+    	<groupId>org.massyframework.modules</groupId>
+    	<artifactId>modules-test-api</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.massyframework.modules</groupId>
+    	<artifactId>modules-test-packages</artifactId>
+    	<version>1.0.0</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>assembly-test-webapp</finalName>

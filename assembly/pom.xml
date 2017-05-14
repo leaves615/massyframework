@@ -78,6 +78,7 @@
     <module>assembly-base</module>
     <module>assembly-runtime</module>
     <module>assembly-spring4</module>
+    <module>assembly-struts2</module>
     <module>assembly-packages</module>
     <module>assembly-test</module>
     <module>assembly-test-webapp</module>

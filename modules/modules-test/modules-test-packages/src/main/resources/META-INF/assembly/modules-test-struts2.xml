@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://www.massyframework.org/schema/assembly"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.massyframework.org/schema/assembly
+		http://www.massyframework.org/schema/assembly/assembly.xsd ">
+		
+	<symbolicName>modules.test.struts2</symbolicName>
+	<name>测试-业务模块-Web交互Struts2</name>
+	<description>提供test人机交互页面</description>
+	<vendor>smarabbit</vendor>
+	<assemblyContext>struts</assemblyContext>
+	
+	<init-params>
+		<parameter key="filter.name" value ="struts2" />
+		<parameter key="filter.urlPatterns" value ="/struts/*" />
+	</init-params>
+		
+</assembly>

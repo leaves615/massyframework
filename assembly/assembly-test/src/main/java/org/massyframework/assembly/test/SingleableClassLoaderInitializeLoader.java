@@ -33,7 +33,6 @@ import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.protocol.URLFactory;
 import org.massyframework.assembly.util.ServiceLoaderUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * 单一类加载器加载装配件
@@ -100,7 +99,7 @@ public class SingleableClassLoaderInitializeLoader implements FrameworkInitializ
 				new ArrayList<AssemblyResource>();
 		
 		if (this.resources != null){
-			String[] arr = StringUtils.split(this.resources, ",");
+			String[] arr = this.resources.split(",");
 			for (String resource: arr){
 				AssemblyResource res =
 						this.createAssemblyResource(resource);

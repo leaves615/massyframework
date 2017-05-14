@@ -47,7 +47,8 @@ public class Handler extends URLStreamHandler {
 	 */
 	@Override
 	protected URLConnection openConnection(URL u) throws IOException {
-		final URL resourceUrl = classLoader.getResource(u.getPath());
+		String resource = u.getPath();
+		final URL resourceUrl = classLoader.getResource(resource);
         return resourceUrl.openConnection();
 	}
 	

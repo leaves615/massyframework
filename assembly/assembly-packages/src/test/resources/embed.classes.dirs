@@ -4,3 +4,5 @@
 ../../../../../assembly-runtime/target/classes
 #assembly-spring4项目
 ../../../../../assembly-spring4/target/classes
+#assembly-struts2项目
+../../../../../assembly-struts2/target/classes

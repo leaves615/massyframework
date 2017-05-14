@@ -184,6 +184,13 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="struts">
+				<xs:annotation>
+					<xs:documentation>
+					 使用Struts作为装配件的上下文
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="customize">
 				<xs:annotation>
 					<xs:documentation>

@@ -76,6 +76,11 @@
 									<artifactId>assembly-spring4</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.assembly</groupId>
+									<artifactId>assembly-struts2</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.build.directory}/classes/META-INF/lib</outputDirectory>
 						</configuration>

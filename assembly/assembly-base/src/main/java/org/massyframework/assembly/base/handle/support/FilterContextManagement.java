@@ -49,7 +49,7 @@ import org.massyframework.assembly.util.ClassLoaderUtils;
 public class FilterContextManagement extends BootableContextManagement<Filter> 
 	implements ReadyingHandler{
 
-	private Class<Filter> filterType;
+	private Class<? extends Filter> filterType;
 	private volatile HandlerRegistration<Filter> registration;
 	private volatile ExportServiceRegistration<Filter> serviceRegistration;
 	
@@ -63,7 +63,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 	/**
 	 * 
 	 */
-	public FilterContextManagement(Class<Filter> filterType) {
+	public FilterContextManagement(Class<? extends Filter> filterType) {
 		super();
 		this.filterType = filterType;
 	}
@@ -73,7 +73,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 	 */
 	@Override
 	protected Filter createBootable(InitParams initParams) throws Exception {
-		Class<Filter> clazz = this.getFilterClass(initParams);
+		Class<? extends Filter> clazz = this.getFilterClass(initParams);
 		Filter result = ClassLoaderUtils.newInstance(clazz);
 		return result;
 	}
@@ -176,7 +176,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 	 */
 	private void registerFilterToServletContext(InitParams initParams){
 		ExportServiceRepository serviceRepository =
-				this.getHandler(ExportServiceRepository.class);
+				ExportServiceRepositoryReference.adaptFrom(this.getAssembly());
 		ServletContext servletContext =
 				serviceRepository.findService(ServletContext.class);
 		if (servletContext == null){
@@ -218,7 +218,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	protected Class<Filter> getFilterClass(InitParams initParams) throws Exception{
+	protected Class<? extends Filter> getFilterClass(InitParams initParams) throws Exception{
 		if (this.filterType != null){
 			return this.filterType;
 		}
@@ -229,7 +229,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 					"cannot found " + Constants.FILTER_CLASSNAME + " parameter.");
 		}		
 		ClassLoader loader = ClassLoaderReference.adaptFrom(this.getAssembly());
-		return (Class<Filter>)loader.loadClass(className);
+		return (Class<? extends Filter>)loader.loadClass(className);
 	}
 	
 	

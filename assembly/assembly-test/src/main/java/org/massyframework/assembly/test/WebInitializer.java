@@ -64,6 +64,7 @@ public class WebInitializer implements ServletContainerInitializer {
 				this.createInitializeLoader(configuration, ctx);
 		try {
 			factory.createFramework(configuration, loader);
+			ctx.addListener(new ContextDestroyedListener());
 		} catch (Exception e) {
 			throw new ServletException("launch massy framework failed.", e);
 		}

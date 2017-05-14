@@ -16,7 +16,7 @@
 * @作   者： 黄开晖<kaimohkh@gmail.com> 
 * @日   期:  2017年5月11日
 */
-package org.massyframework.modules.launching;
+package org.massyframework.assembly.test;
 
 import java.util.Arrays;
 import java.util.List;

@@ -63,6 +63,7 @@ public abstract class AssemblyContextHandlerFactory
 	 * @return <code>true</code>需要，<code>false</code>不需要
 	 */
 	protected boolean hasRegistWithFilter(Assembly assembly){
-		return false;
+		String filterName = assembly.getInitParameter(Constants.FILTER_NAME);
+		return filterName != null;
 	}
 }
