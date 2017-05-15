@@ -68,10 +68,6 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 	@Override
 	public void init(HandlerRegistry handlerRegistry) {
 		this.handlerRegistry = handlerRegistry;	
-		SpringWebAssemblyContext context = this.createWebApplication();
-		if (context != null){
-			this.assemblyContextRegistration = this.handlerRegistry.register(context);
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -82,6 +78,10 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 		if (this.filterConfig == null){
 			this.filterConfig = new FilterConfigWrapper(filterConfig); 
 			super.init(filterConfig);
+			SpringWebAssemblyContext context = this.createWebApplication();
+			if (context != null){
+				this.assemblyContextRegistration = this.handlerRegistry.register(context);
+			}
 		}
 	}
 	
