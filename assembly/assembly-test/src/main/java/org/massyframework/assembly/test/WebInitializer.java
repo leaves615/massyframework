@@ -31,6 +31,7 @@ import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.FrameworkFactory;
 import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.FrameworkInitializer;
@@ -132,7 +133,8 @@ public class WebInitializer implements ServletContainerInitializer {
 		}catch(Exception e){
 			servletContext.log(e.getMessage(), e);
 		}
-				
+			
+		result.put(Constants.ENVIRONMENT, Constants.ENVIRONMENT_J2EE);
 		return result;
 	}
 }

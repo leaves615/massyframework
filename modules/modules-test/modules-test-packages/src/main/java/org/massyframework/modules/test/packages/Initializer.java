@@ -59,12 +59,12 @@ public class Initializer implements FrameworkInitializer {
 				
 		//只有在J2EE运行环境下，才允许注册基于Web的装配件
 		if (Constants.ENVIRONMENT_J2EE.equals(framework.getInitParameter(Constants.ENVIRONMENT))){
-			/*url = this.getClass().getResource("/META-INF/assembly/modules-test-webui.xml");
+			url = this.getClass().getResource("/META-INF/assembly/modules-test-webui.xml");
 			if (url != null){
 				DefaultAssemblyResource resource =
 						new DefaultAssemblyResource(loader, url);
 				framework.installAssembly(resource);
-			}*/
+			}
 			
 			url = this.getClass().getResource("/META-INF/assembly/modules-test-struts2.xml");
 			if (url != null){

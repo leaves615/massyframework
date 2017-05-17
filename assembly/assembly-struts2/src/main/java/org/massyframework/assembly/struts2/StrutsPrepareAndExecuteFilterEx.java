@@ -18,10 +18,18 @@
 */
 package org.massyframework.assembly.struts2;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.struts2.dispatcher.Dispatcher;
+import org.apache.struts2.dispatcher.HostConfig;
+import org.apache.struts2.dispatcher.InitOperations;
+import org.apache.struts2.dispatcher.filter.FilterHostConfig;
 import org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter;
 import org.massyframework.assembly.AssemblyContext;
 import org.massyframework.assembly.AssemblyContextReference;
@@ -35,6 +43,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ConfigurableWebEnvironment;
 import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * 扩展Struts2的Filter,使用Spring容器，支持装配件
@@ -46,6 +55,7 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 	private volatile HandlerRegistration<SpringWebAssemblyContext> assemblyContextRegistration;
 	
 	private FilterConfig filterConfig;
+	
 	/**
 	 * 
 	 */
@@ -73,15 +83,44 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 	/* (non-Javadoc)
 	 * @see org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter#init(javax.servlet.FilterConfig)
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public synchronized void init(FilterConfig filterConfig) throws ServletException {		
 		if (this.filterConfig == null){
 			this.filterConfig = new FilterConfigWrapper(filterConfig); 
-			super.init(filterConfig);
-			SpringWebAssemblyContext context = this.createWebApplication();
-			if (context != null){
-				this.assemblyContextRegistration = this.handlerRegistry.register(context);
+			
+			ClassLoader loader = ClassLoaderReference.adaptFrom(
+					this.handlerRegistry.getReference());
+			//创建Spring的ApplicationContext
+			SpringWebAssemblyContext applicationContext = this.createWebApplication();
+			if (applicationContext != null){
+				applicationContext.setClassLoader(loader);
+				this.assemblyContextRegistration = this.handlerRegistry.register(applicationContext);
+				applicationContext.refresh();
 			}
+			
+			InitOperations init = createInitOperations();
+	        Dispatcher dispatcher = null;
+	        try {
+	            FilterHostConfig config = new FilterHostConfig(this.filterConfig);
+	            init.initLogging(config);
+	            dispatcher = createDispatcher(config, loader);
+	            dispatcher.init();
+	            
+	            init.initStaticContentLoader(config, dispatcher);
+	            prepare = createPrepareOperations(dispatcher);
+	            execute = createExecuteOperations(dispatcher);
+	            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+	            
+	            postInit(dispatcher, filterConfig);
+	        } finally {
+	            if (dispatcher != null) {
+	                dispatcher.cleanUpAfterInit();
+	            }
+	            init.cleanup();
+	        }
+						
+			
 		}
 	}
 	
@@ -109,9 +148,7 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 			result = new SpringWebAssemblyContext();
 			
 			result.setConfigLocation(configLocation);			
-			ClassLoader loader = ClassLoaderReference.adaptFrom(
-					this.handlerRegistry.getReference());
-			result.setClassLoader(loader);
+			
 			
 			ServletContext sc = this.filterConfig.getServletContext();
 			
@@ -143,11 +180,23 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 			if (env instanceof ConfigurableWebEnvironment) {
 				((ConfigurableWebEnvironment) env).initPropertySources(sc, null);
 			}
-			result.refresh();
+			
+			sc.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, result);
 		}
 		
 		return result;
 	}
+	
+	protected Dispatcher createDispatcher(HostConfig filterConfig, ClassLoader loader) {
+        Map<String, String> params = new HashMap<>();
+        for (Iterator<String> e = filterConfig.getInitParameterNames(); e.hasNext(); ) {
+            String name = (String) e.next();
+            String value = filterConfig.getInitParameter(name);
+            params.put(name, value);
+        }
+                
+        return new DispatcherEx(filterConfig.getServletContext(), params, loader);
+    }
 
 	protected HandlerRegistry getHandlerRegistry(){
 		return this.handlerRegistry;

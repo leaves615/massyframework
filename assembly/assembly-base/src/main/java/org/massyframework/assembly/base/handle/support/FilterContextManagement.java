@@ -194,7 +194,7 @@ public class FilterContextManagement extends BootableContextManagement<Filter>
 				.append(Constants.FILTER_NAME).append("=").append(filterName)
 			.append(")")
 			.append(")");
-		Map<String, String> params = ServletUtils.getServletInitParameter(initParams);
+		Map<String, String> params = ServletUtils.getFilterInitParameter(initParams);
 		params.put(PlaceHolderServlet.FILTERSTRING, builder.toString());
 		params.put(Constants.ASSEMBLY_SYMBOLICNAME, this.getAssembly().getSymbolicName());
 		

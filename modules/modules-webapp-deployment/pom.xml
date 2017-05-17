@@ -34,7 +34,7 @@
 		</dependency>
 	</dependencies>
 
-	<build>
+	<!-- <build>
 		<finalName>modules-deployment</finalName>
 		<plugins>
 			<plugin>
@@ -52,7 +52,7 @@
 
 						<configuration>
 							<artifactItems>
-								<!-- assembly core -->
+								assembly core
 								<artifactItem>
 									<groupId>org.massyframework.assembly</groupId>
 									<artifactId>assembly-api</artifactId>
@@ -72,7 +72,7 @@
 									<outputDirectory>${project.build.directory}/modules-deployment/WEB-INF/massy/modules/org/massyframework/assembly/main</outputDirectory>
 								</artifactItem>
 								
-								<!--  test modules -->
+								 test modules
 								<artifactItem>
 									<groupId>org.massyframework.modules</groupId>
 									<artifactId>modules-test-api</artifactId>
@@ -91,5 +91,5 @@
 				</executions>
 			</plugin>
 		</plugins>
-	</build>
+	</build> -->
 </project>

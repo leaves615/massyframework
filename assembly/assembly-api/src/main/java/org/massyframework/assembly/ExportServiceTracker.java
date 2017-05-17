@@ -65,7 +65,9 @@ public class ExportServiceTracker<T>{
 		
 		this.serviceRepository = serviceRepository;
 		this.serviceType = serviceType;
-		this.filterString = filterString;
+		this.filterString = filterString == null ?
+				"(" + Constants.OBJECT_CLASS + "=" + serviceType.getName() + ")" :
+					"(&(" + Constants.OBJECT_CLASS + "=" + serviceType.getName() + ") " + filterString + ")";
 		this.customizer = customizer;
 	}
 	

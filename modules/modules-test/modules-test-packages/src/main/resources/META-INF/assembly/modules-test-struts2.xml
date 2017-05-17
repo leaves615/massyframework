@@ -12,7 +12,22 @@
 	
 	<init-params>
 		<parameter key="filter.name" value ="struts2" />
-		<parameter key="filter.urlPatterns" value ="/struts/*" />
+		<parameter key="filter.urlPatterns" value ="/struts2/*" />
+		<parameter key="contextConfigLocation"
+			value="classpath:META-INF/assembly/spring/struts-spring.xml" />
+		<parameter key="filter.init.config"
+			value= "META-INF/assembly/struts/struts.xml" />
+		<parameter key="filter.dispatcherType"
+			value="request, forward" />
 	</init-params>
+	
+	<http-resources>
+		<resource alias="/account" name="/account" />
+	</http-resources>
+	
+	<!-- 依赖服务 -->
+	<dependency-service cName="userAdmin">
+		<class>org.massyframework.modules.test.UserAdmin</class>
+	</dependency-service>
 		
 </assembly>

@@ -167,7 +167,12 @@ class DefaultFrameworkLauncher implements FrameworkLauncher {
 	protected void doInitialize(FrameworkInitializeLoader initializeLoader) throws Exception{
 		List<FrameworkInitializer> initializers = 
 				this.loadFrameworkInitialziers();
-		initializers.add(0, new Initailizer());
+		
+		if (Constants.ENVIRONMENT_J2EE.equals(framework.getInitParameter(Constants.ENVIRONMENT))){
+			initializers.add(1, new Initailizer());
+		}else{
+			initializers.add(0, new Initailizer());
+		}
 		
 		for (FrameworkInitializer initializer: initializers){
 			try{

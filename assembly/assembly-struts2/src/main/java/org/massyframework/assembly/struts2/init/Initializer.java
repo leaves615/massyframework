@@ -43,7 +43,7 @@ public final class Initializer implements FrameworkInitializer {
 	@Override
 	public void onStartup(Framework framework) throws Exception {
 		if (this.isJ2EE(framework)){
-			//注册Struts2的过滤器
+			//注册Struts2的过滤器的装配件上下文工厂
 			Map<String, Object> props = new HashMap<String, Object>();
 			
 			props.put(Constants.SERVICE_NAME, new String[]{"struts"});
