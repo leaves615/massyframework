@@ -29,12 +29,16 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.massyframework.assembly.Assembly;
+import org.massyframework.assembly.ClassLoaderReference;
+import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.ExportServiceReference;
 import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.ExportServiceTracker;
 import org.massyframework.assembly.ExportServiceTrackerCustomizer;
 import org.massyframework.assembly.Framework;
+import org.massyframework.assembly.util.ClassLoaderUtils;
 
 
 /**
@@ -48,6 +52,7 @@ public class PlaceHolderFilter implements Filter {
 	private volatile FilterConfig config;
 	private final AtomicReference<Filter> reference;
 	private volatile ExportServiceTracker<Filter> serviceTracker;
+	private volatile ClassLoader loader;
 	
 	/**
 	 * 
@@ -78,9 +83,21 @@ public class PlaceHolderFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		Filter filter = this.reference.get();
-		if (filter != null){
-			filter.doFilter(request, response, chain);
+		ClassLoader contextLoader = null;
+		if (this.loader != null){
+			contextLoader = 
+					ClassLoaderUtils.setThreadContextClassLoader(this.loader);
+		}
+		
+		try{
+			Filter filter = this.reference.get();
+			if (filter != null){
+				filter.doFilter(request, response, chain);
+			}
+		}finally{
+			if (contextLoader != null){
+				ClassLoaderUtils.setThreadContextClassLoader(contextLoader);
+			}
 		}
 	}
 
@@ -101,6 +118,11 @@ public class PlaceHolderFilter implements Filter {
 		ServletContext servletContext = this.config.getServletContext();
 		Object obj = servletContext.getAttribute(Framework.class.getName());
 		if (obj instanceof Framework){
+			String name = this.config.getInitParameter(Constants.ASSEMBLY_SYMBOLICNAME);
+			Assembly assembly = ((Framework)obj).getAssembly(name);
+			if (assembly != null){
+				this.loader = ClassLoaderReference.adaptFrom(assembly);
+			}
 			return ExportServiceRepositoryReference.adaptFrom((Framework)obj);
 		}else{
 			throw new ServletException("cannot found Framework with ServletContext: attributeName=" + Framework.class.getName() + ".");

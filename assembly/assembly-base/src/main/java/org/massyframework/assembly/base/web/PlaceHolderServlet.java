@@ -28,7 +28,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.AssemblyNotReadyException;
+import org.massyframework.assembly.ClassLoaderReference;
 import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.ExportServiceReference;
 import org.massyframework.assembly.ExportServiceRepository;
@@ -36,6 +38,7 @@ import org.massyframework.assembly.ExportServiceRepositoryReference;
 import org.massyframework.assembly.ExportServiceTracker;
 import org.massyframework.assembly.ExportServiceTrackerCustomizer;
 import org.massyframework.assembly.Framework;
+import org.massyframework.assembly.util.ClassLoaderUtils;
 
 
 /**
@@ -48,6 +51,7 @@ public final class PlaceHolderServlet implements Servlet {
 	private ServletConfig config;
 	private final AtomicReference<Servlet> reference;
 	private ExportServiceTracker<Servlet> serviceTracker;
+	private volatile ClassLoader loader;
 	
 	/**
 	 * 
@@ -90,12 +94,24 @@ public final class PlaceHolderServlet implements Servlet {
 	 */
 	@Override
 	public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-		Servlet servlet = this.reference.get();
-		if (servlet != null){
-			servlet.service(req, res);
-		}else{
-			throw new AssemblyNotReadyException(
-					this.config.getInitParameter(Constants.ASSEMBLY_SYMBOLICNAME));
+		ClassLoader contextLoader = null;
+		if (this.loader != null){
+			contextLoader = 
+					ClassLoaderUtils.setThreadContextClassLoader(this.loader);
+		}
+		
+		try{
+			Servlet servlet = this.reference.get();
+			if (servlet != null){
+				servlet.service(req, res);
+			}else{
+				throw new AssemblyNotReadyException(
+						this.config.getInitParameter(Constants.ASSEMBLY_SYMBOLICNAME));
+			}
+		}finally{
+			if (contextLoader != null){
+				ClassLoaderUtils.setThreadContextClassLoader(contextLoader);
+			}
 		}
 	}
 
@@ -135,6 +151,11 @@ public final class PlaceHolderServlet implements Servlet {
 		ServletContext servletContext = this.config.getServletContext();
 		Object obj = servletContext.getAttribute(Framework.class.getName());
 		if (obj instanceof Framework){
+			String name = this.config.getInitParameter(Constants.ASSEMBLY_SYMBOLICNAME);
+			Assembly assembly = ((Framework)obj).getAssembly(name);
+			if (assembly != null){
+				this.loader = ClassLoaderReference.adaptFrom(assembly);
+			}
 			return ExportServiceRepositoryReference.adaptFrom((Framework)obj);
 		}else{
 			throw new ServletException("cannot found Framework with ServletContext: attributeName=" + Framework.class.getName() + ".");
