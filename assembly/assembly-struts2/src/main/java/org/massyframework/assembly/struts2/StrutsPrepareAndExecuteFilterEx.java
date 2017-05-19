@@ -26,7 +26,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.HostConfig;
 import org.apache.struts2.dispatcher.InitOperations;
 import org.apache.struts2.dispatcher.filter.FilterHostConfig;
@@ -37,6 +36,7 @@ import org.massyframework.assembly.ClassLoaderReference;
 import org.massyframework.assembly.base.handle.Handler;
 import org.massyframework.assembly.base.handle.HandlerRegistration;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
+import org.massyframework.assembly.base.web.MixinClassLoader;
 import org.massyframework.assembly.spring.SpringWebAssemblyContext;
 import org.massyframework.assembly.util.ClassLoaderUtils;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -53,7 +53,7 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 	implements AssemblyContextReference, Handler {
 
 	private volatile HandlerRegistry handlerRegistry;
-	private volatile HandlerRegistration<SpringWebAssemblyContext> assemblyContextRegistration;
+	private volatile HandlerRegistration<AssemblyContext> assemblyContextRegistration;
 	
 	private FilterConfig filterConfig;
 	
@@ -88,46 +88,45 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 	@Override
 	public synchronized void init(FilterConfig filterConfig) throws ServletException {		
 		if (this.filterConfig == null){
-			this.filterConfig = new FilterConfigWrapper(filterConfig); 
-			
+			this.filterConfig = new FilterConfigWrapper(filterConfig);
 			ClassLoader loader = ClassLoaderReference.adaptFrom(
 					this.handlerRegistry.getReference());
-			ClassLoader contextLoader = ClassLoaderUtils.setThreadContextClassLoader(loader);
+			ClassLoader contextLoader = ClassLoaderUtils.setThreadContextClassLoader(
+					new MixinClassLoader(loader, this.getClass().getClassLoader()));
 			try{
-				
 				//创建Spring的ApplicationContext
-				SpringWebAssemblyContext applicationContext = this.createWebApplication();
+				SpringWebAssemblyContext applicationContext = this.maybeTocreateWebApplication(loader);
 				if (applicationContext != null){
-					applicationContext.setClassLoader(loader);
 					this.assemblyContextRegistration = this.handlerRegistry.register(applicationContext);
 					applicationContext.refresh();
+					super.init(this.filterConfig);
+				}else{
+					InitOperations init = createInitOperations();
+			        DispatcherContext dispatcher = null;
+			        try {
+			            FilterHostConfig config = new FilterHostConfig(this.filterConfig);
+			            init.initLogging(config);
+			            dispatcher = createDispatcherContext(config);
+			            this.assemblyContextRegistration = 
+			            		this.handlerRegistry.register(dispatcher);
+			            dispatcher.init();
+			         
+			            init.initStaticContentLoader(config, dispatcher);
+			            prepare = createPrepareOperations(dispatcher);
+			            execute = createExecuteOperations(dispatcher);
+			            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+			            
+			            postInit(dispatcher, filterConfig);
+			        } finally {
+			            if (dispatcher != null) {
+			                dispatcher.cleanUpAfterInit();
+			            }
+			            init.cleanup();
+			        }
 				}
-				
-				InitOperations init = createInitOperations();
-		        Dispatcher dispatcher = null;
-		        try {
-		            FilterHostConfig config = new FilterHostConfig(this.filterConfig);
-		            init.initLogging(config);
-		            dispatcher = createDispatcher(config, loader);
-		            dispatcher.init();
-		            
-		            init.initStaticContentLoader(config, dispatcher);
-		            prepare = createPrepareOperations(dispatcher);
-		            execute = createExecuteOperations(dispatcher);
-		            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
-		            
-		            postInit(dispatcher, filterConfig);
-		        } finally {
-		            if (dispatcher != null) {
-		                dispatcher.cleanUpAfterInit();
-		            }
-		            init.cleanup();
-		        }
 			}finally{
 				ClassLoaderUtils.setThreadContextClassLoader(contextLoader);
 			}
-						
-			
 		}
 	}
 	
@@ -144,19 +143,17 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 	}
 
 	/**
-	 * 创建Spring的WebApplication
+	 * 尝试创建Spring的WebApplication
 	 * @return {@link SpringWebAssemblyContext}
 	 */
-	protected SpringWebAssemblyContext createWebApplication(){
+	protected SpringWebAssemblyContext maybeTocreateWebApplication(ClassLoader loader){
 		SpringWebAssemblyContext result = null;
 		String configLocation = this.getHandlerRegistry().getReference().getInitParameter(
 				ContextLoader.CONFIG_LOCATION_PARAM);
 		if (configLocation != null){
 			result = new SpringWebAssemblyContext();
 			
-			result.setConfigLocation(configLocation);			
-			
-			
+			result.setConfigLocation(configLocation);						
 			ServletContext sc = this.filterConfig.getServletContext();
 			
 			//以下代码来自Spring的ContextLoader.
@@ -189,12 +186,13 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 			}
 			
 			sc.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, result);
+			result.setClassLoader(loader);
 		}
 		
 		return result;
 	}
-	
-	protected Dispatcher createDispatcher(HostConfig filterConfig, ClassLoader loader) {
+		
+	protected DispatcherContext createDispatcherContext(HostConfig filterConfig) {
         Map<String, String> params = new HashMap<>();
         for (Iterator<String> e = filterConfig.getInitParameterNames(); e.hasNext(); ) {
             String name = (String) e.next();
@@ -202,7 +200,7 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
             params.put(name, value);
         }
                 
-        return new DispatcherEx(filterConfig.getServletContext(), params, loader);
+        return new DispatcherContext(filterConfig.getServletContext(), params);
     }
 
 	protected HandlerRegistry getHandlerRegistry(){

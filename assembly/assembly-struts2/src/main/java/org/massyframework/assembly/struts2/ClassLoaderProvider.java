@@ -14,29 +14,28 @@
 * limitations under the License.
 *  
 * @作   者： 黄开晖<kaimohkh@gmail.com> 
-* @日   期:  2017年5月16日
+* @日   期:  2017年5月19日
 */
 package org.massyframework.assembly.struts2;
 
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationException;
-import com.opensymphony.xwork2.config.ContainerProvider;
+import com.opensymphony.xwork2.config.ConfigurationProvider;
 import com.opensymphony.xwork2.inject.ContainerBuilder;
+import com.opensymphony.xwork2.inject.Context;
+import com.opensymphony.xwork2.inject.Factory;
 import com.opensymphony.xwork2.inject.Scope;
 import com.opensymphony.xwork2.util.location.LocatableProperties;
 
 /**
- * @author huangkaihui
- *
+ * 类加载器提供者
  */
-public class ClassLoaderContainerProvider implements ContainerProvider {
+public class ClassLoaderProvider implements ConfigurationProvider {
 
-	private ClassLoaderFactory factory;
 	/**
 	 * 
 	 */
-	public ClassLoaderContainerProvider(ClassLoader classLoader) {
-		this.factory = new ClassLoaderFactory(classLoader);
+	public ClassLoaderProvider() {
 	}
 
 	/* (non-Javadoc)
@@ -44,7 +43,7 @@ public class ClassLoaderContainerProvider implements ContainerProvider {
 	 */
 	@Override
 	public void destroy() {
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -52,7 +51,7 @@ public class ClassLoaderContainerProvider implements ContainerProvider {
 	 */
 	@Override
 	public void init(Configuration configuration) throws ConfigurationException {
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -68,8 +67,30 @@ public class ClassLoaderContainerProvider implements ContainerProvider {
 	 */
 	@Override
 	public void register(ContainerBuilder builder, LocatableProperties props) throws ConfigurationException {
-		builder.factory(ClassLoader.class, "objectFactory.classloader", factory, Scope.SINGLETON);
+		builder.factory(ClassLoader.class, "objectFactory.classloader", new FactoryImpl(), Scope.SINGLETON);
+	}
 
+	/* (non-Javadoc)
+	 * @see com.opensymphony.xwork2.config.PackageProvider#loadPackages()
+	 */
+	@Override
+	public void loadPackages() throws ConfigurationException {
+		
+	}
+	
+	private class FactoryImpl implements Factory<ClassLoader> {
+		
+		private ClassLoader loader ;
+		
+		public FactoryImpl(){
+			this.loader = Thread.currentThread().getContextClassLoader();
+		}
+
+		@Override
+		public ClassLoader create(Context context) throws Exception {
+			return this.loader;
+		}
+		
 	}
 
 }

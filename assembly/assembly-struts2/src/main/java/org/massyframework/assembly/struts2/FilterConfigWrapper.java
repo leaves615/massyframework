@@ -19,6 +19,7 @@
 package org.massyframework.assembly.struts2;
 
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -31,8 +32,11 @@ import org.massyframework.assembly.util.Asserts;
  */
 final class FilterConfigWrapper implements FilterConfig {
 	
+	private static final String PROVIDERS = "configProviders";
 	private FilterConfig delegate;
 	private ServletContext context;
+	
+	private String configProviders;
 
 	/**
 	 * 
@@ -41,6 +45,12 @@ final class FilterConfigWrapper implements FilterConfig {
 		Asserts.notNull(delegate, "delegate cannot be null.");
 		this.delegate = delegate;
 		this.context = new StrutsServletContext(delegate.getServletContext());
+		this.configProviders = delegate.getInitParameter(PROVIDERS);
+		if (this.configProviders == null){
+			this.configProviders = ClassLoaderProvider.class.getName();
+		}else{
+			this.configProviders = this.configProviders + "," + ClassLoaderProvider.class.getName();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -64,6 +74,9 @@ final class FilterConfigWrapper implements FilterConfig {
 	 */
 	@Override
 	public String getInitParameter(String name) {
+		if (PROVIDERS.equals(name)){
+			return this.configProviders;
+		}
 		return this.delegate.getInitParameter(name);
 	}
 
@@ -72,7 +85,14 @@ final class FilterConfigWrapper implements FilterConfig {
 	 */
 	@Override
 	public Enumeration<String> getInitParameterNames() {
-		return this.delegate.getInitParameterNames();
+		Vector<String> result = new Vector<String>();
+		Enumeration<String> em = this.delegate.getInitParameterNames();
+		while (em.hasMoreElements()){
+			result.add(em.nextElement());
+		}
+		
+		result.add(PROVIDERS);
+		return result.elements();
 	}
 
 }

@@ -106,7 +106,7 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 		Servlet result = this.servletMap.get(resource.getAssembly());
 		if (result == null){
 			try{
-				ClassLoader jasperLoader = new JsparClassLoader(
+				ClassLoader jasperLoader = new MixinClassLoader(
 						resource.getAssemblyClassLoader(), this.getClass().getClassLoader());
 				if (this.servletClass == null){
 					this.servletClass = (Class<? extends Servlet>) 

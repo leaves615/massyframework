@@ -14,7 +14,7 @@
 * limitations under the License.
 *  
 * @作   者： 黄开晖<kaimohkh@gmail.com> 
-* @日   期:  2017年5月16日
+* @日   期:  2017年5月19日
 */
 package org.massyframework.assembly.struts2;
 
@@ -24,26 +24,27 @@ import com.opensymphony.xwork2.inject.Context;
 import com.opensymphony.xwork2.inject.Factory;
 
 /**
- * 类加载器工厂
+ * @author huangkaihui
+ *
  */
-public class ClassLoaderFactory implements Factory<ClassLoader> {
+public class DependencyServiceFactory<T> implements Factory<T> {
 	
-	private final ClassLoader loader;
+	private T service;
 
 	/**
 	 * 
 	 */
-	public ClassLoaderFactory(ClassLoader loader) {
-		Asserts.notNull(loader, "loader cannot be null.");
-		this.loader = loader;
+	public DependencyServiceFactory(T service) {
+		Asserts.notNull(service, "service cannot be null.");
+		this.service = service;
 	}
 
 	/* (non-Javadoc)
 	 * @see com.opensymphony.xwork2.inject.Factory#create(com.opensymphony.xwork2.inject.Context)
 	 */
 	@Override
-	public ClassLoader create(Context context) throws Exception {
-		return this.loader;
+	public T create(Context context) throws Exception {
+		return this.service;
 	}
 	
 	

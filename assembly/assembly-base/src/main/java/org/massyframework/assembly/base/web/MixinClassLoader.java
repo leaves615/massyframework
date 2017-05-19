@@ -29,10 +29,9 @@ import java.util.Vector;
 import org.massyframework.assembly.util.Asserts;
 
 /**
- * @author huangkaihui
- *
+ * 混合的类加载器
  */
-class JsparClassLoader extends URLClassLoader {
+public class MixinClassLoader extends URLClassLoader {
 	
 	private final List<ClassLoader> loaders;
 
@@ -40,13 +39,13 @@ class JsparClassLoader extends URLClassLoader {
 	 * @param urls
 	 * @param parent
 	 */
-	public JsparClassLoader(List<ClassLoader> loaders, ClassLoader parent) {
+	public MixinClassLoader(List<ClassLoader> loaders, ClassLoader parent) {
 		super(null, parent);
 		Asserts.notEmpty(loaders, "loaders cannot be empty.");
 		this.loaders = loaders;
 	}
 	
-	public JsparClassLoader(ClassLoader loader, ClassLoader parent){
+	public MixinClassLoader(ClassLoader loader, ClassLoader parent){
 		super(new URL[0], parent);
 		this.loaders = new ArrayList<ClassLoader>();
 		this.loaders.add(loader);

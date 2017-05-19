@@ -16,7 +16,7 @@
 * @作   者： 黄开晖<kaimohkh@gmail.com> 
 * @日   期:  2017年4月10日
 */
-package org.massyframework.assembly.base.handle.support;
+package org.massyframework.assembly.base.web;
 
 import java.util.concurrent.atomic.AtomicReference;
 

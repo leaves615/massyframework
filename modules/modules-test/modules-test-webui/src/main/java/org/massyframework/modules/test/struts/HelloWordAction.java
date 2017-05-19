@@ -74,7 +74,7 @@ public class HelloWordAction extends ActionSupport {
 	/**
 	 * @param userAdmin the userAdmin to set
 	 */
-	@Resource
+	@Resource //如果使用Spring注入方式，此注解有效
 	public void setUserAdmin(UserAdmin userAdmin) {
 		this.userAdmin = userAdmin;
 	}
