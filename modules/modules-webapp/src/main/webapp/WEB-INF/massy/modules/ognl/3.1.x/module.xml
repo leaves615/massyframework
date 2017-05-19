@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="ognl" slot="3.1.x">
+	
+	<resources>
+		<resource-root path="ognl-3.1.12.jar" />
+	</resources>
+	<dependencies>
+		<module name="org.javassist" slot="3.20.x" />
+	</dependencies>
+	
+</module>

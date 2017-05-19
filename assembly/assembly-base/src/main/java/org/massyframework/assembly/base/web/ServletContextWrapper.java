@@ -16,7 +16,7 @@
 * @作   者： 黄开晖<kaimohkh@gmail.com> 
 * @日   期:  2017年4月14日
 */
-package org.massyframework.assembly.spring.init;
+package org.massyframework.assembly.base.web;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -25,7 +25,6 @@ import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
@@ -39,22 +38,15 @@ import javax.servlet.SessionCookieConfig;
 import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
-import org.massyframework.assembly.util.Asserts;
-import org.springframework.web.context.WebApplicationContext;
-
 /**
- * 提供ServletCOntext封装，阻断Spring ContextLoaderListener和DispatcherServlet之间的联系
+ * 提供ServletCOntext封装，拦截Spring Root WebApplicationContext设置和读取
  */
-class ServletContextWrapper implements ServletContext {
+public abstract class ServletContextWrapper implements ServletContext {
 	
-	private final ServletContext context;
-
 	/**
 	 * 
 	 */
-	public ServletContextWrapper(ServletContext context) {
-		Asserts.notNull(context, "context cannot be null.");
-		this.context = context;
+	public ServletContextWrapper() {
 	}
 
 	/* (non-Javadoc)
@@ -62,7 +54,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public String getContextPath() {
-		return this.context.getContextPath();
+		return this.getInternalContext().getContextPath();
 	}
 
 	/* (non-Javadoc)
@@ -70,7 +62,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public ServletContext getContext(String uripath) {
-		return this.context.getContext(uripath);
+		return this.getInternalContext().getContext(uripath);
 	}
 
 	/* (non-Javadoc)
@@ -78,7 +70,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public int getMajorVersion() {
-		return this.context.getMajorVersion();
+		return this.getInternalContext().getMajorVersion();
 	}
 
 	/* (non-Javadoc)
@@ -86,7 +78,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public int getMinorVersion() {
-		return this.context.getMinorVersion();
+		return this.getInternalContext().getMinorVersion();
 	}
 
 	/* (non-Javadoc)
@@ -94,7 +86,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public int getEffectiveMajorVersion() {
-		return this.context.getEffectiveMinorVersion();
+		return this.getInternalContext().getEffectiveMinorVersion();
 	}
 
 	/* (non-Javadoc)
@@ -102,7 +94,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public int getEffectiveMinorVersion() {
-		return this.context.getEffectiveMinorVersion();
+		return this.getInternalContext().getEffectiveMinorVersion();
 	}
 
 	/* (non-Javadoc)
@@ -110,7 +102,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public String getMimeType(String file) {
-		return this.context.getMimeType(file);
+		return this.getInternalContext().getMimeType(file);
 	}
 
 	/* (non-Javadoc)
@@ -118,7 +110,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Set<String> getResourcePaths(String path) {
-		return this.context.getResourcePaths(path);
+		return this.getInternalContext().getResourcePaths(path);
 	}
 
 	/* (non-Javadoc)
@@ -126,7 +118,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public URL getResource(String path) throws MalformedURLException {
-		return this.context.getResource(path);
+		return this.getInternalContext().getResource(path);
 	}
 
 	/* (non-Javadoc)
@@ -134,7 +126,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public InputStream getResourceAsStream(String path) {
-		return this.context.getResourceAsStream(path);
+		return this.getInternalContext().getResourceAsStream(path);
 	}
 
 	/* (non-Javadoc)
@@ -142,7 +134,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public RequestDispatcher getRequestDispatcher(String path) {
-		return this.context.getRequestDispatcher(path);
+		return this.getInternalContext().getRequestDispatcher(path);
 	}
 
 	/* (non-Javadoc)
@@ -150,7 +142,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public RequestDispatcher getNamedDispatcher(String name) {
-		return this.context.getNamedDispatcher(name);
+		return this.getInternalContext().getNamedDispatcher(name);
 	}
 
 	/* (non-Javadoc)
@@ -159,7 +151,7 @@ class ServletContextWrapper implements ServletContext {
 	@SuppressWarnings("deprecation")
 	@Override
 	public Servlet getServlet(String name) throws ServletException {
-		return this.context.getServlet(name);
+		return this.getInternalContext().getServlet(name);
 	}
 
 	/* (non-Javadoc)
@@ -168,7 +160,7 @@ class ServletContextWrapper implements ServletContext {
 	@SuppressWarnings("deprecation")
 	@Override
 	public Enumeration<Servlet> getServlets() {
-		return this.context.getServlets();
+		return this.getInternalContext().getServlets();
 	}
 
 	/* (non-Javadoc)
@@ -177,7 +169,7 @@ class ServletContextWrapper implements ServletContext {
 	@SuppressWarnings("deprecation")
 	@Override
 	public Enumeration<String> getServletNames() {
-		return this.context.getServletNames();
+		return this.getInternalContext().getServletNames();
 	}
 
 	/* (non-Javadoc)
@@ -185,7 +177,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void log(String msg) {
-		this.context.log(msg);
+		this.getInternalContext().log(msg);
 	}
 
 	/* (non-Javadoc)
@@ -194,7 +186,7 @@ class ServletContextWrapper implements ServletContext {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void log(Exception exception, String msg) {
-		this.context.log(exception, msg);
+		this.getInternalContext().log(exception, msg);
 	}
 
 	/* (non-Javadoc)
@@ -202,7 +194,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void log(String message, Throwable throwable) {
-		this.context.log(message, throwable);
+		this.getInternalContext().log(message, throwable);
 	}
 
 	/* (non-Javadoc)
@@ -210,7 +202,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public String getRealPath(String path) {
-		return this.context.getRealPath(path);
+		return this.getInternalContext().getRealPath(path);
 	}
 
 	/* (non-Javadoc)
@@ -218,7 +210,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public String getServerInfo() {
-		return this.context.getServerInfo();
+		return this.getInternalContext().getServerInfo();
 	}
 
 	/* (non-Javadoc)
@@ -226,7 +218,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public String getInitParameter(String name) {
-		return this.context.getInitParameter(name);
+		return this.getInternalContext().getInitParameter(name);
 	}
 
 	/* (non-Javadoc)
@@ -234,7 +226,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Enumeration<String> getInitParameterNames() {
-		return this.context.getInitParameterNames();
+		return this.getInternalContext().getInitParameterNames();
 	}
 
 	/* (non-Javadoc)
@@ -242,19 +234,15 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public boolean setInitParameter(String name, String value) {
-		return this.context.setInitParameter(name, value);
+		return this.getInternalContext().setInitParameter(name, value);
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.servlet.ServletContext#getAttribute(java.lang.String)
 	 */
 	@Override
-	public Object getAttribute(String name) {
-		if (WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE.equals(name)){
-			return null;
-		}
-		
-		return this.context.getAttribute(name);
+	public Object getAttribute(String name) {		
+		return this.getInternalContext().getAttribute(name);
 	}
 
 	/* (non-Javadoc)
@@ -262,15 +250,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Enumeration<String> getAttributeNames() {
-		Vector<String> vector = new Vector<String>();
-		Enumeration<String> em = this.context.getAttributeNames();
-		while (em.hasMoreElements()){
-			String name = em.nextElement();
-			if (!WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE.equals(name)){
-				vector.add(name);
-			}
-		}
-		return vector.elements();
+		return this.getInternalContext().getAttributeNames();
 	}
 
 	/* (non-Javadoc)
@@ -278,7 +258,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void setAttribute(String name, Object object) {
-		this.context.setAttribute(name, object);
+		this.getInternalContext().setAttribute(name, object);
 	}
 
 	/* (non-Javadoc)
@@ -286,7 +266,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void removeAttribute(String name) {
-		this.context.removeAttribute(name);
+		this.getInternalContext().removeAttribute(name);
 	}
 
 	/* (non-Javadoc)
@@ -294,7 +274,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public String getServletContextName() {
-		return this.context.getServletContextName();
+		return this.getInternalContext().getServletContextName();
 	}
 
 	/* (non-Javadoc)
@@ -302,7 +282,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Dynamic addServlet(String servletName, String className) {
-		return this.context.addServlet(servletName, className);
+		return this.getInternalContext().addServlet(servletName, className);
 	}
 
 	/* (non-Javadoc)
@@ -310,7 +290,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Dynamic addServlet(String servletName, Servlet servlet) {
-		return this.context.addServlet(servletName, servlet);
+		return this.getInternalContext().addServlet(servletName, servlet);
 	}
 
 	/* (non-Javadoc)
@@ -318,7 +298,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass) {
-		return this.context.addServlet(servletName, servletClass);
+		return this.getInternalContext().addServlet(servletName, servletClass);
 	}
 
 	/* (non-Javadoc)
@@ -326,7 +306,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException {
-		return this.context.createServlet(clazz);
+		return this.getInternalContext().createServlet(clazz);
 	}
 
 	/* (non-Javadoc)
@@ -334,7 +314,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public ServletRegistration getServletRegistration(String servletName) {
-		return this.context.getServletRegistration(servletName);
+		return this.getInternalContext().getServletRegistration(servletName);
 	}
 
 	/* (non-Javadoc)
@@ -342,7 +322,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Map<String, ? extends ServletRegistration> getServletRegistrations() {
-		return this.context.getServletRegistrations();
+		return this.getInternalContext().getServletRegistrations();
 	}
 
 	/* (non-Javadoc)
@@ -350,7 +330,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className) {
-		return this.context.addFilter(filterName, className);
+		return this.getInternalContext().addFilter(filterName, className);
 	}
 
 	/* (non-Javadoc)
@@ -358,7 +338,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
-		return this.context.addFilter(filterName, filter);
+		return this.getInternalContext().addFilter(filterName, filter);
 	}
 
 	/* (non-Javadoc)
@@ -366,7 +346,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Class<? extends Filter> filterClass) {
-		return this.context.addFilter(filterName, filterClass);
+		return this.getInternalContext().addFilter(filterName, filterClass);
 	}
 
 	/* (non-Javadoc)
@@ -374,7 +354,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException {
-		return this.context.createFilter(clazz);
+		return this.getInternalContext().createFilter(clazz);
 	}
 
 	/* (non-Javadoc)
@@ -382,7 +362,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public FilterRegistration getFilterRegistration(String filterName) {
-		return this.context.getFilterRegistration(filterName);
+		return this.getInternalContext().getFilterRegistration(filterName);
 	}
 
 	/* (non-Javadoc)
@@ -390,7 +370,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
-		return this.context.getFilterRegistrations();
+		return this.getInternalContext().getFilterRegistrations();
 	}
 
 	/* (non-Javadoc)
@@ -398,7 +378,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public SessionCookieConfig getSessionCookieConfig() {
-		return this.context.getSessionCookieConfig();
+		return this.getInternalContext().getSessionCookieConfig();
 	}
 
 	/* (non-Javadoc)
@@ -406,7 +386,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
-		this.context.setSessionTrackingModes(sessionTrackingModes);
+		this.getInternalContext().setSessionTrackingModes(sessionTrackingModes);
 	}
 
 	/* (non-Javadoc)
@@ -414,7 +394,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
-		return this.context.getDefaultSessionTrackingModes();
+		return this.getInternalContext().getDefaultSessionTrackingModes();
 	}
 
 	/* (non-Javadoc)
@@ -422,7 +402,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
-		return this.context.getEffectiveSessionTrackingModes();
+		return this.getInternalContext().getEffectiveSessionTrackingModes();
 	}
 
 	/* (non-Javadoc)
@@ -430,7 +410,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void addListener(String className) {
-		this.context.addListener(className);
+		this.getInternalContext().addListener(className);
 
 	}
 
@@ -439,7 +419,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public <T extends EventListener> void addListener(T t) {
-		this.context.addListener(t);
+		this.getInternalContext().addListener(t);
 	}
 
 	/* (non-Javadoc)
@@ -447,7 +427,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void addListener(Class<? extends EventListener> listenerClass) {
-		this.context.addListener(listenerClass);
+		this.getInternalContext().addListener(listenerClass);
 	}
 
 	/* (non-Javadoc)
@@ -455,7 +435,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException {
-		return this.context.createListener(clazz);
+		return this.getInternalContext().createListener(clazz);
 	}
 
 	/* (non-Javadoc)
@@ -463,7 +443,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public JspConfigDescriptor getJspConfigDescriptor() {
-		return this.context.getJspConfigDescriptor();
+		return this.getInternalContext().getJspConfigDescriptor();
 	}
 
 	/* (non-Javadoc)
@@ -471,7 +451,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public ClassLoader getClassLoader() {
-		return this.context.getClassLoader();
+		return this.getInternalContext().getClassLoader();
 	}
 
 	/* (non-Javadoc)
@@ -479,7 +459,7 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public void declareRoles(String... roleNames) {
-		this.context.declareRoles(roleNames);
+		this.getInternalContext().declareRoles(roleNames);
 
 	}
 
@@ -488,7 +468,12 @@ class ServletContextWrapper implements ServletContext {
 	 */
 	@Override
 	public String getVirtualServerName() {
-		return this.context.getVirtualServerName();
+		return this.getInternalContext().getVirtualServerName();
 	}
 
+	/**
+	 * 获取内部的{@link ServletContext}
+	 * @return
+	 */
+	protected abstract ServletContext getInternalContext();
 }

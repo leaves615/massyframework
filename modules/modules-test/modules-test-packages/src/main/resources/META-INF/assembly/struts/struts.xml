@@ -3,10 +3,9 @@
 <struts>
 	<!-- 使用Spring作为组件容器 -->
 	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
-	<!-- <constant name="com.opensymphony.xwork2.ObjectFactory" value="spring" /> -->
 		
 	<!-- include节点是struts2中组件化的方式 可以将每个功能模块独立到一个xml配置文件中 然后用include节点引用 -->
-	<include file="struts-default.xml"></include>
+	<include file="struts-default.xml"/>
 	
 	<!-- struts2的action必须放在一个指定的包空间下定义 -->
     <package name="spring-default" namespace="/struts2" extends="struts-default">

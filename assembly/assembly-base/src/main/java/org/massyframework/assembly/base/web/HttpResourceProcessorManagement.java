@@ -110,10 +110,15 @@ class HttpResourceProcessorManagement
 	 */
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp, HttpResource resource) throws IOException{
 		String path = req.getPathInfo();
+		if (path != null && path.startsWith("/WEB-INF/")) { //$NON-NLS-1$
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return;
+		}
+		
 		if (!path.startsWith("/")){
 			path = "/" + path;
 		}
-		
+				
 		String resourceName = resource.getName() + path;
 		URL url = resource.getAssemblyClassLoader().getResource(resourceName);
 		if (url != null){
@@ -256,7 +261,6 @@ class HttpResourceProcessorManagement
 	 * @throws IOException
 	 */
 	private void sendError(final HttpServletResponse resp, int sc) throws IOException {
-
 		try {
 			// we need to reset headers for 302 and 403
 			resp.reset();

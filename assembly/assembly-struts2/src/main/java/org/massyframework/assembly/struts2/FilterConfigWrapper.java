@@ -32,7 +32,7 @@ import org.massyframework.assembly.util.Asserts;
 final class FilterConfigWrapper implements FilterConfig {
 	
 	private FilterConfig delegate;
-	private ServletContextWrapper contextWrapper;
+	private ServletContext context;
 
 	/**
 	 * 
@@ -40,8 +40,7 @@ final class FilterConfigWrapper implements FilterConfig {
 	public FilterConfigWrapper(FilterConfig delegate) {
 		Asserts.notNull(delegate, "delegate cannot be null.");
 		this.delegate = delegate;
-		this.contextWrapper = new ServletContextWrapper(
-				delegate.getServletContext());
+		this.context = new StrutsServletContext(delegate.getServletContext());
 	}
 
 	/* (non-Javadoc)
@@ -57,7 +56,7 @@ final class FilterConfigWrapper implements FilterConfig {
 	 */
 	@Override
 	public ServletContext getServletContext() {
-		return this.contextWrapper;
+		return this.context;
 	}
 
 	/* (non-Javadoc)

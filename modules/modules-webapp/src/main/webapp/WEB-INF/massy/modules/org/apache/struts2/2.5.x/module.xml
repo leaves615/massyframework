@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="org.apache.struts2" slot="2.5.x">
+	
+	<resources>
+	    <resource-root path="struts2-spring-plugin-2.5.10.1.jar" />
+		<resource-root path="struts2-core-2.5.10.1.jar" />
+	</resources>
+	
+	<dependencies>
+		<module name="org.freemarker" slot="2.3.x" />  
+		<module name="ognl" slot="3.1.x" />
+		<module name="org.apache.commons.fileupload" slot="1.3.x" />
+		<module name="org.apache.commons.io" slot="2.5" />
+		<module name="org.apache.commons.lang3" slot="3.5" />
+		<module name="org.apache.logging" slot="2.7" />
+		<module name="javax.servlet" slot="3.1" />
+		<module name="sun.jdk" slot="1.8" />
+		<module name="org.springframework" slot="4.3.5.RELEASE" >
+			<imports>
+				<include path="META-INF**" />
+				<include path="org**" />
+			</imports>
+        </module>    
+	</dependencies>
+</module>

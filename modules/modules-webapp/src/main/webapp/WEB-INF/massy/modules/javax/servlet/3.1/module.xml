@@ -8,7 +8,11 @@
             	<path name="javax/servlet" />
             	<path name="javax/servlet/annotation" />
             	<path name="javax/servlet/descriptor" />
-            	<path name="javax/servlet/http" />              	            	
+            	<path name="javax/servlet/http" />   
+            	<path name="javax/servlet/jsp" />     
+            	<path name="javax/servlet/jsp/el" />     
+            	<path name="javax/servlet/jsp/resources" />     
+            	<path name="javax/servlet/jsp/tagext" />             	            	
             </paths>
         </system>        
 	</dependencies>

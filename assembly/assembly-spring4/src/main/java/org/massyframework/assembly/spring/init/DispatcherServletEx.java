@@ -96,7 +96,7 @@ public class DispatcherServletEx extends DispatcherServlet implements AssemblyCo
 			super.init(new Config(config.getServletContext()));
 		}else{
 			super.init(new Config(
-				new ServletContextWrapper(this.delegate.getServletContext())));
+				new SpringServletContext(this.delegate.getServletContext())));
 		}
 	}
 

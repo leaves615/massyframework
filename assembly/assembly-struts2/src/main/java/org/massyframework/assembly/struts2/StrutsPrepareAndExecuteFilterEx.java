@@ -38,6 +38,7 @@ import org.massyframework.assembly.base.handle.Handler;
 import org.massyframework.assembly.base.handle.HandlerRegistration;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
 import org.massyframework.assembly.spring.SpringWebAssemblyContext;
+import org.massyframework.assembly.util.ClassLoaderUtils;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
@@ -91,34 +92,40 @@ public class StrutsPrepareAndExecuteFilterEx extends StrutsPrepareAndExecuteFilt
 			
 			ClassLoader loader = ClassLoaderReference.adaptFrom(
 					this.handlerRegistry.getReference());
-			//创建Spring的ApplicationContext
-			SpringWebAssemblyContext applicationContext = this.createWebApplication();
-			if (applicationContext != null){
-				applicationContext.setClassLoader(loader);
-				this.assemblyContextRegistration = this.handlerRegistry.register(applicationContext);
-				applicationContext.refresh();
+			ClassLoader contextLoader = ClassLoaderUtils.setThreadContextClassLoader(loader);
+			try{
+				
+				//创建Spring的ApplicationContext
+				SpringWebAssemblyContext applicationContext = this.createWebApplication();
+				if (applicationContext != null){
+					applicationContext.setClassLoader(loader);
+					this.assemblyContextRegistration = this.handlerRegistry.register(applicationContext);
+					applicationContext.refresh();
+				}
+				
+				InitOperations init = createInitOperations();
+		        Dispatcher dispatcher = null;
+		        try {
+		            FilterHostConfig config = new FilterHostConfig(this.filterConfig);
+		            init.initLogging(config);
+		            dispatcher = createDispatcher(config, loader);
+		            dispatcher.init();
+		            
+		            init.initStaticContentLoader(config, dispatcher);
+		            prepare = createPrepareOperations(dispatcher);
+		            execute = createExecuteOperations(dispatcher);
+		            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
+		            
+		            postInit(dispatcher, filterConfig);
+		        } finally {
+		            if (dispatcher != null) {
+		                dispatcher.cleanUpAfterInit();
+		            }
+		            init.cleanup();
+		        }
+			}finally{
+				ClassLoaderUtils.setThreadContextClassLoader(contextLoader);
 			}
-			
-			InitOperations init = createInitOperations();
-	        Dispatcher dispatcher = null;
-	        try {
-	            FilterHostConfig config = new FilterHostConfig(this.filterConfig);
-	            init.initLogging(config);
-	            dispatcher = createDispatcher(config, loader);
-	            dispatcher.init();
-	            
-	            init.initStaticContentLoader(config, dispatcher);
-	            prepare = createPrepareOperations(dispatcher);
-	            execute = createExecuteOperations(dispatcher);
-	            this.excludedPatterns = init.buildExcludedPatternsList(dispatcher);
-	            
-	            postInit(dispatcher, filterConfig);
-	        } finally {
-	            if (dispatcher != null) {
-	                dispatcher.cleanUpAfterInit();
-	            }
-	            init.cleanup();
-	        }
 						
 			
 		}

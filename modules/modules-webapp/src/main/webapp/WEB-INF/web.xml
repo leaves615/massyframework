@@ -4,4 +4,10 @@
 	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	<display-name>Modular Web Application</display-name>
 
+	<jsp-config>
+		<taglib>
+			<taglib-uri>struts-tags</taglib-uri>
+			<taglib-location>META-INF/struts-tags</taglib-location>
+		</taglib>
+	</jsp-config>
 </web-app>

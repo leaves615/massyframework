@@ -45,10 +45,8 @@ public class Initializer implements FrameworkInitializer {
 	 */
 	@Override
 	public void onStartup(Framework framework) throws Exception {
-		
 		URLClassLoader loader =
-				this.createdEmbedClassLoader();
-		
+				this.createdEmbedClassLoader();		
 		//找到装配件的配置文件，并手工安装装配件
 		URL url =  this.getClass().getResource("/META-INF/assembly/modules-test-business.xml");
 		if (url != null){

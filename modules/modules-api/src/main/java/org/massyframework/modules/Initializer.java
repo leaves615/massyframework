@@ -60,7 +60,7 @@ public class Initializer implements ServletContainerInitializer {
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
 		
 		Map<String, String> configuration = this.getConfiguration(ctx);
-		try{
+		try{			
 			ModuleLoader moduleLoader = prepareModuleLoader(configuration);
 			ctx.setAttribute(ModuleLoader.class.getName(), moduleLoader);
 						
