@@ -116,6 +116,4 @@ public class MixinClassLoader extends URLClassLoader {
 		}
 		return result.elements();
 	}
-
-
 }

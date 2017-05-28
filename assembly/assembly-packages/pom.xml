@@ -74,17 +74,11 @@
 			</exclusions>
 		</dependency>
 		
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jasper</artifactId>
-			<version>9.0.0.M21</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.tomcat</groupId>
-					<artifactId>tomcat-servlet-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency> -->
+			<version>8.5.14</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -122,6 +116,11 @@
 								<artifactItem>
 									<groupId>org.massyframework.assembly</groupId>
 									<artifactId>assembly-struts2</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.assembly</groupId>
+									<artifactId>assembly-servlet-jasper</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
 							</artifactItems>

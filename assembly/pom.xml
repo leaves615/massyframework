@@ -76,6 +76,7 @@
   <modules>
     <module>assembly-api</module>
     <module>assembly-base</module>
+    <module>assembly-servlet-jasper</module>
     <module>assembly-runtime</module>
     <module>assembly-spring4</module>
     <module>assembly-struts2</module>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="javax.servlet.jsp.jstl" slot="1.2.x">
+	
+	<resources>
+		<resource-root path="taglibs-standard-impl-1.2.5.jar" />
+		<resource-root path="taglibs-standard-spec-1.2.5.jar" />
+	</resources>
+	<dependencies>
+		<module name="javax.servlet" slot="3.1" />
+		<module name="sun.jdk" slot="1.8" />
+	</dependencies>
+	
+	<!-- <dependencies>
+		<system export="true">
+			<paths>
+				<path name="javax/servlet/jsp/jstl/core" />
+				<path name="javax/servlet/jsp/jstl/fmt" />
+				<path name="javax/servlet/jsp/jstl/sql" />
+				<path name="javax/servlet/jsp/jstl/tlv" />
+				<path name="org/apache/taglibs/standard" />
+				<path name="org/apache/taglibs/standard/extra/spath" />
+				<path name="org/apache/taglibs/standard/functions" />
+				<path name="org/apache/taglibs/standard/lang/jstl" />
+				<path name="org/apache/taglibs/standard/lang/jstl/parser" />
+				<path name="org/apache/taglibs/standard/lang/jstl/test" />
+				<path name="org/apache/taglibs/standard/lang/jstl/test/beans" />
+				<path name="org/apache/taglibs/standard/lang/support" />
+				<path name="org/apache/taglibs/standard/resources" />
+				<path name="org/apache/taglibs/standard/tag/common/core" />
+				<path name="org/apache/taglibs/standard/tag/common/fmt" />
+				<path name="org/apache/taglibs/standard/tag/common/sql" />
+				<path name="org/apache/taglibs/standard/tag/common/xml" />
+				<path name="org/apache/taglibs/standard/tag/el/core" />
+				<path name="org/apache/taglibs/standard/tag/el/fmt" />
+				<path name="org/apache/taglibs/standard/tag/el/sql" />
+				<path name="org/apache/taglibs/standard/tag/el/xml" />
+				<path name="org/apache/taglibs/standard/tag/rt/core" />
+				<path name="org/apache/taglibs/standard/tag/rt/fmt" />
+				<path name="org/apache/taglibs/standard/tag/rt/sql" />
+				<path name="org/apache/taglibs/standard/tag/rt/xml" />
+				<path name="org/apache/taglibs/standard/tei" />
+				<path name="org/apache/taglibs/standard/tlv" />
+				<path name="org/apache/taglibs/standard/util" />
+	
+			</paths>
+		</system>
+	</dependencies>  -->
+</module>

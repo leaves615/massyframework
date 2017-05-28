@@ -16,7 +16,7 @@
 * @作   者： 黄开晖<kaimohkh@gmail.com> 
 * @日   期:  2017年5月17日
 */
-package org.massyframework.assembly.base.web;
+package org.massyframework.assembly.servlet.jasper;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,8 +38,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jasper.Constants;
+import org.apache.jasper.compiler.TldCache;
+import org.apache.jasper.servlet.JspServlet;
+import org.apache.jasper.servlet.TldScanner;
+import org.apache.tomcat.InstanceManager;
+import org.apache.tomcat.SimpleInstanceManager;
 import org.massyframework.assembly.Assembly;
 import org.massyframework.assembly.LoggerReference;
+import org.massyframework.assembly.base.web.MixinClassLoader;
+import org.massyframework.assembly.base.web.ServletContextWrapper;
 import org.massyframework.assembly.util.ClassLoaderUtils;
 import org.massyframework.assembly.web.HttpResource;
 import org.massyframework.assembly.web.HttpResourceProcessor;
@@ -86,7 +94,7 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 		Servlet servlet = this.getOrCreateJspServelt(resource);
 		String path = resource.getName() + req.getPathInfo() ;
 		req.setAttribute(RequestDispatcher.INCLUDE_SERVLET_PATH, path);
-		
+				
 		ClassLoader loader = ClassLoaderUtils.setThreadContextClassLoader(
 				servlet.getServletConfig().getServletContext().getClassLoader());
 		try{
@@ -106,27 +114,35 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 		Servlet result = this.servletMap.get(resource.getAssembly());
 		if (result == null){
 			try{
-				ClassLoader jasperLoader = new MixinClassLoader(
-						resource.getAssemblyClassLoader(), this.getClass().getClassLoader());
-				if (this.servletClass == null){
-					this.servletClass = (Class<? extends Servlet>) 
-							jasperLoader.loadClass("org.apache.jasper.servlet.JspServlet");
-							
-				}
-				Servlet tmp = ClassLoaderUtils.newInstance(this.servletClass);
-				
-				ClassLoader loader = 
-						ClassLoaderUtils.setThreadContextClassLoader(jasperLoader);
-				try{
-					tmp.init(new Config(new Context(
-							jasperLoader, LoggerReference.adaptFrom(resource.getAssembly()))));
-					
-					result = this.servletMap.putIfAbsent(resource.getAssembly(), tmp);
+				synchronized(this){
 					if (result == null){
-						result = tmp;
+						ClassLoader jasperLoader = new MixinClassLoader(
+							resource.getAssemblyClassLoader(), this.getClass().getClassLoader());
+													
+						if (this.servletClass == null){
+							this.servletClass = (Class<? extends Servlet>) 
+								jasperLoader.loadClass("org.apache.jasper.servlet.JspServlet");		
+						}
+						Servlet tmp = ClassLoaderUtils.newInstance(this.servletClass);
+					
+						ClassLoader loader = 
+							ClassLoaderUtils.setThreadContextClassLoader(jasperLoader);
+						try{					
+							
+							Context context =  new Context(
+									jasperLoader, LoggerReference.adaptFrom(resource.getAssembly()));							
+							context.scanTlds();
+							tmp.init(new Config(context));
+							
+						
+							result = this.servletMap.putIfAbsent(resource.getAssembly(), tmp);
+							if (result == null){
+								result = tmp;
+							}
+						}finally{
+							ClassLoaderUtils.setThreadContextClassLoader(loader);
+						}
 					}
-				}finally{
-					ClassLoaderUtils.setThreadContextClassLoader(loader);
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -134,6 +150,18 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 		}
 		
 		return result;
+	}
+	
+	protected TldCache getTldCache(ServletContext context){
+		Object result = context.getAttribute(TldCache.SERVLET_CONTEXT_ATTRIBUTE_NAME);
+		if (result == null){
+			return null;
+		}
+		
+		if (result instanceof TldCache){
+			return (TldCache)result;
+		}
+		return null;
 	}
 	
 	/* (non-Javadoc)
@@ -182,6 +210,8 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 		
 		private ClassLoader loader;
 		private Logger logger;
+		private Object tldCache;
+		private Object instanceManager;
 		
 		public Context(ClassLoader loader, Logger logger){
 			this.loader = loader;
@@ -189,6 +219,74 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 		}
 
 		
+
+		@Override
+		public Object getAttribute(String name) {
+			if (TldCache.SERVLET_CONTEXT_ATTRIBUTE_NAME.equals(name)){
+				return this.tldCache;
+			}
+			
+			if (InstanceManager.class.getName().equals(name)){
+				return this.instanceManager;
+			}
+			return super.getAttribute(name);
+		}
+
+
+
+		@Override
+		public Enumeration<String> getAttributeNames() {
+			Vector<String> result = new Vector<String>();
+			Enumeration<String> em = super.getAttributeNames();
+			while (em.hasMoreElements()){
+				result.add(em.nextElement());
+			}
+			if (this.tldCache != null){
+				result.addElement(TldCache.SERVLET_CONTEXT_ATTRIBUTE_NAME);
+			}
+			if (this.instanceManager != null){
+				result.add(InstanceManager.class.getName());
+			}
+			return result.elements();
+		}
+
+
+
+		@Override
+		public void setAttribute(String name, Object object) {
+			if (TldCache.SERVLET_CONTEXT_ATTRIBUTE_NAME.equals(name)){
+				this.tldCache = object;
+			}else{
+				if (InstanceManager.class.getName().equals(name)){
+					this.instanceManager = object;
+				}else{
+					super.setAttribute(name, object);
+				}
+			}
+		}
+
+
+
+		/* (non-Javadoc)
+		 * @see org.massyframework.assembly.base.web.ServletContextWrapper#getRealPath(java.lang.String)
+		 */
+		@Override
+		public String getRealPath(String path) {
+			String result = super.getRealPath(path);
+			
+			if (this.logger != null){
+				if (this.logger.isTraceEnabled()){
+					String msg = result == null ?
+						"cannot get real path: path=" + path + "." :
+							"get real path " + path + " with:" + result +".";
+					this.logger.trace(msg);
+				}
+				
+			}
+			return result;
+		}
+
+
 
 		@Override
 		public URL getResource(String path) throws MalformedURLException {
@@ -208,11 +306,11 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 			}
 			
 			if (logger != null){
-				if (logger.isDebugEnabled()){
+				if (logger.isTraceEnabled()){
 					String msg = result == null ?
 							"cannot found resource: " + path + ".":
 								"found resource "+ path + " with: " + result.getPath() + ".";
-					logger.debug(msg);
+					logger.trace(msg);
 				}
 			}
 			return result;
@@ -256,6 +354,37 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 			return servletContext;
 		}
 		
+		/**
+		 * 扫描tlds
+		 * @throws ServletException
+		 */
+		protected void scanTlds() throws ServletException{
+			this.setAttribute(InstanceManager.class.getName(), new SimpleInstanceManager());
+			boolean validate = Boolean.parseBoolean(
+	                this.getInitParameter(Constants.XML_VALIDATION_TLD_INIT_PARAM));
+	        String blockExternalString = this.getInitParameter(
+	                Constants.XML_BLOCK_EXTERNAL_INIT_PARAM);
+	        boolean blockExternal = false;
+	        if (blockExternalString == null) {
+	            blockExternal = true;
+	        } else {
+	            blockExternal = Boolean.parseBoolean(blockExternalString);
+	        }
+	        
+			// scan the application for TLDs
+	        TldScanner scanner = new TldScannerEx(this, true, validate, blockExternal);
+	        try {	        	
+	        	scanner.setClassLoader(this.loader);
+	            scanner.scan();
+	         
+	        } catch (Exception e) {
+	            throw new ServletException(e);
+	        }
+	        
+	        this.setAttribute(TldCache.SERVLET_CONTEXT_ATTRIBUTE_NAME,
+	                new TldCache(this, scanner.getUriTldResourcePathMap(),
+	                        scanner.getTldResourcePathTaglibXmlMap()));
+		}
 	}
 
 }

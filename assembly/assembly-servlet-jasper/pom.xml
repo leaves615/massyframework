@@ -4,15 +4,18 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.massyframework.modules</groupId>
-		<artifactId>modules</artifactId>
+		<groupId>org.massyframework.assembly</groupId>
+		<artifactId>assembly</artifactId>
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>modules-webapp</artifactId>
-	<packaging>war</packaging>
-	<name>modules-webapp Maven Webapp</name>
+	<artifactId>assembly-servlet-jasper</artifactId>
+	<name>assembly-servlet-jasper</name>
+	<description>提供Jasper和jstl标签的支持</description>
 	<url>http://maven.apache.org</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -20,26 +23,24 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
-			<groupId>org.massyframework.modules</groupId>
-			<artifactId>modules-api</artifactId>
+			<groupId>org.massyframework.assembly</groupId>
+			<artifactId>assembly-base</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
+			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.apache.tomcat</groupId>
-		    <artifactId>tomcat-jasper</artifactId>
-		    <version>8.5.15</version>
-		</dependency> -->
-		
+			<artifactId>tomcat-jasper</artifactId>
+			<version>8.5.14</version>
+		</dependency>
 	</dependencies>
-	<build>
-		<finalName>modules-webapp</finalName>
-	</build>
 </project>

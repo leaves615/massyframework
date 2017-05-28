@@ -35,8 +35,6 @@ import org.massyframework.assembly.FrameworkInitializer;
 import org.massyframework.assembly.base.handle.AssemblyContextHandler;
 import org.massyframework.assembly.base.handle.support.CustomizeAssemblyContextManagement;
 import org.massyframework.assembly.base.web.DefaultHttpService;
-import org.massyframework.assembly.base.web.JasparResourceProessor;
-import org.massyframework.assembly.web.HttpResourceProcessor;
 import org.massyframework.assembly.web.HttpService;
 
 /**
@@ -59,7 +57,6 @@ class Initailizer implements FrameworkInitializer {
 		this.initExecutorService(framework);
 		this.initCustomizeAssemblyContextManagement(framework);
 		this.initHttService(framework);
-		this.initJasperResourceProcessor(framework);
 	}
 	
 	/**
@@ -109,20 +106,6 @@ class Initailizer implements FrameworkInitializer {
 		}
 	}
 	
-	/**
-	 * 初始化Jsp资源处理器
-	 * @param framework
-	 */
-	protected void initJasperResourceProcessor(Framework framework){
-		if (Constants.ENVIRONMENT_J2EE.equals(framework.getInitParameter(Constants.ENVIRONMENT))){
-			JasparResourceProessor processor =
-					new JasparResourceProessor();
-			Map<String, Object> props = new HashMap<String, Object>();
-			props.put(Constants.SERVICE_DESCRIPTION, "对动态类加载器中的jsp文件提供编译支持.");
-			framework.addExportService(HttpResourceProcessor.class, processor, props);
-		}
-	}
-
 	private class Factory implements ThreadFactory {
 
 		private final AtomicInteger count = new AtomicInteger(-1);

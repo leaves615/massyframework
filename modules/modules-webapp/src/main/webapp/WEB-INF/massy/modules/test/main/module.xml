@@ -26,6 +26,7 @@
 				<include path="META-INF**" />
 				<include path="org**" />
 			</imports>
-        </module>    	
+        </module>   
+        
 	</dependencies>
 </module>

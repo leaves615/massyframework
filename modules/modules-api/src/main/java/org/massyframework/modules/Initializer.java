@@ -21,6 +21,7 @@ package org.massyframework.modules;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ public class Initializer implements ServletContainerInitializer {
 	public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
 		
 		Map<String, String> configuration = this.getConfiguration(ctx);
-		try{			
+		try{				
 			ModuleLoader moduleLoader = prepareModuleLoader(configuration);
 			ctx.setAttribute(ModuleLoader.class.getName(), moduleLoader);
 						

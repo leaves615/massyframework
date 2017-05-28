@@ -21,5 +21,6 @@
 				<include path="org**" />
 			</imports>
         </module>    
+        <module name="javax.servlet.jsp.jstl" slot="1.2.x" />
 	</dependencies>
 </module>

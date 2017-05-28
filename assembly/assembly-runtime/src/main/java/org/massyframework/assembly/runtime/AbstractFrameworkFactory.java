@@ -25,6 +25,7 @@ import org.massyframework.assembly.FrameworkFactory;
 import org.massyframework.assembly.FrameworkInitializeLoader;
 import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.util.Asserts;
+import org.massyframework.assembly.util.ClassLoaderUtils;
 import org.slf4j.Logger;
 
 /**
@@ -63,6 +64,7 @@ abstract class AbstractFrameworkFactory implements FrameworkFactory {
 			logger.info("Massy Framework started.");
 		}
 		
+		ClassLoaderUtils.setThreadContextClassLoader(this.getClass().getClassLoader());
 		return result;
 	}
 	
