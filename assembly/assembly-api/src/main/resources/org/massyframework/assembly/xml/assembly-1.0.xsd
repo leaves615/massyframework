@@ -73,6 +73,26 @@
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
+				
+				<!-- 页面映射 -->
+				<xs:element name="page-mappings" type="pageMappingsType"
+					minOccurs="0" maxOccurs="1" >
+					<xs:annotation>
+						<xs:documentation>
+						页面映射
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				
+				<!-- http资源绑定 -->
+				<xs:element name="http-resources" type="httpResourcesType"
+					minOccurs="0" maxOccurs="1" >
+					<xs:annotation>
+						<xs:documentation>
+						http静态资源绑定
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
 
 
 				<!-- 依赖服务 -->
@@ -184,6 +204,13 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="struts">
+				<xs:annotation>
+					<xs:documentation>
+					 使用Struts作为装配件的上下文
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value="customize">
 				<xs:annotation>
 					<xs:documentation>
@@ -218,6 +245,66 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- 页面映射 -->
+	<xs:complexType name="pageMappingsType">
+		<xs:annotation>
+			<xs:documentation>
+			页面映射
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="mapping">
+				<xs:annotation>
+					<xs:documentation>
+						使用alias和page进行绑定，构成映射关系
+					</xs:documentation>
+				</xs:annotation>
+				
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="alias" type="xs:string" />
+							<xs:attribute name="page" type="xs:string" />
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- http资源定义 -->
+	<xs:complexType name="httpResourcesType">
+		<xs:annotation>
+			<xs:documentation>
+			http资源定义
+			</xs:documentation>
+		</xs:annotation>
+		
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="resource">
+				<xs:annotation>
+					<xs:documentation>
+						使用alias和name绑定装配件内的http静态资源
+					</xs:documentation>
+				</xs:annotation>
+				
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="alias" type="xs:string" />
+							<xs:attribute name="name" type="xs:string" />
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="httpResourceType">
+	
 	</xs:complexType>
 
 	<!-- 属性集类型 -->

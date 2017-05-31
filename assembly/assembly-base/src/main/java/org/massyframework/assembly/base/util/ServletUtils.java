@@ -151,8 +151,8 @@ public abstract class ServletUtils {
 		
 		List<String> keys = initParams.getParameterKeys();
 		for (String key: keys){
-			if (key.startsWith(Constants.SERVLET_INIT_PREFIX)){
-				String name = key.substring(13);
+			if (key.startsWith(Constants.FILTER_INIT_PREFIX)){
+				String name = key.substring(12);
 				if ((name != null) && (name.length() != 0)){
 					result.put(name, initParams.getParameter(key));
 				}

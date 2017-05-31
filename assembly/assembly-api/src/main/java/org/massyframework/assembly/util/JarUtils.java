@@ -18,8 +18,10 @@
 */
 package org.massyframework.assembly.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -64,10 +66,18 @@ public abstract class JarUtils {
 	 * @param url 资源定位
 	 * @return {@link JarFile}，如果不是jar资源，则返回null.
 	 * @throws IOException 发生IO读写例外
+	 * @throws URISyntaxException 
 	 */
-	public static JarFile extractJarFile(URL resource) throws IOException{
+	public static JarFile extractJarFile(URL resource) throws IOException, URISyntaxException{
 		if (resource.getProtocol().equals("jar")){
 			return ((JarURLConnection) resource.openConnection()).getJarFile();  
+		}
+		
+		if (resource.getProtocol().equals("file")){
+			File file = new File(resource.toURI());
+			if (file.getName().endsWith(".jar")){
+				return new JarFile(file);
+			}
 		}
 		return null;
 	}

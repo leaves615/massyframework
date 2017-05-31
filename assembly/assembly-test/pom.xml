@@ -22,6 +22,14 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Servlet3 -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 
 		<dependency>

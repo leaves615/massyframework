@@ -36,12 +36,14 @@ import org.massyframework.assembly.base.handle.DependencyServiceResourceHandler;
 import org.massyframework.assembly.base.handle.Handler;
 import org.massyframework.assembly.base.handle.HandlerRegistry;
 import org.massyframework.assembly.base.handle.ServiceInjectHandler;
+import org.massyframework.assembly.util.Asserts;
 import org.massyframework.assembly.util.MapUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
 /**
@@ -68,6 +70,15 @@ public class SpringWebAssemblyContext extends XmlWebApplicationContext
 	}
 	
 	/* (non-Javadoc)
+	 * @see org.springframework.context.support.AbstractXmlApplicationContext#initBeanDefinitionReader(org.springframework.beans.factory.xml.XmlBeanDefinitionReader)
+	 */
+	@Override
+	protected void initBeanDefinitionReader(XmlBeanDefinitionReader reader) {
+		super.initBeanDefinitionReader(reader);
+        reader.setBeanClassLoader(this.getClassLoader());
+	}
+	
+	/* (non-Javadoc)
 	 * @see org.springframework.context.support.AbstractXmlApplicationContext#loadBeanDefinitions(org.springframework.beans.factory.support.DefaultListableBeanFactory)
 	 */
 	@Override
@@ -86,6 +97,10 @@ public class SpringWebAssemblyContext extends XmlWebApplicationContext
 	protected void prapareLoadBeanDefinitions(DefaultListableBeanFactory beanFactory)
 			throws BeansException, IOException {
 		try{
+			Asserts.notNull(this.handlerRegistry, "handlerRegistry cannot be null, please set it.");
+			Assembly assembly = this.handlerRegistry.getReference();
+			Asserts.notNull(assembly, "assembly cannot be null");
+			
 			AssemblyAwareBeanPostProcessor processor =
 					new AssemblyAwareBeanPostProcessor(this.handlerRegistry.getReference(), beanFactory);
 			beanFactory.addBeanPostProcessor(processor);

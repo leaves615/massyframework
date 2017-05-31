@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd" >
+<struts>
+	<!-- 使用Spring作为组件容器 -->
+	<constant name="struts.objectFactory" value="org.apache.struts2.spring.StrutsSpringObjectFactory" />
+		
+	<!-- include节点是struts2中组件化的方式 可以将每个功能模块独立到一个xml配置文件中 然后用include节点引用 -->
+	<include file="struts-default.xml"/>
+	
+	<!-- struts2的action必须放在一个指定的包空间下定义 -->
+    <package name="spring-default" namespace="/struts2" extends="struts-default">
+    	<action name="hello" class="org.massyframework.modules.test.struts.HelloWordAction">
+    		<result name="success">/account/hello.jsp</result>
+    	</action>
+    </package>
+	
+</struts>

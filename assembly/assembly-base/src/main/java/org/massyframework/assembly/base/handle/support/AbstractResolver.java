@@ -20,10 +20,12 @@ package org.massyframework.assembly.base.handle.support;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.massyframework.assembly.Constants;
 import org.massyframework.assembly.ExportServiceRepository;
 import org.massyframework.assembly.ExportServiceRepositoryReference;
+import org.massyframework.assembly.LoggerReference;
 import org.massyframework.assembly.ServiceNotFoundException;
 import org.massyframework.assembly.base.handle.AssemblyInformationHandler;
 import org.massyframework.assembly.base.handle.DependencyServiceResource;
@@ -35,6 +37,9 @@ import org.massyframework.assembly.base.handle.AssemblyContextHandler;
 import org.massyframework.assembly.base.support.ImmutableInitParams;
 import org.massyframework.assembly.base.support.InitParams;
 import org.massyframework.assembly.util.Asserts;
+import org.massyframework.assembly.util.MapUtils;
+import org.massyframework.assembly.web.HttpService;
+import org.slf4j.Logger;
 
 /**
  * 提供配置解析后，设置处理方法的封装
@@ -102,6 +107,57 @@ public abstract class AbstractResolver extends AbstractHandler implements Resolv
 			this.getHandlerRegistry().register(initParams);
 		}
 	}
+	
+	/**
+	 * 添加页面映射
+	 * @param pageMappings
+	 */
+	protected final void addPageMappings(Map<String, String> pageMappings){
+		if (!MapUtils.isEmpty(pageMappings)){
+			ExportServiceRepository serviceRepository =
+					ExportServiceRepositoryReference.adaptFrom(this.getAssembly());
+			HttpService httpService =
+					serviceRepository.findService(HttpService.class);
+			if (httpService != null){
+				Logger logger = LoggerReference.adaptFrom(this.getAssembly());
+				for (Entry<String, String> entry: pageMappings.entrySet()){
+					if (!httpService.bindMapping(entry.getKey(), entry.getValue(), this.getAssembly())){
+						if (logger != null){
+							if (logger.isWarnEnabled()){
+								logger.warn("add page mapping failed: alias=" + entry.getKey() + ",value=" + entry.getValue()+ ".");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 添加装配件资源
+	 * @param pageMappings
+	 */
+	protected final void addHttpResources(Map<String, String> resources){
+		if (!MapUtils.isEmpty(resources)){
+			ExportServiceRepository serviceRepository =
+					ExportServiceRepositoryReference.adaptFrom(this.getAssembly());
+			HttpService httpService =
+					serviceRepository.findService(HttpService.class);
+			if (httpService != null){
+				Logger logger = LoggerReference.adaptFrom(this.getAssembly());
+				for (Entry<String, String> entry: resources.entrySet()){
+					if (!httpService.registerResources(entry.getKey(), entry.getValue(), this.getAssembly())){
+						if (logger != null){
+							if (logger.isWarnEnabled()){
+								logger.warn("add http resource failed: alias=" + entry.getKey() + ",name=" + entry.getValue()+ ".");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * 添加依赖服务定义

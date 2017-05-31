@@ -64,6 +64,14 @@ abstract class AbstractXmlResolver extends AbstractResolver {
 	public static final String PARAMETER_KEY      = "key";
 	public static final String PARAMETER_VALUE    = "value";
 	
+	public static final String PAGE_MAPPINGS      = "page-mappings";
+	public static final String PAGE_MAPPING       = "mapping";
+	public static final String ALIAS              = "alias";
+	public static final String PAGE               = "page";
+	
+	public static final String HTTP_RESOURCES     = "http-resources";
+	public static final String HTTP_RESOURCE      = "resource";
+	
 	public static final String DEPENDENCY_SERVICE = "dependency-service";
 	public static final String CNAME              = "cName";
 	public static final String CLASS              = "class";
@@ -104,6 +112,8 @@ abstract class AbstractXmlResolver extends AbstractResolver {
 			//解析
 			String container = this.doParser(document);
 			this.doParserInitParams(document);
+			this.doParserPageMappings(document);
+			this.doParserHttpResources(document);
 			this.doParserDependencyService(document);
 			this.doParserExportService(document);
 			this.setAssemblyContextHandler(container);
@@ -165,21 +175,80 @@ abstract class AbstractXmlResolver extends AbstractResolver {
 		Map<String, String> map = new HashMap<String, String>();
 		NodeList list =document.getElementsByTagName(INIT_PARAMS);
 		if (list != null){
-			list = list.item(0).getChildNodes();
-			int size = list.getLength();
-			for (int i=0; i<size; i++){
-				Node node = list.item(i);
-				if (node.getNodeName().equals(PARAMETER)){
-					Node key = node.getAttributes().getNamedItem(PARAMETER_KEY);
-					Node value = node.getAttributes().getNamedItem(PARAMETER_VALUE);
-					
-					map.put(key.getTextContent(), 
-							this.getTextContent(value));
+			if (list.getLength() > 0){
+				list = list.item(0).getChildNodes();
+				int size = list.getLength();
+				for (int i=0; i<size; i++){
+					Node node = list.item(i);
+					if (node.getNodeName().equals(PARAMETER)){
+						Node key = node.getAttributes().getNamedItem(PARAMETER_KEY);
+						Node value = node.getAttributes().getNamedItem(PARAMETER_VALUE);
+						
+						map.put(key.getTextContent(), 
+								this.getTextContent(value));
+					}
 				}
 			}
 		}
 		
 		this.setInitParams(map);
+	}
+	
+	/**
+	 * 解析页面映射
+	 * @param document
+	 */
+	protected void doParserPageMappings(Document document){
+		NodeList list = document.getElementsByTagName(PAGE_MAPPINGS);
+		if (list != null){
+			if (list.getLength() > 0){
+				Map<String, String> mappings =
+						new HashMap<String, String>();
+				list = list.item(0).getChildNodes();
+				int size = list.getLength();
+				for (int i=0; i<size; i++){
+					Node node = list.item(i);
+					if (node.getNodeName().equals(PAGE_MAPPING)){
+						Node alias = node.getAttributes().getNamedItem(ALIAS);
+						Node page = node.getAttributes().getNamedItem(PAGE);
+						
+						mappings.put(alias.getTextContent(), 
+								this.getTextContent(page));
+					}
+				}
+				
+				this.addPageMappings(mappings);
+			}
+		}
+	}
+	
+	/**
+	 * 解析httpResource
+	 * @param document
+	 */
+	protected void doParserHttpResources(Document document){
+		NodeList list = document.getElementsByTagName(HTTP_RESOURCES);
+		if (list != null){
+			if (list.getLength() > 0){
+				Map<String, String> resources =
+						new HashMap<String, String>();
+				
+				list = list.item(0).getChildNodes();
+				int size = list.getLength();
+				for (int i=0; i<size; i++){
+					Node node = list.item(i);
+					if (node.getNodeName().equals(HTTP_RESOURCE)){
+						Node alias = node.getAttributes().getNamedItem(ALIAS);
+						Node name = node.getAttributes().getNamedItem(NAME);
+						
+						resources.put(alias.getTextContent(), 
+								this.getTextContent(name));
+					}
+				}
+				
+				this.addHttpResources(resources);
+			}
+		}
 	}
 	
 	/**

@@ -104,9 +104,4 @@ public final class ContextLoaderListenerEx extends ContextLoaderListener
 				null:
 					this.assemblyContextRegistration.getHandler();
 	}
-
-	
-	
-	
-
 }

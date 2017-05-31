@@ -91,8 +91,9 @@ public class Initializer implements FrameworkInitializer {
 		servletContext.addListener(IntrospectorCleanupListener.class);
 		
 		//防止中文乱码
+		//Tomcat 在使用class注册动态Filter时会发生ClassNotFoundException,所以直接使用Filter实例进行注册
 		FilterRegistration.Dynamic registration =
-				servletContext.addFilter("SpringEncodingFilter", CharacterEncodingFilter.class);
+				servletContext.addFilter("SpringEncodingFilter",new CharacterEncodingFilter());
 		registration.setAsyncSupported(true);
 		registration.addMappingForUrlPatterns(
 				EnumSet.allOf(DispatcherType.class), false, "/*");

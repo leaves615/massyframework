@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="org.freemarker" slot="2.3.x">
+	
+	<resources>
+		<resource-root path="freemarker-2.3.23.jar" />
+	</resources>
+	
+	<dependencies>
+		<module name="sun.jdk" slot="1.8" />
+		<module name="javax.servlet" slot="3.1" />
+	</dependencies>
+	
+</module>

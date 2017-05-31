@@ -62,6 +62,8 @@ public class MassyFrameworkLauncher implements Launcher {
 		FrameworkInitializeLoader loader =
 				this.createFrameworkInitializeLoader(servletContext, moduleLoader,configuration);
 		factory.createFramework(configuration, loader);
+		
+		servletContext.addListener(new ContextDestroyedListener());
 	}
 	
 	/**

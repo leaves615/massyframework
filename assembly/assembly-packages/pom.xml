@@ -42,6 +42,43 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${springframework.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-core</artifactId>
+			<version>2.5.10.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.struts</groupId>
+			<artifactId>struts2-spring-plugin</artifactId>
+			<version>2.5.10.1</version>
+
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-beans</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-jasper</artifactId>
+			<version>8.5.14</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -74,6 +111,16 @@
 								<artifactItem>
 									<groupId>org.massyframework.assembly</groupId>
 									<artifactId>assembly-spring4</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.assembly</groupId>
+									<artifactId>assembly-struts2</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.assembly</groupId>
+									<artifactId>assembly-servlet-jasper</artifactId>
 									<version>${project.version}</version>
 								</artifactItem>
 							</artifactItems>

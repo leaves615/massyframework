@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="org.javassist" slot="3.20.x">
+	
+	<resources>
+		<resource-root path="javassist-3.20.0-GA.jar" />
+	</resources>
+</module>

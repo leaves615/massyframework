@@ -59,10 +59,12 @@ final class AssemblyAwareBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (beanName != null){
-			BeanDefinition definition = this.beanFactory.getBeanDefinition(beanName);
-			if (definition != null){
-				if (DependencyServiceFactoryBean.class.getName().equals(definition.getBeanClassName())){
-					return bean;
+			if (this.beanFactory.containsBeanDefinition(beanName)){
+				BeanDefinition definition = this.beanFactory.getBeanDefinition(beanName);
+				if (definition != null){
+					if (DependencyServiceFactoryBean.class.getName().equals(definition.getBeanClassName())){
+						return bean;
+					}
 				}
 			}
 		}

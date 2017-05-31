@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.massyframework.modules</groupId>
+		<artifactId>modules</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<artifactId>modules-webapp-deployment</artifactId>
+
+	<packaging>war</packaging>
+	<name>modules-webapp-deployment Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.massyframework.modules</groupId>
+			<artifactId>modules-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<!-- <build>
+		<finalName>modules-deployment</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.10</version>
+
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+
+						<configuration>
+							<artifactItems>
+								assembly core
+								<artifactItem>
+									<groupId>org.massyframework.assembly</groupId>
+									<artifactId>assembly-api</artifactId>
+									<version>${assembly.version}</version>
+									<outputDirectory>${project.build.directory}/modules-deployment/WEB-INF/massy/modules/org/massyframework/assembly/main</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.assembly</groupId>
+									<artifactId>assembly-packages</artifactId>
+									<version>${assembly.version}</version>
+									<outputDirectory>${project.build.directory}/modules-deployment/WEB-INF/massy/modules/org/massyframework/assembly/main</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.modules</groupId>
+									<artifactId>modules-core</artifactId>
+									<version>${project.version}</version>
+									<outputDirectory>${project.build.directory}/modules-deployment/WEB-INF/massy/modules/org/massyframework/assembly/main</outputDirectory>
+								</artifactItem>
+								
+								 test modules
+								<artifactItem>
+									<groupId>org.massyframework.modules</groupId>
+									<artifactId>modules-test-api</artifactId>
+									<version>${project.version}</version>
+									<outputDirectory>${project.build.directory}/modules-deployment/WEB-INF/massy/modules/test/main</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.massyframework.modules</groupId>
+									<artifactId>modules-test-packages</artifactId>
+									<version>${project.version}</version>
+									<outputDirectory>${project.build.directory}/modules-deployment/WEB-INF/massy/modules/test/main</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build> -->
+</project>

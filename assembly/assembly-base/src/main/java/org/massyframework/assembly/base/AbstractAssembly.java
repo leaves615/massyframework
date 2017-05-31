@@ -56,9 +56,10 @@ public abstract class AbstractAssembly implements Assembly {
 		if (symbolicName != null){
 			this.symbolicName = symbolicName;
 		}
-		
+		ExportServiceRepository repository =
+				this.getExportServiceRepository();
 		this.adaptManagement = 
-				new AdaptManagement(this.getExportServiceRepository());
+				new AdaptManagement(repository);
 		if (symbolicName != null){
 			this.adaptManagement.addAdaptObject(
 					new DelegateLogger(this));

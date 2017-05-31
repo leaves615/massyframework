@@ -23,7 +23,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -35,6 +35,11 @@
 			<groupId>org.massyframework.assembly</groupId>
 			<artifactId>assembly-api</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.5</version>
 		</dependency>
 	</dependencies>
 </project>
