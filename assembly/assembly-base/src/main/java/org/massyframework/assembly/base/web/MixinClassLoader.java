@@ -116,4 +116,21 @@ public class MixinClassLoader extends URLClassLoader {
 		}
 		return result.elements();
 	}
+
+	/**
+	 * 所有混合的类加载器
+	 * @return
+	 */
+	public List<ClassLoader> getClassLoaders(){
+		List<ClassLoader> result =
+				new ArrayList<ClassLoader>();
+		
+		result.addAll(this.loaders);
+		if (this.getParent() != null){
+			result.add(this.getParent());
+		}
+		return result;
+	}
+	
+	
 }

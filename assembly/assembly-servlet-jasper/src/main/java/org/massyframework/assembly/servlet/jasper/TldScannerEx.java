@@ -3,9 +3,16 @@
  */
 package org.massyframework.assembly.servlet.jasper;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.descriptor.JspConfigDescriptor;
@@ -17,6 +24,9 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.descriptor.tld.TaglibXml;
 import org.apache.tomcat.util.descriptor.tld.TldResourcePath;
+import org.massyframework.assembly.base.web.MixinClassLoader;
+import org.massyframework.assembly.spec.JarEntrySpecification;
+import org.massyframework.assembly.util.JarUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -33,6 +43,7 @@ final class TldScannerEx extends TldScanner {
     private final ServletContext context;
     
     private final TldParserEx tldParser;
+    private ClassLoader loader;
 	
 	/**
 	 * @param context
@@ -50,7 +61,81 @@ final class TldScannerEx extends TldScanner {
 
 	@Override
 	public void setClassLoader(ClassLoader classLoader) {
+		this.loader = classLoader;
 		this.tldParser.setClassLoader(classLoader);
+	}
+	
+	
+	@Override
+	public void scanJars() {
+		super.scanJars();
+		if (this.loader != null){
+			List<String> tldResources = this.getTldFiles();
+			
+			for (String resource: tldResources){
+				
+				try{
+					this.parseTld(resource);
+				}catch(Exception e){
+					
+				}
+					
+			}
+		}
+	}
+	
+	private List<String> getTldFiles(){
+		List<String> result = new ArrayList<String>();
+		if (this.loader != null){
+		
+			if (this.loader instanceof MixinClassLoader){
+				List<ClassLoader> loaders =
+						((MixinClassLoader)this.loader).getClassLoaders();
+				
+				JarEntrySpecification spec =
+						new JarEntrySpecification("META-INF", ".tld");
+				for (ClassLoader cl: loaders){
+					try {
+						Enumeration<URL> em = cl.getResources("META-INF");
+						 //内部类
+				        FilenameFilter filter = new FilenameFilter(){
+				            @Override
+				            public boolean accept(File dir, String name) {
+				                return name.endsWith(".tld");          
+				            }
+				        };
+						
+						while (em.hasMoreElements()){
+							URL url = em.nextElement();
+							try{
+								JarFile jarFile = JarUtils.extractJarFile(url);
+								if (jarFile != null){
+									List<JarEntry> entries = JarUtils.findJarEntries(jarFile, spec);
+									for (JarEntry entry: entries){
+										result.add(entry.getName());
+									}
+								}else{
+									File file = new File(url.toURI());
+									if (file.isDirectory()){
+										File[] files = file.listFiles(filter);
+										for (File tmp: files){
+											result.add(tmp.getName());
+										}
+									}
+								}
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		return result;
 	}
 
 

@@ -22,10 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -58,12 +62,17 @@ import org.slf4j.Logger;
  * jsp资源处理器
  */
 public class JasparResourceProessor implements HttpResourceProcessor, ServletContextAware {
+	
+	private static final String LIB_PATH = "/WEB-INF/lib/";
+	
 	private String[] extensionNames = new String[]{"*.jsp"};
 	private volatile ServletContext servletContext;
 	private Map<String, String> initParams;
 	private volatile Class<? extends Servlet> servletClass;
 	private Map<Assembly, Servlet> servletMap =
 			new ConcurrentHashMap<Assembly, Servlet>();
+	
+	
 	/**
 	 * 
 	 */
@@ -116,7 +125,7 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 			try{
 				synchronized(this){
 					if (result == null){
-						ClassLoader jasperLoader = new MixinClassLoader(
+						MixinClassLoader jasperLoader = new MixinClassLoader(
 							resource.getAssemblyClassLoader(), this.getClass().getClassLoader());
 													
 						if (this.servletClass == null){
@@ -208,17 +217,28 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 	
 	private class Context extends ServletContextWrapper {
 		
-		private ClassLoader loader;
+		private MixinClassLoader loader;
 		private Logger logger;
 		private Object tldCache;
 		private Object instanceManager;
 		
-		public Context(ClassLoader loader, Logger logger){
+		private Map<String, URL> libs;
+		
+		public Context(MixinClassLoader loader, Logger logger){
 			this.loader = loader;
 			this.logger = logger;
+			this.libs = new HashMap<String, URL>();
+			List<ClassLoader> loaders = this.loader.getClassLoaders();
+			for (ClassLoader cl: loaders){
+				if (cl instanceof URLClassLoader){
+					URL[] urls = ((URLClassLoader)cl).getURLs();
+					for (URL url: urls){
+						String name = LIB_PATH + "__embed_" + UUID.randomUUID() + ".jar";
+						this.libs.put(name, url);
+					}
+				}
+			}
 		}
-
-		
 
 		@Override
 		public Object getAttribute(String name) {
@@ -305,6 +325,10 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 				result = super.getResource(path);
 			}
 			
+			if (result == null){
+				return this.libs.get(path);
+			}
+			
 			if (logger != null){
 				if (logger.isTraceEnabled()){
 					String msg = result == null ?
@@ -335,11 +359,20 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 		 */
 		@Override
 		public Set<String> getResourcePaths(String path) {
-			Set<String> result = super.getResourcePaths(path);
-			return result;
+			if (LIB_PATH.equals(path)){
+				return this.getJarLibs(path);
+			}else{
+				Set<String> result = super.getResourcePaths(path);
+				return result;
+			}
 		}
 
-
+		protected Set<String> getJarLibs(String path){
+			Set<String> result = new HashSet<String>();
+			result.addAll(super.getResourcePaths(path));
+			result.addAll(this.libs.keySet());
+			return result;
+		}
 
 		@Override
 		public ClassLoader getClassLoader() {
@@ -380,7 +413,7 @@ public class JasparResourceProessor implements HttpResourceProcessor, ServletCon
 	        } catch (Exception e) {
 	            throw new ServletException(e);
 	        }
-	        
+	        	        
 	        this.setAttribute(TldCache.SERVLET_CONTEXT_ATTRIBUTE_NAME,
 	                new TldCache(this, scanner.getUriTldResourcePathMap(),
 	                        scanner.getTldResourcePathTaglibXmlMap()));
